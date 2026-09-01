@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | :--- | :--- |
 | **문서 ID** | `STATE-001` |
-| **문서 버전** | `v2.0.0` |
+| **문서 버전** | `v2.1.0` |
 | **상태** | `ACTIVE` |
 | **최종 동기화** | `2026-09-02` |
 
@@ -20,7 +20,7 @@
 ---
 
 ## 📌 현재 당면 작업 (Current Task Focus)
-- **Feature / Task**: `[AbyssEngine] 캐릭터 공방(CharacterWorkshopService) 및 Illustrious-XL 단부루 태그 컴파일러 복구 완료 (28개 단위 테스트 100% PROVEN)`
+- **Feature / Task**: `[AbyssEngine] Clean 4-Tier 전용 신규 웹 스튜디오(Web Studio) 구축 및 가동 완료 (31개 단위 테스트 100% PROVEN)`
 - **Track Type**: `Track 3: Standard Architecture`
 - **Current Phase**: `COMPLETED`
 - **Implementation Auth**: `APPROVED`

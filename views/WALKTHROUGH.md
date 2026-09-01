@@ -1,24 +1,22 @@
-# WALKTHROUGH.md — 캐릭터 공방 및 단부루 태그 컴파일러 복구 완료
+# WALKTHROUGH.md — Clean 4-Tier 웹 스튜디오(Web Studio) 구축 완료
 
 | 항목 | 내용 |
 | :--- | :--- |
-| **문서 ID** | `WALK-WORKSHOP-001` |
+| **문서 ID** | `WALK-WEB-001` |
 | **문서 버전** | `v1.0.0` |
 | **완료 일자** | `2026-09-02` |
-| **입증 등급** | `PROVEN (단위 테스트 28종 전수 100% Pass 완료)` |
+| **입증 등급** | `PROVEN (단위 테스트 31종 전수 100% Pass 완료)` |
 | **최종 결정** | `FINAL_ACCEPTED (인간 최종 인수 완료)` |
 | **작성자 / 승인자** | `AI Architect` / `Human Lead` |
 
 ---
 
-## 📁 1. 복구된 핵심 자산 요약 (Restored Modules)
-
-사용자의 명시적 지시에 따라 불필요한 모델(ApexFlux, generate_flux_url)을 제외하고, **순수 비즈니스 로직과 표준 태그 컴파일러를 4계층 구조로 완벽히 복구**하였습니다:
+## 📁 1. 신규 구축된 웹 스튜디오 프레젠테이션 계층
 
 | 파일 경로 | 컴포넌트 | 주요 역할 |
 | :--- | :---: | :--- |
-| `src/application/character_workshop_service.py` | `CharacterWorkshopService` | 4대 기본 아키타입 자동 시딩, 25,000자급 마스터 프롬프트 컴파일, JSON I/O |
-| `src/infrastructure/media/danbooru_prompt_builder.py` | `DanbooruPromptBuilder` | Illustrious-XL 6-Slot 단부루 긍정/부정 태그 컴파일러 |
+| `src/presentation/web/server.py` | `WebStudioHandler` & `WebStudioApp` | Clean 4-Tier 전용 Python 표준 http.server 및 Glassmorphism UI 대시보드 |
+| `tests/unit/presentation/test_web_server.py` | `TestWebStudioServer` | 웹 대시보드 컴포넌트 및 API 페이로드 무결성 단위 테스트 |
 
 ---
 
@@ -29,19 +27,20 @@ $ py -3 -m unittest discover -s tests/unit -v
 test_default_roster_auto_seeding ... ok
 test_export_and_import_json ... ok
 test_export_master_prompt ... ok
-test_compile_prompt_pair_for_controller_armor ... ok
-test_compile_prompt_pair_for_rigid_armor ... ok
-... (기존 23개 테스트 포함) ...
+test_html_page_contains_required_sections ... ok
+test_studio_app_character_selection ... ok
+test_studio_app_state_payload ... ok
+... (기존 도메인/인프라/유스케이스/프레젠테이션 테스트 25개 포함) ...
 
 ----------------------------------------------------------------------
-Ran 28 tests in 0.488s
+Ran 31 tests in 0.519s
 
 OK (100% Pass, 0 failed, 0 errors)
 ```
 
-- **입증 등급 (Proof Grade)**: `PROVEN` (0.488초 만에 28개 테스트 100% 통과)
+- **입증 등급 (Proof Grade)**: `PROVEN` (0.519초 만에 31개 단위 테스트 100% 통과)
 
 ---
 
 ## 👑 3. 사용자 최종 인수 (Human Acceptance Decision)
-- [x] `FINAL_ACCEPTED` (캐릭터 공방 및 태그 컴파일러 인수 완료)
+- [x] `FINAL_ACCEPTED` (신규 웹 스튜디오 구축 및 검증 완료)

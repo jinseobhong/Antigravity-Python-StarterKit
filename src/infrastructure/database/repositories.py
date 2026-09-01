@@ -111,8 +111,21 @@ class CharacterRepository:
                 ego_durability=float(row["ego_durability"]),
                 neural_taint=float(row["neural_taint"]),
                 traits=traits,
-                tensors=tensors,
+                tensors=tensors
             )
+
+    def list_all(self) -> List[Character]:
+        """모든 캐릭터 목록 조회"""
+        with self.db.get_connection() as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT seed_hash FROM characters ORDER BY id ASC")
+            rows = cur.fetchall()
+            chars = []
+            for r in rows:
+                c = self.find_by_seed_hash(r["seed_hash"])
+                if c:
+                    chars.append(c)
+            return chars
 
 
 class TurnHistoryRepository:
