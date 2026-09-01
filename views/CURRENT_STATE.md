@@ -2,16 +2,16 @@
 
 ## 🗺️ Execution Pipeline (현재 진행 좌표)
 - [x] Step 1. 문제 파악 및 컨텍스트 확인 (Understand & State Sync)
-- [x] Step 2. 수정 대상 파일 및 설계 계획 수립 (Plan)
+- [x] Step 2. 수정 대상 파일 및 설계 계획 수립 (Design & Plan)
 - [x] Step 3. 사용자 명시적 계획 승인 (User Approval Gate)
-- [x] Step 4. 승인 범위 내 구현 및 실측 테스트 (Execute & AI Proof)
+- [x] Step 4. 승인 범위 내 구현 및 실측 테스트 (Implement & AI Proof)
 - [x] Step 5. 증거 제출 및 사용자 최종 인수 (Human Decision)
 
 ---
 
 ## 📌 현재 당면 작업 (Current Task Focus)
-- **Feature / Task**: `워크플로우 및 스킬 3대 모듈(main-stream, plan, execute) 1:1 완벽 정렬 구축 완료`
-- **Current Phase**: `PHASE 2: 구현 및 입증 완료 (COMPLETED)`
+- **Feature / Task**: `[설계: design / 구현: implement] 3대 모듈 및 워크플로우 1:1 완벽 정렬 구축 완료`
+- **Current Phase**: `PHASE 2: 구현 완료 (COMPLETED)`
 - **Implementation Auth**: `APPROVED`
 - **Proof Status**: `PROVEN`
 - **Decision Status**: `FINAL_ACCEPTED`
