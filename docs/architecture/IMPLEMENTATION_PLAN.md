@@ -1,3 +1,14 @@
+<!--
+======================================================================
+[HITL TRINITY SUPREME MANDATE - CONSTITUTION ARTICLE 20]
+1. FULL-READING  : Must read full Constitution (Articles 1-20) without summary.
+2. PRE-APPROVAL  : No code modification without explicit user plan approval.
+3. LIVE AI-PROOF : Must verify on AUTHENTIC runtime environment (NO fake mocks).
+4. POST-REPORT   : Final acceptance (FINAL_ACCEPTED) belongs solely to the Human.
+5. PERMANENCE    : This header MUST remain at the top of all skills, workflows, docs.
+======================================================================
+-->
+
 # [PLAN-METH-001] 계약 주도 개발(CDD) & E2E 실측 테스트 오라클 방법론 수립 및 전면 주입 계획서
 
 | 메타데이터 항목 | 내용 |
