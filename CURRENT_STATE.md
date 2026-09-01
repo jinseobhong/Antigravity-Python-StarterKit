@@ -10,13 +10,13 @@
 ---
 
 ## 📌 현재 당면 작업 (Current Task Focus)
-- **Feature / Task**: `Antigravity 5대 핵심 문서 뷰 및 2-Phase 자동 미러링 체계 구축 완료`
+- **Feature / Task**: `프로젝트 루트 5대 핵심 뷰 체계 확립 및 전수 매핑 검증`
 - **Current Phase**: `PHASE 2: 구현 및 입증 완료 (COMPLETED)`
 - **Implementation Auth**: `APPROVED`
 - **Proof Status**: `PROVEN`
 - **Decision Status**: `FINAL_ACCEPTED`
 
-## 📁 5대 핵심 실시간 뷰 (The 5 Core Live Views)
+## 📁 프로젝트 5대 핵심 실시간 뷰 (The 5 Core Live Views)
 1. `CURRENT_STATE.md` (현재 상황 — SSOT & 파이프라인)
 2. `IMPLEMENTATION_STATUS.md` (구현 상황도 — 전체 컴포넌트 현황)
 3. `IMPLEMENTATION_PLAN.md` (구현 계획 — 브레인 실시간 미러링)
