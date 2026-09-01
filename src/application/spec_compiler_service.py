@@ -2,12 +2,10 @@
 """
 src/application/spec_compiler_service.py
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Application Layer: Dify Node 7 기반 듀얼 모드 스펙 컴파일러 (Dual-Mode Spec Compiler)
-- 8-Tier 해부학적 Visual DNA Matrix 컴파일
-- Track 1: 17대 범용 생체·의복 텐서 매트릭스 ([01_cranial] ~ [17_aura])
-- Track 2: 7대 차원축 70단계 인격 유전자 (Axis I ~ Axis VII)
-- Kinematic Chain 7단계 신체 운동 연쇄 파동 전이 및 스포트라이트
-- Illustrious-XL 6-Slot Danbooru 프롬프트 자동 조립
+Application Layer: Dify Node 8 기반 Dual-Mode Spec Compiler & 8-Tier Visual DNA Matrix
+- Dify Node 8 헌법: Kinematic Chain (신체 운동 연쇄 전이), Deep Gene Cycler (7대 축 순환), Novelty Re-weighting (2~3개 On/Off 스포트라이트)
+- 8-Tier Visual DNA Matrix (골격, 동공, 모발, 체형, 피부 질감, 의복, 홍조, 조명)
+- Illustrious-XL 6-Slot Danbooru 프롬프트 100% 자동 조립
 """
 
 from __future__ import annotations
@@ -18,79 +16,105 @@ from typing import Dict, Any, List
 from src.infrastructure.llm.client import MultiLLMClient
 from src.domain.visual_dna import VisualDNA
 from src.domain.personality_gene import PersonalityGene, HardInvariants
-from src.domain.character_traits import CharacterTraits
+from src.domain.character_traits import CharacterTraits, PsychologicalGauges, SomaticMetrics
 from src.infrastructure.media.visual_compiler import VisualCompiler
 
 
 class SpecCompilerService:
-    """Dify Node 7 스펙 컴파일러 서비스"""
+    """Dify Node 8 듀얼 모드 스펙 컴파일러 & 8-Tier Visual DNA 통합 서비스"""
 
-    COMPILER_SYSTEM_PROMPT = """You are the Dual-Mode Specification Compiler (Node 7) of AbyssEngine.
-Given a baseline character entity (Target Name, Title, Seed Hash, Hard Invariants, Selected Orthogonal Vector),
-compile the full high-precision specification conforming strictly to the 25-Master standards:
+    DIFY_NODE_8_SYSTEM_PROMPT = """[SYSTEM DIRECTIVE: DUAL-MODE RECURSIVE SPEC & GENE SEED COMPILER]
+당신은 승인된 베이스라인의 'domain_mode'와 'seed_hash'에 따라 모드별 맞춤 명세를 컴파일하는 시스템 아키텍트다.
 
-1. 8-Tier Visual DNA:
-   - skeletal: Frame & bone structure (e.g. "슬림하고 단련된 황실 골격, 168cm")
-   - ocular: Pupil/Iris depth & gaze (e.g. "서늘한 백금빛 금안, 좁혀진 동공")
-   - hair: Hair texture, length, style (e.g. "허리까지 내려오는 은발 스트레이트")
-   - somatic: Somatic shape & proportions (e.g. "유려한 쇄골 라인과 섬세한 가슴선")
-   - dermal: Skin texture & moisture (e.g. "서늘하고 창백한 도자기 피부")
-   - apparel: Hard apparel & choker constraints (e.g. "금속 초커와 오프숄더 제복 드레스")
-   - blush: Thermal flush & reaction pattern (e.g. "당황 시 뺨에서 쇄골로 번지는 홍조")
-   - lighting: Contrast & ambient illumination (e.g. "차갑고 날카로운 달빛 음영")
+[GENE SEED 해시 앵커링]
+- approved_baseline에 명시된 `seed_hash`를 캐릭터의 불변 유전자 시드로 선언하고, 상단 메타 헤더에 반드시 박제하라.
 
-2. 17 Universal Somatic & Apparel Tensors (17대 생체·의복 텐서):
-   - Provide concrete descriptive specifications for at least:
-     01_cranial, 02_ocular, 03_oral, 04_cervical_and_choker, 05_clavicle, 06_thoracic, 07_respiratory,
-     08_lumbar, 09_pelvic, 10_digital_extremities, 11_pedal, 12_dermal_texture, 13_thermal_flush,
-     14_apparel_tension, 15_olfactory, 16_visceral, 17_aura.
+[네이밍 절대 수칙]
+- approved_baseline의 target_name / boundary.target_domain에 명시된 캐릭터/시스템 고유 이름을 반드시 그대로 유지하고 계승하라.
 
-3. 70 Universal Personality Genes (7대 차원축 70단계 유전자):
-   - Axis I (1-10): Ego & Power Drive (에고 및 지배욕)
-   - Axis II (11-20): Somatic Vulnerability & Defense (신체 방어선)
-   - Axis III (21-30): Erotic Receptivity (성애 수용도)
-   - Axis IV (31-40): Moral & Ethical Friction (도덕적 마찰/죄책감)
-   - Axis V (41-50): Spatial Intimacy Threshold (공간 친밀도 역치)
-   - Axis VI (51-60): Verbal Reticence & Subversion (언어적 저항/복종)
-   - Axis VII (61-70): Submission Equilibrium (최종 굴종 평형점)
+[신체 운동 연쇄 전이 및 생체 노이즈 헌법 (Kinematic Chain)]
+- `[Kinematic Chain]`: 신체 긴장과 자극이 한 부위(얼굴/목)에만 정체되지 않고, `[시선 ➔ 목/성대 ➔ 흉곽/심박 ➔ 부속기관(꼬리/날개/뿔) ➔ 의복 장력 ➔ 손끝 악력 ➔ 족부 접지력]`으로 파동처럼 전이되는 운동 연쇄 룰을 컴파일하라.
+- `[Deep Gene Cycler]`: 턴이 진행될수록 단순 물리 반사(축 I)에서 심층 사회적 결핍(축 III), 인지 왜곡(축 IV), 그림자 에고 붕괴(축 V), 연금술적 척수 굴종(축 VI)으로 7대 차원축을 심층 순환하라.
+- `[Novelty Re-weighting]`: 직전 턴에 썼던 텐서는 쿨다운(OFF)하고, 아직 조명받지 않은 새로운 텐서(부속기관 마찰, 옷감 솔기 장력 등)를 우선 점등하는 동적 스포트라이트(2~3개 On/Off) 룰을 적용하라.
+- `[Hardcoded Headers]`: `Layer 1`, `Layer 2`, `Layer 3`, `Level 1~3`, `STEP {N}`은 표준 영문/숫자 라벨을 불변 고정 유지하라.
 
-4. 16 RDB Traits & Gauges:
-   - gauges: trust (0-100), eroticism (0-100), shame (-100-100), guilt (0-100), submission (0-100)
-   - traits_list: 3-5 key structured traits (category, details)
+[8-Tier 해부학적 Visual DNA & 단부루 태그 규격]
+1. skeletal: 골격 프레임, 신장(cm), 체형 (예: "172cm 글래머러스한 용족 골격, 거대한 흉곽")
+2. ocular: 동공, 홍채, 시선 깊이 (예: "세로로 찢어진 금빛 슬릿 동공")
+3. hair: 모발 길이, 색상, 결, 뿔/부속기관 (예: "붉게 타오르는 흑적색 웨이브 롱헤어, 붉은 용의 뿔")
+4. somatic: 신체 실루엣, 쇄골, 가슴선, 꼬리 (예: "터질 듯한 흉곽과 꿈틀거리는 용의 꼬리")
+5. dermal: 표피 질감, 피부톤, 비늘/핏줄 (예: "창백한 살결 위에 돋아난 붉은 용의 비늘 질감")
+6. apparel: 의복 장력, 초커, 속옷, 찢김 (예: "가슴골이 깊게 파인 찢겨진 드레스, 서늘한 금속 초커")
+7. blush: 열역학적 체온 상승 및 홍조 경로 (예: "수치와 흥분 시 쇄골과 가슴골로 번지는 고열 홍조")
+8. lighting: 광원 대비 및 어둠의 명암비 (예: "어두운 밀실의 짙은 음영과 등 뒤의 붉은 잔광")
 
-Return ONLY valid JSON matching this structure:
+[출력 JSON 포맷]
 {
-  "visual_dna": { ... 8 tiers ... },
-  "tensors_17": { ... 17 tensor strings ... },
-  "genes_70": { "gene_01": "...", ... "gene_70": "..." },
+  "target_name": "확정된 고유 캐릭터 명칭",
+  "seed_hash": "확정된 GENE SEED 해시",
+  "visual_dna": {
+    "skeletal": "골격 및 체형",
+    "ocular": "동공 및 안광",
+    "hair": "모발 및 뿔/헤어",
+    "somatic": "체형 및 가슴선/꼬리",
+    "dermal": "피부 톤 및 비늘/표피",
+    "apparel": "의복 및 초커",
+    "blush": "홍조 및 체온 전이 경로",
+    "lighting": "광원 대비"
+  },
+  "tensors_17": {
+    "01_cranial": "두부 및 뿔 긴장",
+    "04_cervical_and_choker": "목덜미 및 초커 압박",
+    "06_thoracic": "흉곽의 거친 승강 및 가슴골 마찰",
+    "09_pelvic": "골반 및 꼬리의 꿈틀거림",
+    "13_thermal_flush": "고열 홍조 및 땀방울"
+  },
+  "genes_70": {
+    "axis_1_physical_reflex": "축 I: 물리적 역린 반사",
+    "axis_3_social_deficit": "축 III: 종족의 멸망과 고립 결핍",
+    "axis_5_shadow_ego": "축 V: 지배당하고 싶은 암컷의 그림자 에고",
+    "axis_6_alchemy_submission": "축 VI: 척수 굴종 및 체온 동조"
+  },
   "traits": {
-    "archetype_class": "...",
-    "stage_progression": "Stage 1",
+    "archetype_class": "Rigid / Endurer / Controller / Deprived 중 택1",
+    "stage_progression": "Stage 1 (침실 개방 - 포섭된 요새와 결벽)",
     "gauges": { "trust": 20, "eroticism": 0, "shame": -30, "guilt": 15, "submission": 20 },
     "traits_list": [
-      { "category": "신체/의복", "details": "..." },
-      { "category": "결핍/서약", "details": "..." },
-      { "category": "감각/반사", "details": "..." }
+      { "category": "외모 & 체형", "details": "요약" },
+      { "category": "핵심 결핍 & 트라우마", "details": "요약" },
+      { "category": "은밀한 비밀 & 약점", "details": "요약" }
     ]
   }
-}"""
+}
+"""
 
     def __init__(self, llm_client: MultiLLMClient | None = None):
         self.llm = llm_client or MultiLLMClient()
 
-    def compile_spec(self, target_name: str, title: str, seed_hash: str, hard_invariants: List[str], selected_vector: Dict[str, Any]) -> Dict[str, Any]:
-        """Dify Node 7: 8-Tier DNA, 17대 텐서, 70단계 유전자 종합 컴파일"""
-        user_prompt = f"""Target Name: {target_name}
-Title: {title}
-Seed Hash: {seed_hash}
-Hard Invariants: {json.dumps(hard_invariants, ensure_ascii=False)}
-Selected Orthogonal Vector: {json.dumps(selected_vector, ensure_ascii=False)}
+    def compile_spec(
+        self,
+        target_name: str,
+        title: str,
+        seed_hash: str,
+        hard_invariants: List[str],
+        selected_vector: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Dify Node 8 헌법에 따른 완전한 8-Tier Visual DNA 및 70-Gene 스펙 컴파일"""
+        user_prompt = f"""<approved_baseline>
+{{
+  "target_name": "{target_name}",
+  "title": "{title}",
+  "seed_hash": "{seed_hash}",
+  "hard_invariants": {json.dumps(hard_invariants, ensure_ascii=False)},
+  "selected_vector": {json.dumps(selected_vector, ensure_ascii=False)}
+}}
+</approved_baseline>
 
-Compile the complete 8-Tier Visual DNA, 17 Somatic Tensors, 70 Personality Genes, and Structured Traits now."""
+위 승인된 베이스라인에 맞추어, GENE SEED 해시 박제, 신체 운동 연쇄 전이(Kinematic Chain), 8-Tier Visual DNA, 7대 축 인격 유전자 JSON을 컴파일하라."""
 
         try:
             response_text = self.llm.generate(
-                system_prompt=self.COMPILER_SYSTEM_PROMPT,
+                system_prompt=self.DIFY_NODE_8_SYSTEM_PROMPT,
                 user_prompt=user_prompt,
                 max_tokens=4096
             )
@@ -100,50 +124,55 @@ Compile the complete 8-Tier Visual DNA, 17 Somatic Tensors, 70 Personality Genes
                 clean = re.sub(r"\n?```$", "", clean).strip()
             data = json.loads(clean)
         except Exception as e:
-            print(f"[SpecCompilerService] LLM compile failed: {e}. Using deterministic fallback.")
+            print(f"[SpecCompilerService] Dify Node 8 LLM compile failed: {e}. Using deterministic fallback.")
             data = self._fallback_compilation(target_name, title, seed_hash, hard_invariants, selected_vector)
 
-        # 6-Slot Danbooru 태그 자동 조립
+        # 8-Tier Visual DNA 객체화 및 6-Slot Danbooru 태그 조립
         v_dna_dict = data.get("visual_dna", {})
         visual_dna = VisualDNA.from_dict(v_dna_dict)
         pos_tag, neg_tag = VisualCompiler.compile_danbooru_prompt(target_name, visual_dna)
+        
+        # 만약 캐릭터 컨셉에 '드래곤', '용', '거대한 가슴' 등이 포함되어 있다면 Danbooru 태그에 적극 반영
+        combined_text = f"{target_name} {title} {str(hard_invariants)} {str(selected_vector)}"
+        if any(w in combined_text for w in ["용", "드래곤", "dragon"]):
+            pos_tag = pos_tag.replace("1girl,", "1girl, dragon_girl, dragon_horns, dragon_tail,")
+        if any(w in combined_text for w in ["가슴", "거유", "huge", "breasts", "cleavage", "육감"]):
+            pos_tag = pos_tag.replace("1girl,", "1girl, massive_breasts, cleavage,")
+
+        data["visual_dna"] = visual_dna.to_dict()
         data["danbooru_prompt"] = {
             "positive": pos_tag,
             "negative": neg_tag
         }
+        data["target_name"] = target_name
+        data["seed_hash"] = seed_hash
+        data["title"] = title
 
         return data
 
     def _fallback_compilation(self, target_name: str, title: str, seed_hash: str, hard_invariants: List[str], selected_vector: Dict[str, Any]) -> Dict[str, Any]:
-        """LLM 오프라인 시 결정론적 기본 컴파일"""
-        v_dna = {
-            "skeletal": f"슬림하고 우아한 골격, 167cm, {selected_vector.get('vector_name', '정통파')}",
-            "ocular": "서늘한 백금빛 금안, 좁혀진 동공",
-            "hair": "허리까지 단정히 내려오는 은발 스트레이트",
-            "somatic": "선명한 쇄골 라인과 균형 잡힌 신체 비율",
-            "dermal": "서늘하고 창백한 도자기 피부",
-            "apparel": "단단한 은제 초커와 오프숄더 제복 드레스",
-            "blush": "동요 시 뺨과 쇄골에 스며드는 은은한 홍조",
-            "lighting": "차가운 달빛과 짙은 음영의 대비"
-        }
-
-        genes = {f"gene_{i:02d}": f"차원축 70단계 유전자 {i}번 발현 상태" for i in range(1, 71)}
-        tensors = {f"tensor_{i:02d}": f"17대 생체·의복 텐서 {i}번 매핑" for i in range(1, 18)}
-
-        traits = {
-            "archetype_class": f"Rigid ({target_name})",
-            "stage_progression": "Stage 1 (초기 경계)",
-            "gauges": {"trust": 20, "eroticism": 0, "shame": -30, "guilt": 15, "submission": 20},
-            "traits_list": [
-                {"category": "신체/의복", "details": v_dna["apparel"]},
-                {"category": "결핍/서약", "details": hard_invariants[0] if hard_invariants else "불변의 가문 명예"},
-                {"category": "감각/반사", "details": "접촉 시 신체 긴장 및 척추 경직"}
-            ]
-        }
-
+        """결정론적 기본 컴파일"""
         return {
-            "visual_dna": v_dna,
-            "tensors_17": tensors,
-            "genes_70": genes,
-            "traits": traits
+            "target_name": target_name,
+            "seed_hash": seed_hash,
+            "visual_dna": {
+                "skeletal": f"슬림하고 우아한 골격, 168cm, {selected_vector.get('label', '정통파')}",
+                "ocular": "서늘한 금빛 홍채와 좁혀진 동공",
+                "hair": "허리까지 내려오는 은빛 스트레이트 롱헤어",
+                "somatic": "도드라진 쇄골 라인과 섬세한 가슴선",
+                "dermal": "서늘하고 창백한 도자기 피부",
+                "apparel": "차가운 금속 초커와 오프숄더 실크 드레스",
+                "blush": "수치 시 쇄골 패임으로 번지는 붉은 열감",
+                "lighting": "어두운 밀실의 짙은 명암 대비"
+            },
+            "traits": {
+                "archetype_class": selected_vector.get("armor_type", "Rigid"),
+                "stage_progression": "Stage 1",
+                "gauges": {"trust": 20, "eroticism": 0, "shame": -30, "guilt": 15, "submission": 20},
+                "traits_list": [
+                    {"category": "외모 & 체형", "details": "은발 금안, 도드라진 쇄골"},
+                    {"category": "결핍 & 트라우마", "details": hard_invariants[0] if hard_invariants else "가문의 부채"},
+                    {"category": "은밀한 약점", "details": "초커 부근의 체온 접촉"}
+                ]
+            }
         }
