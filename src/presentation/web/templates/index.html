@@ -1,279 +1,759 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>심연의 혈통 : 침식의 제국 — AbyssEngine Studio</title>
-  <link rel="stylesheet" href="/static/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👑 심연의 혈통 : 침식의 제국 &bull; 마스터 스튜디오</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#090a10',
+                        panelBg: '#121420',
+                        cardBorder: '#23273c',
+                        neonPurple: '#a855f7',
+                        neonPink: '#ec4899',
+                        neonGold: '#f59e0b'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        body { font-family: 'Pretendard', sans-serif; background: #090a10; color: #f1f5f9; }
+        .glass-panel { background: rgba(18, 20, 32, 0.92); backdrop-filter: blur(16px); border: 1px solid #23273c; }
+        .portal-card:hover { transform: translateY(-4px); border-color: #a855f7; box-shadow: 0 12px 30px rgba(168, 85, 247, 0.25); }
+        .prose-text p { margin-bottom: 0.95rem; line-height: 1.85; }
+        .prose-text strong { color: #f472b6; font-weight: 700; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #090a10; }
+        ::-webkit-scrollbar-thumb { background: #23273c; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a855f7; }
+    </style>
 </head>
-<body>
+<body class="h-screen flex flex-col justify-between overflow-hidden">
 
-  <!-- Top Navigation Header -->
-  <header class="top-nav">
-    <div class="brand-container" id="btn-nav-lobby">
-      <span class="brand-icon">👑</span>
-      <div>
-        <span class="brand-title">심연의 혈통 : 침식의 제국</span>
-        <span class="brand-sub">Enterprise Recursive Narrative Engine • Gemini 3.6 / Claude 3.7</span>
-      </div>
-    </div>
-    <div class="top-actions">
-      <span class="pill-badge" id="top-config-badge">CLAUDE 3.7 (ONLINE)</span>
-    </div>
-  </header>
-
-  <main class="app-container">
-
-    <!-- =============================================================
-         VIEW 1: Main Lobby Hub
-         ============================================================= -->
-    <section class="view-section active" id="view-lobby">
-      <div class="lobby-grid">
+    <!-- ========================================== -->
+    <!-- 1. [VIEW 1 : MAIN HUB / LOBBY (메인 로비)] -->
+    <!-- ========================================== -->
+    <div id="viewMainHub" class="flex-1 flex flex-col justify-between p-6 md:p-10 max-w-6xl mx-auto w-full overflow-y-auto">
         
-        <!-- Left Hero Section -->
-        <div class="hero-left">
-          <div class="hero-badge">✨ Next-Gen Persona & Narrative Architecture</div>
-          <h1 class="hero-title">
-            가장 완벽한 인격과의 조우,<br>
-            <span class="gradient">한계를 넘는 서사의 심연.</span>
-          </h1>
-          <p class="hero-sub">
-            17대 생체 텐서와 3계층 신경·메모리 원장으로 구동되는 독점 서사 엔진입니다.<br>
-            당신만의 고유한 인격을 포착하고, 숨 막히는 1:1 롤플레이에 몰입하세요.
-          </p>
+        <!-- Header Brand -->
+        <header class="flex items-center justify-between pb-6 border-b border-cardBorder">
+            <div class="flex items-center space-x-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 via-pink-500 to-amber-400 flex items-center justify-center shadow-xl">
+                    <i class="fa-solid fa-crown text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black tracking-wide bg-gradient-to-r from-purple-400 via-pink-300 to-amber-300 bg-clip-text text-transparent">
+                        심연의 혈통 : 침식의 제국
+                    </h1>
+                    <p class="text-xs text-gray-400 font-medium">Enterprise Recursive Narrative Engine &bull; Gemini 2.5 Flash / Claude 3.7</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="openLlmSettingsModal()" title="LLM 모델 및 프로바이더 설정" class="px-3.5 py-1.5 bg-gray-900/90 hover:bg-purple-950/80 border border-purple-600/50 text-purple-200 rounded-xl text-xs font-bold transition flex items-center gap-2 shadow-sm hover:scale-105 active:scale-95">
+                    <span id="hubLlmDot" class="w-2 h-2 rounded-full bg-pink-400 animate-pulse"></span>
+                    <span id="hubLlmLabel">Claude 3.7 / Gemini</span>
+                    <i class="fa-solid fa-gear text-purple-400 text-[11px]"></i>
+                </button>
+            </div>
+        </header>
 
-          <div class="portal-cards-grid">
-            <!-- Play Room Card -->
-            <div class="portal-card">
-              <div class="portal-card-header">
-                <div class="portal-card-icon">🎭</div>
-                <div class="portal-card-title">Play Room</div>
-              </div>
-              <div class="portal-card-desc">현재 상주 중인 캐릭터와 1:1 실시간 롤플레이 서사에 돌입합니다.</div>
-              <div class="portal-card-actions">
-                <button class="btn btn-primary" id="btn-portal-play">▶ Play Room 입장</button>
-                <button class="btn" id="btn-lobby-switch">👥 캐릭터 교체</button>
-              </div>
+        <!-- Main Hero & Active Character Card -->
+        <div class="my-auto py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <!-- Left Hero Intro (7 cols) -->
+            <div class="lg:col-span-7 space-y-6">
+                <div class="inline-block px-3.5 py-1 bg-purple-950/70 border border-purple-800/50 rounded-full text-xs font-extrabold text-purple-300">
+                    ✨ Next-Gen Persona & Narrative Architecture
+                </div>
+                <h2 class="text-3xl md:text-5xl font-black text-white leading-tight tracking-tight">
+                    가장 완벽한 인격과의 조우,<br>
+                    <span class="bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-300 bg-clip-text text-transparent">
+                        한계를 넘는 서사의 심연.
+                    </span>
+                </h2>
+                <p class="text-sm text-gray-400 leading-relaxed max-w-xl">
+                    17대 생체 텐서와 3계층 신경·메모리 원장으로 구동되는 독립 조립형 서사 엔진입니다.<br>
+                    당신만의 고유한 인격을 조각하고, 숨 막히는 1:1 롤플레이에 몰입하세요.
+                </p>
+
+                <!-- 3 Main Action Portals -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    <div class="portal-card glass-panel rounded-2xl p-5 text-left transition duration-200 border border-purple-900/60 group bg-gradient-to-br from-purple-950/30 to-transparent flex flex-col justify-between">
+                        <div>
+                            <div class="w-10 h-10 rounded-xl bg-purple-600/30 border border-purple-500/40 flex items-center justify-center text-purple-300 mb-3 group-hover:bg-purple-600 group-hover:text-white transition shadow-md">
+                                <i class="fa-solid fa-masks-theater text-lg"></i>
+                            </div>
+                            <h3 class="text-base font-extrabold text-white mb-1 flex items-center gap-1.5">
+                                Play Room
+                            </h3>
+                            <p class="text-xs text-gray-400 leading-snug mb-4">현재 상주 중인 캐릭터와 1:1 실시간 롤플레이 세션에 돌입합니다.</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="switchView('ROLEPLAY')" class="flex-1 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-xl text-xs font-bold transition shadow flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-play text-[10px]"></i> Play Room 입장
+                            </button>
+                            <button onclick="openCharListModal()" title="플레이할 캐릭터 교체" class="px-3 py-2.5 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-amber-300 hover:text-white rounded-xl text-xs font-bold transition flex items-center gap-1">
+                                <i class="fa-solid fa-users text-[10px]"></i> 교체
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="portal-card glass-panel rounded-2xl p-5 text-left transition duration-200 border border-pink-900/60 group bg-gradient-to-br from-pink-950/30 to-transparent flex flex-col justify-between">
+                        <div>
+                            <div class="w-10 h-10 rounded-xl bg-pink-600/30 border border-pink-500/40 flex items-center justify-center text-pink-300 mb-3 group-hover:bg-pink-600 group-hover:text-white transition shadow-md">
+                                <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
+                            </div>
+                            <h3 class="text-base font-extrabold text-white mb-1 flex items-center gap-1.5">
+                                Character Studio
+                            </h3>
+                            <p class="text-xs text-gray-400 leading-snug mb-4">RDB 캐릭터 보관소, 유전자 튜닝 및 JSON/프롬프트 추출을 관리합니다.</p>
+                        </div>
+                        <button onclick="switchView('WORKSHOP')" class="w-full py-2.5 bg-gradient-to-r from-purple-900/80 to-pink-900/80 hover:from-purple-800 hover:to-pink-800 border border-pink-600/50 text-pink-200 hover:text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
+                            <i class="fa-solid fa-wand-magic-sparkles text-[10px] text-pink-400"></i> Character Studio 입장 &rarr;
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            <!-- Character Studio Card -->
-            <div class="portal-card">
-              <div class="portal-card-header">
-                <div class="portal-card-icon">🪄</div>
-                <div class="portal-card-title">Character Studio</div>
-              </div>
-              <div class="portal-card-desc">RDB 캐릭터 보관소, 유전자 튜닝 및 JSON/프롬프트 사출을 관리합니다.</div>
-              <div class="portal-card-actions">
-                <button class="btn btn-purple" id="btn-portal-vault">🪄 Character Studio 입장 →</button>
-              </div>
+            <!-- Right Active Character Spotlight (5 cols) -->
+            <div class="lg:col-span-5">
+                <div class="glass-panel rounded-3xl p-6 border border-purple-800/40 shadow-2xl relative overflow-hidden bg-gradient-to-b from-gray-900/90 to-cardBg">
+                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-purple-600/15 rounded-full blur-3xl pointer-events-none"></div>
+                    
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[11px] font-extrabold text-purple-400 tracking-wider uppercase flex items-center gap-1">
+                            <i class="fa-solid fa-anchor"></i> ACTIVE PERSONA
+                        </span>
+                        <span id="hubCharSeed" class="text-xs font-mono text-amber-400 bg-amber-950/40 px-2 py-0.5 rounded border border-amber-500/30">#SEED</span>
+                    </div>
+
+                    <!-- AI FLUX / Illustrious 일러스트 액자 -->
+                    <div class="relative w-full h-80 sm:h-96 rounded-2xl overflow-hidden border border-purple-500/40 mb-4 bg-gray-950 flex items-center justify-center group shadow-2xl">
+                        <img id="hubCharImg" src="" alt="Persona Portrait" class="hidden w-full h-full object-cover object-[center_18%] transition duration-500 group-hover:scale-105 cursor-pointer" onclick="openFullImageViewer(this.src)" title="클릭하여 원본 크기 확대 보기">
+
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-950/85 via-transparent to-black/20 pointer-events-none"></div>
+
+                        <div id="hubCharImgPlaceholder" class="w-full h-full bg-gradient-to-tr from-purple-950/80 via-gray-950 to-pink-950/80 flex flex-col items-center justify-center p-6 text-center z-10">
+                            <i class="fa-solid fa-wand-magic-sparkles text-4xl text-purple-400/70 mb-3 animate-pulse"></i>
+                            <span class="text-sm font-black text-white">유전자 기반 AI 비주얼</span>
+                            <span class="text-xs text-gray-400 mt-1">Illustrious-XL / FLUX 6-Slot 단부루 태그 연동</span>
+                        </div>
+
+                        <div class="absolute top-2.5 left-2.5 z-20 px-2 py-0.5 bg-black/70 backdrop-blur-md rounded-lg border border-purple-500/30 text-[10px] text-purple-300 font-mono flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
+                            <i class="fa-solid fa-magnifying-glass-plus"></i> 클릭하여 확대
+                        </div>
+
+                        <div class="absolute bottom-2.5 right-2.5 z-20 flex items-center gap-1.5 bg-black/90 backdrop-blur-md p-1.5 rounded-2xl border border-purple-500/60 shadow-2xl">
+                            <button onclick="openCustomImageUrlModal('file')" title="이미지 파일 직접 업로드 / URL 등록" class="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-amber-300 hover:text-white rounded-xl text-xs font-bold border border-gray-700 transition flex items-center gap-1.5 hover:scale-105 active:scale-95">
+                                <i class="fa-solid fa-folder-open text-xs"></i> <span>업로드</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1 mb-4">
+                        <div class="flex items-center gap-2">
+                            <span id="hubCharTitle" class="text-xs text-purple-300 font-semibold px-2.5 py-0.5 bg-purple-950/80 rounded-full border border-purple-800/50">동기화 중...</span>
+                            <span id="hubCharArmor" class="text-xs text-gray-300 font-bold flex items-center gap-1"><i class="fa-solid fa-shield text-purple-400"></i> 갑주 동기화</span>
+                        </div>
+                        <h3 id="hubCharName" class="text-2xl font-black text-white">상주 인격 로딩 중...</h3>
+                    </div>
+
+                    <!-- 고유 헌법 & 결핍 비주얼 카드 -->
+                    <div id="hubCharTraits" class="bg-gray-950/80 rounded-2xl p-3.5 border border-gray-800/80 space-y-2 text-xs mb-5 max-h-48 overflow-y-auto pr-1">
+                        <!-- Injected via JS -->
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button onclick="switchView('ROLEPLAY')" class="flex-1 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-xl text-xs font-black transition shadow-lg flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-play"></i> Play Room 입장
+                        </button>
+                        <button onclick="openCharListModal()" title="상주 캐릭터 교체" class="px-3.5 py-3 bg-purple-950/80 hover:bg-purple-900 border border-purple-600/50 text-amber-300 hover:text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow">
+                            <i class="fa-solid fa-users text-amber-300"></i> 교체
+                        </button>
+                        <button onclick="switchView('WORKSHOP')" title="Character Studio로 입장" class="px-3.5 py-3 bg-gray-800 hover:bg-gray-700 text-purple-300 hover:text-white rounded-xl text-xs font-bold transition border border-gray-700 flex items-center gap-1.5">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Studio 입장
+                        </button>
+                    </div>
+                </div>
             </div>
-          </div>
+
         </div>
-
-        <!-- Right Active Persona Card -->
-        <div class="active-persona-card">
-          <div class="active-persona-header">
-            <span style="font-weight: 700; font-size: 0.85rem; color: var(--text-muted);">ACTIVE PERSONA</span>
-            <span class="pill-badge amber" id="lobby-seed-badge">#LILI-70G-BFFF</span>
-          </div>
-
-          <div class="portrait-frame">
-            <img id="lobby-portrait-img" src="" alt="Portrait" style="display: none;">
-            <div class="portrait-placeholder" id="lobby-portrait-placeholder">
-              <span style="font-size: 3.5rem;">👑</span>
-              <span style="font-size: 0.9rem; font-weight: 600;">8-Tier Visual DNA Frame</span>
-            </div>
-            <div class="portrait-actions-overlay">
-              <button class="btn btn-sm btn-purple" id="btn-lobby-generate-danbooru">🪄 생성</button>
-            </div>
-          </div>
-
-          <div>
-            <div style="font-size: 1.35rem; font-weight: 800;" id="lobby-char-name">릴리스</div>
-            <div style="font-size: 0.85rem; color: var(--text-pink);" id="lobby-char-title">제1황녀 • 제국 황실 | Rigid (결벽주의 척추 방어)</div>
-          </div>
-
-          <div class="trait-rows-container" id="lobby-traits-container">
-            <!-- Dynamic Trait Rows -->
-          </div>
-
-          <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
-            <button class="btn btn-primary" style="flex: 1;" onclick="App.switchView('play')">▶ Play Room 입장</button>
-            <button class="btn" onclick="App.switchView('vault')">👥 교체</button>
-            <button class="btn" onclick="App.switchView('vault')">🪄 Studio 입장</button>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- =============================================================
-         VIEW 2: Play Room Theater
-         ============================================================= -->
-    <section class="view-section" id="view-play">
-      <div class="play-header">
-        <div class="play-header-left">
-          <button class="btn btn-sm" id="btn-play-lobby">← Lobby</button>
-          <div>
-            <span style="font-weight: 800; font-size: 1.05rem;" id="play-char-name">릴리스</span>
-            <span class="pill-badge" id="play-char-seed" style="margin-left: 0.5rem;">#LILI-70G-BFFF</span>
-            <span class="pill-badge emerald" id="play-stage-badge" style="margin-left: 0.3rem;">Stage 1</span>
-          </div>
-        </div>
-
-        <div class="gauge-bar-group">
-          <span class="pill-badge" id="gauge-trust">신뢰 20%</span>
-          <span class="pill-badge rose" id="gauge-eroticism">성애 0%</span>
-          <span class="pill-badge amber" id="gauge-shame">수치심 -30</span>
-          <span class="pill-badge" id="gauge-guilt">죄책감 15%</span>
-          <span class="pill-badge emerald" id="gauge-submission">굴종 20%</span>
-        </div>
-
-        <div style="display: flex; gap: 0.4rem;">
-          <button class="btn btn-sm" id="btn-play-switch">👥 캐릭터 교체</button>
-          <button class="btn btn-sm" id="btn-play-undo">↺ Undo</button>
-          <button class="btn btn-sm" id="btn-play-reset" style="color: #f43f5e;">🗑️ Reset</button>
-        </div>
-      </div>
-
-      <!-- Main Chat Narrative Stream -->
-      <div class="chat-theater" id="chat-stream">
-        <!-- Dynamic Turn Bubbles -->
-      </div>
-
-      <!-- 5 Categorized Tactical Action Chips -->
-      <div class="tactical-chips-bar">
-        <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; white-space: nowrap;">⚡ 실시간 전술 선택지:</span>
-        <button class="tactical-chip" data-stimulus="순애" data-action-text="차분한 위로 (상대의 손을 두 손으로 감싸 쥐어 따스한 체온을 전하며 안도시킨다)">🌟 [순애] 차분한 위로</button>
-        <button class="tactical-chip" data-stimulus="압박" data-action-text="턱선 치켜올리기 (턱선을 강하게 움켜쥐며 턱을 치켜올려 내게 마주보도록 요구한다)">⚡ [압박] 턱선 치켜올리기</button>
-        <button class="tactical-chip" data-stimulus="탐색" data-action-text="호흡 및 체온 동조 (나란히 앉아 서로의 은밀한 온기와 호흡을 맞춘다)">🌊 [탐색] 호흡·체온 동조</button>
-        <button class="tactical-chip" data-stimulus="제압" data-action-text="어깨 긴장 완화 (단단하게 굳은 어깨를 지그시 주무르며 서서히 신체 긴장을 이완시킨다)">⚡ [제압] 어깨 긴장 완화</button>
-        <button class="tactical-chip" data-stimulus="유혹" data-action-text="금속 초커 자극 (목에 건 차가운 금속 초커 가장자리를 손가락으로 쓸어내린다)">🔥 [유혹] 금속 초커 자극</button>
-      </div>
-
-      <!-- Natural Action Input Form -->
-      <div class="chat-input-form">
-        <textarea class="chat-textarea" id="chat-input" placeholder="당신의 행동이나 대사를 자유롭게 입력하세요... (Enter 전송 / Shift+Enter 줄바꿈)"></textarea>
-        <button class="btn btn-primary" id="btn-send-turn">전송 🚀</button>
-      </div>
-    </section>
-
-    <!-- =============================================================
-         VIEW 3: Character Studio & Vault
-         ============================================================= -->
-    <section class="view-section" id="view-vault">
-      <div class="vault-header-bar">
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
-          <button class="btn btn-sm" id="btn-vault-lobby">← Lobby</button>
-          <span style="font-weight: 800; font-size: 1.15rem;">🪄 Character Studio & Vault</span>
-        </div>
-        <div style="display: flex; gap: 0.5rem;">
-          <button class="btn btn-primary" id="btn-vault-create">+ 1. 생성</button>
-        </div>
-      </div>
-
-      <!-- Search & Archetype Filters -->
-      <div class="vault-search-filter">
-        <div class="search-input-wrapper">
-          <input type="text" class="search-input" placeholder="이름, 칭호, 라이브러리, 결핍/약점 검색...">
-        </div>
-        <div class="filter-pills">
-          <button class="filter-pill active" onclick="VaultView.setFilter('전체')">전체</button>
-          <button class="filter-pill" onclick="VaultView.setFilter('Rigid')">Rigid</button>
-          <button class="filter-pill" onclick="VaultView.setFilter('Endurer')">Endurer</button>
-          <button class="filter-pill" onclick="VaultView.setFilter('Controller')">Controller</button>
-          <button class="filter-pill" onclick="VaultView.setFilter('Deprived')">Deprived</button>
-        </div>
-      </div>
-
-      <!-- 4-Column Character Grid -->
-      <div class="character-grid" id="vault-character-grid">
-        <!-- Dynamic Character Cards -->
-      </div>
-
-      <!-- Bottom Detailed Inspector Panel -->
-      <div class="vault-inspector-panel" id="vault-inspector-body">
-        <!-- Dynamic Inspector Content -->
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="global-footer">
-    © 2026 Abyss Engine • Enterprise 25-Master Architecture | Released under the MIT License
-  </footer>
-
-  <!-- =============================================================
-       Modals
-       ============================================================= -->
-  <!-- Danbooru Tags Modal -->
-  <div class="modal-backdrop" id="danbooru-modal">
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <div class="modal-title">🪄 Illustrious-XL 6-Slot Danbooru Prompt</div>
-        <button class="modal-close" onclick="Modal.close('danbooru-modal')">✕</button>
-      </div>
-      <div id="danbooru-modal-body"></div>
-    </div>
-  </div>
-
-  <!-- Prompt Modal -->
-  <div class="modal-backdrop" id="prompt-modal">
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <div class="modal-title">📋 25대 마스터 시스템 프롬프트</div>
-        <button class="modal-close" onclick="Modal.close('prompt-modal')">✕</button>
-      </div>
-      <div id="prompt-modal-body"></div>
-    </div>
-  </div>
-
-  <!-- Character Creation Modal (HITL 2단계 결재선) -->
-  <div class="modal-backdrop" id="create-character-modal">
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <div class="modal-title">✨ 고유 인격체 발현기 (HITL 2단계 결재)</div>
-        <button class="modal-close" onclick="Modal.close('create-character-modal')">✕</button>
-      </div>
-      
-      <!-- Step 1: Concept Input -->
-      <div id="create-step-1" style="display: flex; flex-direction: column; gap: 1rem;">
-        <label style="font-size: 0.85rem; color: var(--text-secondary);">원하는 여성 캐릭터의 이름, 세계관, 신분, 결벽증 또는 성적/신체적 결핍을 자연어로 적어주세요:</label>
-        <textarea id="create-concept-input" style="width: 100%; height: 120px; background: #0f111c; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #f1f5f9; padding: 0.75rem; font-size: 0.9rem; resize: none;" placeholder="예: 제국의 차가운 은룡 황녀 '실비아', 가문의 멸망과 막대한 부채를 갚기 위해 순결 서약을 맺고 목에 은색 초커를 채운 채 침실에 상주하고 있다."></textarea>
-        <button class="btn btn-primary" id="btn-start-classify" onclick="App.handleStartClassification()">1. 제약선 & 2대 직교 궤적 역산 시작</button>
-      </div>
-
-      <!-- Step 2: Checkpoint 1 (V1 vs V2 Selection) -->
-      <div id="create-step-2" style="display: none; flex-direction: column; gap: 1rem;">
-        <div style="font-size: 0.9rem; font-weight: 700; color: #c084fc;" id="cp1-char-info"></div>
-        <div style="background: #0f111c; padding: 0.75rem; border-radius: 8px; font-size: 0.8rem; color: var(--text-secondary);">
-          <strong>[역산된 불변 제약선]</strong>
-          <ul id="cp1-invariants-list" style="margin-left: 1.2rem; margin-top: 0.3rem;"></ul>
-        </div>
-        <label style="font-size: 0.85rem; font-weight: 700;">상호 직교하는 2대 서사 전개 궤적 중 하나를 결재하십시오:</label>
-        <div id="cp1-vectors-container" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
-      </div>
-
-      <!-- Step 3: Checkpoint 2 (Review 8-Tier DNA & 70-Gene Spec & Final Apply) -->
-      <div id="create-step-3" style="display: none; flex-direction: column; gap: 1rem;">
-        <div style="font-size: 0.95rem; font-weight: 800; color: #38bdf8;" id="cp2-title">📋 Checkpoint 2: 8-Tier DNA & 70-Gene 스펙 검토</div>
-        <div id="cp2-summary-box" style="background: #0f111c; padding: 0.75rem; border-radius: 8px; font-size: 0.8rem; max-height: 220px; overflow-y: auto; color: var(--text-secondary); line-height: 1.4;">
-        </div>
-        <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
-          <button class="btn btn-primary" id="btn-cp2-apply" onclick="App.handleFinalApply()" style="flex: 1;">👑 [APPLY] 25대 마스터 헌법 합성 및 발현 인가</button>
-          <button class="btn" onclick="App.openCreateModal()">↺ 처음부터</button>
-        </div>
-      </div>
 
     </div>
-  </div>
 
-  <!-- Scripts -->
-  <script src="/static/js/api.js"></script>
-  <script src="/static/js/components/modal.js"></script>
-  <script src="/static/js/views/lobby.js"></script>
-  <script src="/static/js/views/play.js"></script>
-  <script src="/static/js/views/vault.js"></script>
-  <script src="/static/js/app.js"></script>
+    <!-- ============================================== -->
+    <!-- 2. [VIEW 2 : PLAY ROOM (실시간 롤플레이 룸)] -->
+    <!-- ============================================== -->
+    <div id="viewRoleplay" class="hidden flex-1 flex flex-col justify-between overflow-hidden">
+        
+        <!-- Play Room Top Bar -->
+        <header class="glass-panel px-6 py-3.5 flex items-center justify-between border-b border-cardBorder z-10 shadow-lg">
+            <div class="flex items-center space-x-4">
+                <button onclick="switchView('MAIN')" class="px-3 py-1.5 bg-gray-800/90 hover:bg-gray-700 text-gray-200 rounded-xl text-xs font-bold border border-cardBorder transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-arrow-left text-purple-400"></i> Lobby
+                </button>
+                <div class="h-5 w-px bg-cardBorder"></div>
+                <div>
+                    <div class="flex items-center gap-2.5">
+                        <h2 id="rpCharName" class="text-base font-extrabold text-white">상주 인격 동기화 중...</h2>
+                        <span id="rpCharTitle" class="text-[11px] text-purple-300 bg-purple-950/70 border border-purple-800/40 px-2 py-0.5 rounded-full font-medium">동기화 중...</span>
+                        <span id="rpCharSeed" class="text-[10px] font-mono text-amber-400/90 bg-amber-950/40 border border-amber-500/30 px-1.5 py-0.5 rounded">#SEED</span>
+                    </div>
+                    <div class="flex items-center gap-2.5 text-[11px] text-gray-400 mt-1 flex-wrap">
+                        <span id="rpCharArmor"><i class="fa-solid fa-shield text-purple-400 mr-1"></i>갑주 동기화</span>
+                        <span class="text-gray-600">&bull;</span>
+                        <span id="rpCharStage" class="text-pink-300 font-medium">압력 단계</span>
+                        <span class="text-gray-600">&bull;</span>
+                        <span id="rpTensorSummary" class="text-purple-300">#텐서 로딩</span>
+                        <span class="text-gray-600">&bull;</span>
+                        <span id="rp5DStatus" class="flex items-center gap-1 text-[10px]">
+                            <span id="badgeTrust" class="px-1.5 py-0.5 bg-emerald-950/80 text-emerald-300 border border-emerald-800/50 rounded font-medium">🌸 신뢰 --</span>
+                            <span id="badgeErotic" class="px-1.5 py-0.5 bg-pink-950/80 text-pink-300 border border-pink-800/50 rounded font-medium">🔥 성애 --</span>
+                            <span id="badgeDom" class="px-1.5 py-0.5 bg-purple-950/80 text-purple-300 border border-purple-800/50 rounded font-medium">👑 주도권 --</span>
+                            <span id="badgeTaboo" class="px-1.5 py-0.5 bg-amber-950/80 text-amber-300 border border-amber-800/50 rounded font-medium">⛓️ 배덕 --</span>
+                            <span id="badgeVuln" class="px-1.5 py-0.5 bg-red-950/80 text-red-300 border border-red-800/50 rounded font-medium">🩸 결핍 --</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="flex items-center space-x-2">
+                <button onclick="openLlmSettingsModal()" title="LLM 모델 & 프로바이더 설정" class="px-3 py-1.5 bg-purple-950/80 hover:bg-purple-900 border border-purple-600/50 text-purple-200 rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+                    <span id="rpLlmDot" class="w-2 h-2 rounded-full bg-pink-400 animate-pulse"></span>
+                    <span id="rpLlmLabel">Claude 3.7</span>
+                    <i class="fa-solid fa-gear text-purple-400 text-[10px]"></i>
+                </button>
+                <button onclick="openCharListModal()" title="플레이할 캐릭터 교체" class="px-3.5 py-1.5 bg-gradient-to-r from-purple-700 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow-md">
+                    <i class="fa-solid fa-repeat text-amber-300"></i> 교체
+                </button>
+                <button onclick="triggerUndo()" title="직전 턴 되돌리기" class="px-3 py-1.5 bg-gray-800/90 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg text-xs font-semibold border border-cardBorder transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-rotate-left text-amber-400"></i> Undo
+                </button>
+                <button onclick="triggerRegenerate()" title="현재 응답 다시 집필" class="px-3 py-1.5 bg-gray-800/90 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg text-xs font-semibold border border-cardBorder transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-arrows-rotate text-purple-400"></i> Regenerate
+                </button>
+                <button onclick="triggerReset()" title="대화 기록을 1턴 초기 오프닝으로 리셋" class="px-3 py-1.5 bg-red-950/70 hover:bg-red-900 text-red-300 hover:text-white rounded-lg text-xs font-semibold border border-red-800/60 transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-trash-can text-red-400"></i> Reset
+                </button>
+            </div>
+        </header>
+
+        <!-- Chat Stream Log -->
+        <main id="chatLogContainer" class="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 max-w-5xl mx-auto w-full">
+            <!-- Messages append dynamically -->
+        </main>
+
+        <!-- Roleplay Input Dock -->
+        <footer class="p-4 bg-gradient-to-t from-darkBg via-darkBg/95 to-transparent pt-3 z-10">
+            <div class="max-w-5xl mx-auto space-y-3">
+                <!-- Suggested Action Vertical List (5대 실시간 전술 선택지) -->
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between text-[11px] font-bold text-gray-400 px-1">
+                        <span class="flex items-center gap-1.5 text-purple-300">
+                            <i class="fa-solid fa-wand-magic-sparkles text-purple-400"></i> 실시간 5대 전술 선택지 (원클릭 즉시 실행)
+                        </span>
+                        <span class="text-[10px] text-gray-500 font-normal">자유 서술 직접 입력도 100% 지원</span>
+                    </div>
+
+                    <div id="choicesVerticalContainer" class="flex flex-col gap-1.5">
+                        <button onclick="fillAndSend('1')" id="chip1" class="w-full text-left px-3.5 py-2 bg-gray-900/90 hover:bg-emerald-950/40 border border-gray-800 hover:border-emerald-500/70 text-gray-200 hover:text-white rounded-xl transition duration-150 shadow-sm text-xs font-medium flex items-center justify-between group">
+                            <span class="flex items-center gap-2.5">
+                                <span class="px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-300 text-[10px] font-bold border border-emerald-800/50 shrink-0">🌸 순애</span>
+                                <span class="chip-text font-normal leading-relaxed text-gray-200">떨리는 어깨에 조용히 외투를 걸쳐주며 더 이상 홀로 짊어질 필요 없다고 위로한다.</span>
+                            </span>
+                            <i class="fa-solid fa-chevron-right text-gray-600 group-hover:text-emerald-300 text-[10px] transition shrink-0 ml-2"></i>
+                        </button>
+                        <button onclick="fillAndSend('2')" id="chip2" class="w-full text-left px-3.5 py-2 bg-gray-900/90 hover:bg-red-950/40 border border-gray-800 hover:border-red-500/70 text-gray-200 hover:text-white rounded-xl transition duration-150 shadow-sm text-xs font-medium flex items-center justify-between group">
+                            <span class="flex items-center gap-2.5">
+                                <span class="px-2 py-0.5 rounded bg-red-950/80 text-red-300 text-[10px] font-bold border border-red-800/50 shrink-0">🔴 정복</span>
+                                <span class="chip-text font-normal leading-relaxed text-gray-200">치켜든 턱을 거세게 쥐어 올리며 가문의 위선과 오만한 긍지를 짓누른다.</span>
+                            </span>
+                            <i class="fa-solid fa-chevron-right text-gray-600 group-hover:text-red-300 text-[10px] transition shrink-0 ml-2"></i>
+                        </button>
+                        <button onclick="fillAndSend('3')" id="chip3" class="w-full text-left px-3.5 py-2 bg-gray-900/90 hover:bg-purple-950/40 border border-gray-800 hover:border-purple-500/70 text-gray-200 hover:text-white rounded-xl transition duration-150 shadow-sm text-xs font-medium flex items-center justify-between group">
+                            <span class="flex items-center gap-2.5">
+                                <span class="px-2 py-0.5 rounded bg-purple-950/80 text-purple-300 text-[10px] font-bold border border-purple-800/50 shrink-0">🟣 복종</span>
+                                <span class="chip-text font-normal leading-relaxed text-gray-200">황녀의 구두 앞에 정중히 한쪽 무릎을 꿇고 손등을 들어 올려 입을 맞춘다.</span>
+                            </span>
+                            <i class="fa-solid fa-chevron-right text-gray-600 group-hover:text-purple-300 text-[10px] transition shrink-0 ml-2"></i>
+                        </button>
+                        <button onclick="fillAndSend('4')" id="chip4" class="w-full text-left px-3.5 py-2 bg-gray-900/90 hover:bg-pink-950/40 border border-gray-800 hover:border-pink-500/70 text-gray-200 hover:text-white rounded-xl transition duration-150 shadow-sm text-xs font-medium flex items-center justify-between group">
+                            <span class="flex items-center gap-2.5">
+                                <span class="px-2 py-0.5 rounded bg-pink-950/80 text-pink-300 text-[10px] font-bold border border-pink-800/50 shrink-0">🟢 체성</span>
+                                <span class="chip-text font-normal leading-relaxed text-gray-200">경직된 목덜미와 쇄골 부근을 서늘한 손끝으로 쓸어내리며 체온 변화를 유도한다.</span>
+                            </span>
+                            <i class="fa-solid fa-chevron-right text-gray-600 group-hover:text-pink-300 text-[10px] transition shrink-0 ml-2"></i>
+                        </button>
+                        <button onclick="fillAndSend('5')" id="chip5" class="w-full text-left px-3.5 py-2 bg-gray-900/90 hover:bg-amber-950/40 border border-gray-800 hover:border-amber-500/70 text-gray-200 hover:text-white rounded-xl transition duration-150 shadow-sm text-xs font-medium flex items-center justify-between group">
+                            <span class="flex items-center gap-2.5">
+                                <span class="px-2 py-0.5 rounded bg-amber-950/80 text-amber-300 text-[10px] font-bold border border-amber-800/50 shrink-0">🟡 유예</span>
+                                <span class="chip-text font-normal leading-relaxed text-gray-200">차갑게 뒤돌아서서 침묵으로 일관하며 오만한 시선을 고립시킨다.</span>
+                            </span>
+                            <i class="fa-solid fa-chevron-right text-gray-600 group-hover:text-amber-300 text-[10px] transition shrink-0 ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Input Box -->
+                <div class="glass-panel rounded-2xl p-2 flex items-center gap-2 border border-cardBorder shadow-2xl focus-within:border-purple-500/80 transition duration-200">
+                    <textarea id="roleplayInput" rows="1" placeholder="당신의 행동이나 대사를 자유롭게 입력하세요... (Enter 전송 / Shift+Enter 줄바꿈)" 
+                              class="flex-1 bg-transparent text-sm text-gray-100 placeholder-gray-500 focus:outline-none px-3.5 py-1.5 resize-none max-h-32 leading-relaxed"
+                              onkeydown="handleKeyDown(event)"></textarea>
+                    
+                    <button onclick="sendRoleplayMessage()" class="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-xl text-xs font-bold transition shadow-md flex items-center gap-1.5 shrink-0">
+                        <span>전송</span>
+                        <i class="fa-solid fa-paper-plane text-[11px]"></i>
+                    </button>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- 3. [VIEW 3 : CHARACTER STUDIO (캐릭터 스튜디오 & 보관소)] -->
+    <!-- ======================================================= -->
+    <div id="viewWorkshop" class="hidden flex-1 flex flex-col justify-between overflow-hidden">
+        
+        <!-- Character Studio Top Bar -->
+        <header class="glass-panel px-6 py-3.5 flex flex-col md:flex-row md:items-center justify-between border-b border-cardBorder z-10 shadow-lg gap-3">
+            <div class="flex items-center space-x-4">
+                <button onclick="switchView('MAIN')" class="px-3 py-1.5 bg-gray-800/90 hover:bg-gray-700 text-gray-200 rounded-xl text-xs font-bold border border-cardBorder transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-arrow-left text-purple-400"></i> Lobby
+                </button>
+                <div class="h-5 w-px bg-cardBorder"></div>
+                <div>
+                    <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles text-pink-400"></i> Character Studio & Vault
+                    </h2>
+                    <p class="text-[11px] text-gray-400">SQLite3 RDB 5대 관리: 생성 &bull; 조회 &bull; 수정 &bull; 불러오기 &bull; 삭제</p>
+                </div>
+            </div>
+            
+            <!-- 툴바 -->
+            <div class="flex items-center space-x-2 flex-wrap gap-y-1.5">
+                <button onclick="openNewCharModal()" title="1. 신규 캐릭터 빚기" class="px-3.5 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-xl text-xs font-black transition shadow-md flex items-center gap-1.5">
+                    <i class="fa-solid fa-plus text-xs"></i> 1. 생성
+                </button>
+                <button onclick="focusSearchInput()" title="2. 보관소 인격 실시간 조회 및 검색" class="px-3.5 py-2 bg-indigo-950/80 hover:bg-indigo-900 text-indigo-200 border border-indigo-600/50 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-magnifying-glass text-cyan-300"></i> 2. 조회
+                </button>
+                <button onclick="openEditActiveCharacterModal()" title="3. 현재 선택된 인격 헌법 수정" class="px-3.5 py-2 bg-purple-950/80 hover:bg-purple-900 text-purple-200 border border-purple-600/50 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-pen-to-square text-amber-300"></i> 3. 수정
+                </button>
+                <button onclick="openExportModal()" class="px-3.5 py-2 bg-purple-950/60 hover:bg-purple-900 border border-purple-700/60 text-purple-300 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-scroll text-amber-400"></i> 4. 25k 프롬프트
+                </button>
+                <button onclick="deleteActiveCharacter()" title="5. 현재 인격 RDB 삭제" class="px-3 py-2 bg-red-950/60 hover:bg-red-900 border border-red-800/60 text-red-300 hover:text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-trash text-xs"></i> 5. 삭제
+                </button>
+                <button onclick="openLlmSettingsModal()" title="LLM 모델 & 프로바이더 설정" class="px-3.5 py-2 bg-purple-950/80 hover:bg-purple-900 border border-purple-600/50 text-purple-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-microchip text-pink-400"></i> <span id="wsLlmLabel">LLM 모델 설정</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Workshop Content Grid -->
+        <main class="flex-1 overflow-y-auto p-6 max-w-6xl mx-auto w-full space-y-6">
+            
+            <!-- Vault Characters Grid with Realtime Search & Filter -->
+            <div class="space-y-3">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <h3 class="text-sm font-extrabold text-gray-300 flex items-center gap-2">
+                        <i class="fa-solid fa-database text-purple-400"></i> Character Vault (SQLite3 RDB)
+                    </h3>
+                    <span id="vaultTotalCount" class="text-xs text-purple-300 font-mono font-bold bg-purple-950/60 px-2.5 py-0.5 rounded-full border border-purple-800/40">
+                        동적 로딩 중...
+                    </span>
+                </div>
+
+                <!-- 실시간 조회 & 갑주 필터 바 -->
+                <div class="glass-panel p-3 rounded-2xl border border-gray-800 flex flex-col md:flex-row gap-2.5 items-center justify-between bg-gradient-to-r from-gray-950 to-cardBg">
+                    <div class="relative w-full md:w-80">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-gray-500"></i>
+                        <input type="text" id="vaultSearchInput" oninput="filterVaultCharacters()" placeholder="이름, 칭호, #SEED, 결핍/욕망 조회..." class="w-full bg-gray-900/90 border border-gray-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/70">
+                    </div>
+                    <div class="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-0.5 text-xs" id="armorFilterChips">
+                        <button onclick="setArmorFilter('ALL')" id="chip-ALL" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-purple-600 text-white transition">전체</button>
+                        <button onclick="setArmorFilter('Rigid')" id="chip-Rigid" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-gray-800 text-amber-300 hover:bg-gray-700 transition">Rigid</button>
+                        <button onclick="setArmorFilter('Endurer')" id="chip-Endurer" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-gray-800 text-sky-300 hover:bg-gray-700 transition">Endurer</button>
+                        <button onclick="setArmorFilter('Controller')" id="chip-Controller" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-gray-800 text-pink-300 hover:bg-gray-700 transition">Controller</button>
+                        <button onclick="setArmorFilter('Deprived')" id="chip-Deprived" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-gray-800 text-teal-300 hover:bg-gray-700 transition">Deprived</button>
+                    </div>
+                </div>
+
+                <div id="vaultGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Dynamic character cards injected via JS -->
+                </div>
+            </div>
+
+            <!-- Current Active Character Deep Tuning Card -->
+            <div id="activeCharacterDetailCard" class="glass-panel rounded-3xl p-6 border border-cardBorder shadow-2xl space-y-4 transition duration-300">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-cardBorder pb-3 gap-3">
+                    <div class="flex items-center gap-3">
+                        <div id="wsCharAvatar" class="w-11 h-11 rounded-xl bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center text-white font-black shadow-md text-base shrink-0">
+                            -
+                        </div>
+                        <div>
+                            <h3 class="text-base font-black text-white flex items-center gap-2">
+                                <span id="wsCharHeader">인격 로딩 중...</span>
+                            </h3>
+                            <p id="wsCharSeed" class="text-[10px] font-mono text-amber-400 font-bold">#SEED</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <button onclick="switchView('ROLEPLAY')" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-xl text-xs font-bold transition shadow-md flex items-center gap-1.5">
+                            <i class="fa-solid fa-play"></i> Play Room 입장
+                        </button>
+                        <button onclick="openEditActiveCharacterModal()" title="현재 인격 헌법 및 설정 수정" class="px-3 py-2 bg-purple-950/80 hover:bg-purple-900 border border-purple-600/50 text-purple-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow">
+                            <i class="fa-solid fa-pen-to-square text-amber-300"></i> 수정
+                        </button>
+                        <button onclick="downloadCurrentCharJson()" class="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-amber-300 rounded-xl text-xs font-bold border border-cardBorder transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-code"></i> JSON 추출
+                        </button>
+                        <button onclick="openExportModal()" class="px-3.5 py-2 bg-purple-950/60 hover:bg-purple-900 border border-purple-700/60 text-purple-300 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-scroll text-amber-400"></i> 25k 프롬프트
+                        </button>
+                        <button onclick="deleteActiveCharacter()" title="현재 인격 영구 삭제" class="px-3 py-2 bg-red-950/60 hover:bg-red-900 border border-red-800/60 text-red-300 hover:text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow">
+                            <i class="fa-solid fa-trash text-xs"></i> 삭제
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div>
+                        <label class="block text-gray-400 font-bold mb-1">로웬 신체 갑주 & 압력 단계</label>
+                        <div id="wsCharArmor" class="text-xs font-extrabold text-purple-300 p-3 bg-gray-950/70 rounded-xl border border-gray-800 flex items-center justify-between">
+                            <span>로딩 중...</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 font-bold mb-1">생체 수치 (EGO / TAINT)</label>
+                        <div id="wsCharMeters" class="text-xs font-bold text-gray-300 p-3 bg-gray-950/70 rounded-xl border border-gray-800 flex items-center justify-between font-mono">
+                            <span class="text-purple-300">EGO: 100.0%</span>
+                            <span class="text-pink-400">TAINT: 0.0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-gray-400 font-bold mb-1.5 text-xs flex items-center justify-between">
+                        <span>고유 결핍 & 특성 헌법 (1:N RDB Traits)</span>
+                        <span class="text-[10px] text-gray-500 font-normal">SQLite3 Realtime Active Sync</span>
+                    </label>
+                    <div id="wsCharTraits" class="p-3.5 bg-gray-950/70 rounded-xl border border-gray-800 text-xs text-gray-300 leading-relaxed space-y-2">
+                        로딩 중...
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- 🌐 GLOBAL FOOTER -->
+    <footer class="py-2.5 px-6 border-t border-cardBorder bg-[#0c0e18]/95 backdrop-blur-md text-xs text-gray-500 flex items-center justify-between z-20 shrink-0 select-none">
+        <span>&copy; 2026 Abyss Engine &bull; Enterprise 25-Master Architecture</span>
+        <span class="text-gray-400 font-medium">Released under the MIT License</span>
+    </footer>
+
+    <!-- ======================================================= -->
+    <!-- 4. MODALS & OVERLAYS -->
+    <!-- ======================================================= -->
+
+    <!-- LLM MODEL & PROVIDER SETTINGS MODAL -->
+    <div id="llmSettingsModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-2xl w-full p-6 border border-purple-500/50 shadow-2xl flex flex-col max-h-[90vh]">
+            <div class="flex items-center justify-between pb-3 border-b border-cardBorder mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-purple-600/20 border border-purple-500/40 flex items-center justify-center text-purple-300">
+                        <i class="fa-solid fa-microchip text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-black text-white">LLM 모델 & 프로바이더 실시간 설정</h3>
+                        <p class="text-xs text-gray-400">사용량 초과(429) 시 자동 스왑 캐스케이드 및 주 모델을 즉시 전환합니다.</p>
+                    </div>
+                </div>
+                <button onclick="closeLlmSettingsModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
+            </div>
+
+            <div class="space-y-4 overflow-y-auto pr-1 flex-1 text-xs">
+                <div>
+                    <label class="block text-gray-300 font-bold mb-2">1. 주 생성 AI 프로바이더 선택</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button type="button" onclick="setLlmProviderChoice('claude')" id="btnProvClaude" class="p-3 rounded-2xl border border-purple-500/50 bg-purple-950/70 text-left transition flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-xl bg-purple-600/30 flex items-center justify-center text-purple-300 font-black text-sm">🟣</div>
+                            <div>
+                                <div class="font-extrabold text-white text-sm">Anthropic Claude</div>
+                                <div class="text-[10px] text-purple-300">Sonnet 3.7 / 3.5 / Haiku</div>
+                            </div>
+                        </button>
+                        <button type="button" onclick="setLlmProviderChoice('gemini')" id="btnProvGemini" class="p-3 rounded-2xl border border-gray-800 bg-gray-900/70 text-left transition flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-xl bg-blue-600/30 flex items-center justify-center text-blue-300 font-black text-sm">🔵</div>
+                            <div>
+                                <div class="font-extrabold text-white text-sm">Google Gemini</div>
+                                <div class="text-[10px] text-blue-300">Flash 2.5 / Flash 2.0 / Pro</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="claudeConfigSection" class="p-4 rounded-2xl bg-purple-950/30 border border-purple-900/60 space-y-3">
+                    <span class="font-extrabold text-purple-300 flex items-center gap-1.5"><i class="fa-solid fa-brain"></i> Claude 모델 선택</span>
+                    <select id="selClaudeModel" class="w-full bg-gray-950 border border-purple-700/60 rounded-xl p-2.5 text-white font-bold focus:outline-none focus:border-purple-400">
+                        <option value="claude-3-7-sonnet-20250219">🔥 Claude 3.7 Sonnet (최신 권장 &bull; 압도적 필력)</option>
+                        <option value="claude-3-5-sonnet-20241022">⚡ Claude 3.5 Sonnet</option>
+                        <option value="claude-3-5-haiku-20241022">🚀 Claude 3.5 Haiku</option>
+                    </select>
+                </div>
+
+                <div id="geminiConfigSection" class="p-4 rounded-2xl bg-blue-950/30 border border-blue-900/60 space-y-3">
+                    <span class="font-extrabold text-blue-300 flex items-center gap-1.5"><i class="fa-solid fa-bolt"></i> Gemini 모델 선택</span>
+                    <select id="selGeminiModel" class="w-full bg-gray-950 border border-blue-700/60 rounded-xl p-2.5 text-white font-bold focus:outline-none focus:border-blue-400">
+                        <option value="gemini-2.5-flash">🔥 Gemini 2.5 Flash (최신 권장 &bull; 초고속)</option>
+                        <option value="gemini-2.0-flash">⚡ Gemini 2.0 Flash</option>
+                        <option value="gemini-2.5-pro">👑 Gemini 2.5 Pro</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-cardBorder mt-4 flex justify-end gap-2 text-xs">
+                <button onclick="saveLlmConfig()" class="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-black rounded-xl shadow-lg transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-floppy-disk"></i> 설정 저장 & 즉시 적용
+                </button>
+                <button onclick="closeLlmSettingsModal()" class="px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold rounded-xl transition">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHARACTER SELECTION / ROSTER MODAL -->
+    <div id="charListModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-4xl w-full p-6 border border-purple-500/40 shadow-2xl flex flex-col max-h-[90vh]">
+            <div class="flex items-center justify-between pb-4 border-b border-cardBorder mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-purple-600/30 border border-purple-500/40 flex items-center justify-center text-purple-300">
+                        <i class="fa-solid fa-users text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-black text-white">캐릭터 보관소 및 즉시 교체</h3>
+                        <p class="text-xs text-gray-400">원하시는 인격을 선택하면 실시간 롤플레이 룸과 공방의 상주 캐릭터가 즉시 전환됩니다.</p>
+                    </div>
+                </div>
+                <button onclick="closeCharListModal()" class="text-gray-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div id="modalCharGrid" class="flex-1 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-1">
+                <!-- Injected via JS -->
+            </div>
+
+            <div class="pt-4 border-t border-cardBorder mt-4 flex justify-between items-center text-xs">
+                <button onclick="openNewCharModal()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl shadow transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-plus"></i> 새 캐릭터 빚기
+                </button>
+                <button onclick="closeCharListModal()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold rounded-xl transition">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 25K MASTER PROMPT EXPORT MODAL -->
+    <div id="exportModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-4xl w-full p-6 md:p-8 border border-purple-500/50 shadow-2xl flex flex-col max-h-[90vh]">
+            <div class="flex items-center justify-between pb-4 border-b border-cardBorder mb-4">
+                <div class="flex items-center gap-3.5">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 via-purple-600 to-pink-600 flex items-center justify-center shadow-lg">
+                        <i class="fa-solid fa-scroll text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-black text-white">25,000자급 마스터 시스템 프롬프트 & JSON</h3>
+                        <p class="text-xs text-gray-400">Dify, Claude, ChatGPT 등에 그대로 복사하거나 표준 JSON 규격으로 저장할 수 있습니다.</p>
+                    </div>
+                </div>
+                <button onclick="closeExportModal()" class="text-gray-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 mb-4">
+                <button onclick="copyPromptToClipboard()" class="py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-2xl text-xs font-black shadow-xl transition transform active:scale-95 flex items-center justify-center gap-2 border border-purple-400/40">
+                    <i class="fa-solid fa-copy text-sm"></i>
+                    <span>프롬프트 1초 복사</span>
+                </button>
+                <button onclick="downloadCurrentCharJson()" class="py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-gray-950 rounded-2xl text-xs font-black shadow-xl transition transform active:scale-95 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-file-code text-sm"></i>
+                    <span>JSON 다운로드</span>
+                </button>
+            </div>
+
+            <div class="relative flex-1 bg-gray-950 border border-cardBorder rounded-2xl p-4 overflow-hidden flex flex-col min-h-[300px]">
+                <textarea id="promptArea" readonly class="flex-1 bg-transparent border-0 font-mono text-xs text-gray-300 resize-none focus:outline-none leading-relaxed overflow-y-auto"></textarea>
+            </div>
+
+            <div class="pt-4 flex justify-end">
+                <button onclick="closeExportModal()" class="px-6 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl text-xs font-bold transition">창 닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW CHARACTER MODAL (Dify 11-Node 2-Checkpoint Flow) -->
+    <div id="newCharModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-2xl w-full p-6 md:p-8 border border-pink-500/50 shadow-2xl flex flex-col max-h-[92vh]">
+            <div class="flex items-center justify-between pb-3 border-b border-cardBorder mb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-pink-500/20 border border-pink-500/40 flex items-center justify-center text-pink-300">
+                        <i class="fa-solid fa-fire-flame-curved text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-black text-white">신규 캐릭터 직접 조각 & 헌법 제정</h3>
+                        <p class="text-xs text-gray-400">말 못할 은밀한 취향이나 자연어 컨셉을 그대로 입력하여 인격을 창조하세요.</p>
+                    </div>
+                </div>
+                <button onclick="closeNewCharModal()" class="text-gray-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Step 1: Input Concept -->
+            <div id="createStep1" class="space-y-3 flex-1 overflow-y-auto pr-1 text-xs">
+                <div class="bg-gradient-to-r from-pink-950/80 via-purple-950/40 to-gray-950 rounded-2xl p-3.5 border border-pink-500/40 space-y-1">
+                    <span class="text-pink-300 font-extrabold flex items-center gap-1.5"><i class="fa-solid fa-shield-cat text-amber-300"></i> Dify 11-Node 캐릭터 생성 파이프라인</span>
+                    <p class="text-[11px] text-gray-300 leading-relaxed">자연어 컨셉을 입력하시면 8-Tier DNA, 17대 생체 텐서, 70단계 유전자 역산 및 직교 V1/V2 궤적을 실시간으로 도출합니다.</p>
+                </div>
+                <div>
+                    <label class="block text-gray-300 font-bold mb-1">캐릭터 자연어 컨셉 & 은밀한 취향</label>
+                    <textarea id="newCharConceptInput" rows="7" placeholder="예: 제국의 차가운 은룡 황녀 실비아, 가문의 멸망과 부채를 갚기 위해 순결 서약을 맺고 목에 은색 초커를 채운 채 침실에 상주..." class="w-full bg-gray-950 border border-gray-800 rounded-2xl p-3.5 text-gray-200 text-xs font-mono focus:outline-none focus:border-pink-500/70 resize-none leading-relaxed"></textarea>
+                </div>
+                <div class="flex justify-end pt-2">
+                    <button onclick="startCharacterClassification()" class="px-5 py-2.5 bg-gradient-to-r from-pink-600 via-rose-600 to-amber-500 hover:from-pink-500 hover:to-amber-400 text-white font-black rounded-xl shadow-lg transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-bolt"></i> 1단계: 궤적 역산 & Checkpoint 1 돌입 &rarr;
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Checkpoint 1 (V1 vs V2 Choice) -->
+            <div id="createStep2" class="hidden space-y-3 flex-1 overflow-y-auto pr-1 text-xs">
+                <div class="bg-purple-950/70 p-3 rounded-xl border border-purple-800/50">
+                    <span class="text-amber-300 font-extrabold flex items-center gap-1.5"><i class="fa-solid fa-code-fork"></i> Checkpoint 1 : V1 vs V2 직교 궤적 선택</span>
+                    <p class="text-[11px] text-gray-300">생성할 캐릭터의 서사 전개 방향(1안 vs 2안)을 선택해 주세요.</p>
+                </div>
+                <div id="vectorChoiceContainer" class="space-y-2.5">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
+            <!-- Step 3: Checkpoint 2 (8-Tier DNA & Spec Review & APPLY) -->
+            <div id="createStep3" class="hidden space-y-3 flex-1 overflow-y-auto pr-1 text-xs">
+                <div class="bg-emerald-950/70 p-3 rounded-xl border border-emerald-800/50">
+                    <span class="text-emerald-300 font-extrabold flex items-center gap-1.5"><i class="fa-solid fa-check-double"></i> Checkpoint 2 : 8-Tier DNA & 70-Gene 스펙 검토</span>
+                    <p class="text-[11px] text-gray-300">컴파일된 규격을 검토 후 [APPLY]를 누르면 DB에 영구 등록됩니다.</p>
+                </div>
+                <div id="compiledSpecPreview" class="bg-gray-950 rounded-xl p-3 border border-gray-800 font-mono text-[11px] text-gray-300 max-h-60 overflow-y-auto space-y-2">
+                    <!-- Injected via JS -->
+                </div>
+                <div class="flex justify-end pt-2 gap-2">
+                    <button onclick="applyAndPersistCharacter()" class="px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black rounded-xl shadow-lg transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-crown"></i> 👑 [APPLY] RDB 영구 저장 및 활성화
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT CHARACTER MODAL -->
+    <div id="editCharModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-2xl w-full p-6 md:p-8 border border-purple-500/50 shadow-2xl flex flex-col max-h-[92vh]">
+            <div class="flex items-center justify-between pb-3 border-b border-cardBorder mb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-purple-600/30 border border-purple-500/40 flex items-center justify-center text-purple-300">
+                        <i class="fa-solid fa-pen-to-square text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-black text-white">캐릭터 헌법 및 정보 개정 (Update)</h3>
+                        <p class="text-xs text-gray-400">RDB에 영구 저장된 캐릭터의 신상, 갑주 및 고유 헌법을 실시간 수정합니다.</p>
+                    </div>
+                </div>
+                <button onclick="closeEditCharModal()" class="text-gray-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <input type="hidden" id="editSeedHash">
+
+            <div class="space-y-3 flex-1 overflow-y-auto pr-1 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-gray-300 font-bold mb-1">캐릭터 이름</label>
+                        <input type="text" id="editName" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-white font-bold text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 font-bold mb-1">칭호 / 신분</label>
+                        <input type="text" id="editTitle" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-white text-xs">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-gray-300 font-bold mb-1">외모 & 신체 복장 특징</label>
+                    <textarea id="editTraitAppearance" rows="2" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-gray-200 text-xs"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-300 font-bold mb-1">핵심 결핍 & 욕망 / 성향</label>
+                    <textarea id="editTraitDeficiency" rows="2" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-gray-200 text-xs"></textarea>
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-cardBorder mt-3 flex justify-end gap-2 text-xs">
+                <button onclick="submitEditCharacter()" class="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-black rounded-xl shadow-lg transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-check"></i> 헌법 개정 및 RDB 동기화
+                </button>
+                <button onclick="closeEditCharModal()" class="px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold rounded-xl transition">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FULLSCREEN IMAGE VIEWER MODAL -->
+    <div id="imageViewerModal" class="hidden fixed inset-0 bg-black/95 backdrop-blur-xl z-50 flex items-center justify-center p-4" onclick="closeFullImageViewer()">
+        <div class="relative max-w-4xl w-full max-h-[95vh] flex flex-col items-center justify-center" onclick="event.stopPropagation()">
+            <button onclick="closeFullImageViewer()" class="absolute -top-10 right-0 text-gray-400 hover:text-white text-2xl font-bold transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <img id="imageViewerImg" src="" alt="Full Character Artwork" class="max-h-[85vh] max-w-full object-contain rounded-2xl border border-purple-500/50 shadow-2xl">
+        </div>
+    </div>
+
+    <!-- MANUAL IMAGE MODAL -->
+    <div id="customImageUrlModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-lg w-full p-6 border border-purple-500/50 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between pb-2 border-b border-cardBorder">
+                <h3 class="text-base font-black text-white">캐릭터 일러스트 수동 등록</h3>
+                <button onclick="closeCustomImageUrlModal()" class="text-gray-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-300 mb-1">이미지 직접 링크 (https://...)</label>
+                <input type="text" id="customImageUrlInput" placeholder="https://example.com/image.png" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-pink-500 text-xs font-mono">
+            </div>
+            <div class="pt-2 flex justify-end gap-2 text-xs">
+                <button onclick="submitManualImage()" class="px-5 py-2.5 bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 hover:from-pink-500 hover:to-indigo-500 text-white font-bold rounded-xl shadow transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-check"></i> <span>포트레이트 적용</span>
+                </button>
+                <button onclick="closeCustomImageUrlModal()" class="px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold rounded-xl transition">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOADING OVERLAY -->
+    <div id="loadingOverlay" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex flex-col items-center justify-center gap-3">
+        <div class="w-10 h-10 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin"></div>
+        <p id="loadingOverlayText" class="text-xs font-bold text-purple-300 tracking-wider animate-pulse">데이터를 처리 중입니다...</p>
+    </div>
+
+    <!-- FLOATING TOAST NOTIFICATION CONTAINER -->
+    <div id="toastContainer" class="fixed top-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- STATIC JAVASCRIPT ASSETS -->
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/app.js"></script>
 </body>
 </html>

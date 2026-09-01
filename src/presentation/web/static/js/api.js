@@ -1,138 +1,120 @@
 /**
- * api.js — AbyssEngine Web Studio REST API Client
+ * api.js — AbyssEngine REST API Client
  */
 
 const API = {
+  async getState() {
+    const res = await fetch("/api/state");
+    return await res.json();
+  },
+
   async getCharacters() {
     const res = await fetch("/api/characters");
-    return res.json();
+    return await res.json();
   },
 
-  async getActiveCharacter() {
-    const res = await fetch("/api/characters/active");
-    return res.json();
-  },
-
-  async setActiveCharacter(charId) {
-    const res = await fetch("/api/characters/active", {
+  async selectCharacter(seedHash) {
+    const res = await fetch("/api/select_character", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ character_id: charId })
+      body: JSON.stringify({ seed_hash: seedHash })
     });
-    return res.json();
+    return await res.json();
   },
 
-  async classifyConcept(conceptText) {
-    const res = await fetch("/api/characters/classify", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ concept: conceptText })
-    });
-    return res.json();
-  },
-
-  async compileSpec(payload) {
-    const res = await fetch("/api/characters/compile-spec", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-    return res.json();
-  },
-
-  async synthesizeMaster(characterData) {
-    const res = await fetch("/api/characters/synthesize-master", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ character_data: characterData })
-    });
-    return res.json();
-  },
-
-  async compileCharacter(payload) {
-    const res = await fetch("/api/characters/compile", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-    return res.json();
-  },
-
-  async deleteCharacter(charId) {
-    const res = await fetch("/api/characters/delete", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ character_id: charId })
-    });
-    return res.json();
-  },
-
-  async getTurnHistory(charId) {
-    const url = charId ? `/api/turns?character_id=${charId}` : "/api/turns";
-    const res = await fetch(url);
-    return res.json();
-  },
-
-  async executeTurn(charId, userAction, stimulusType = "DEFAULT") {
-    const res = await fetch("/api/turns", {
+  async sendAction(actionText, vectorType = "SUBJUGATION", choiceId = null) {
+    const res = await fetch("/api/action", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        character_id: charId,
-        user_action: userAction,
-        stimulus_type: stimulusType
+        action_text: actionText,
+        vector_type: vectorType,
+        choice_id: choiceId
       })
     });
-    return res.json();
+    return await res.json();
   },
 
-  async undoTurn(charId) {
-    const res = await fetch("/api/turns/undo", {
+  async triggerUndo() {
+    const res = await fetch("/api/undo", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ character_id: charId })
+      body: JSON.stringify({})
     });
-    return res.json();
+    return await res.json();
   },
 
-  async resetTurns(charId) {
-    const res = await fetch("/api/turns/reset", {
+  async triggerReset() {
+    const res = await fetch("/api/reset", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ character_id: charId })
+      body: JSON.stringify({})
     });
-    return res.json();
+    return await res.json();
   },
 
-  async getDanbooruPrompt(charId) {
-    const res = await fetch("/api/characters/danbooru", {
+  async classifyConcept(concept) {
+    const res = await fetch("/api/characters/classify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ character_id: charId })
+      body: JSON.stringify({ concept })
     });
-    return res.json();
+    return await res.json();
   },
 
-  async getMasterPrompt(charId) {
-    const res = await fetch("/api/characters/prompt", {
+  async compileSpec(targetName, title, seedHash, hardInvariants, selectedVector) {
+    const res = await fetch("/api/characters/compile-spec", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ character_id: charId })
+      body: JSON.stringify({
+        target_name: targetName,
+        title: title,
+        seed_hash: seedHash,
+        hard_invariants: hardInvariants,
+        selected_vector: selectedVector
+      })
     });
-    return res.json();
+    return await res.json();
   },
 
-  async importCharacter(jsonStr) {
-    const res = await fetch("/api/import", {
+  async createCharacter(data) {
+    const res = await fetch("/api/create_character", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ character_json: jsonStr })
+      body: JSON.stringify(data)
     });
-    return res.json();
+    return await res.json();
   },
 
-  async getConfig() {
-    const res = await fetch("/api/config");
-    return res.json();
+  async updateCharacter(data) {
+    const res = await fetch("/api/update_character", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+    return await res.json();
+  },
+
+  async deleteCharacter(seedHash) {
+    const res = await fetch("/api/delete_character", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ seed_hash: seedHash })
+    });
+    return await res.json();
+  },
+
+  async getLlmConfig() {
+    const res = await fetch("/api/llm_config");
+    return await res.json();
+  },
+
+  async saveLlmConfig(data) {
+    const res = await fetch("/api/save_llm_config", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+    return await res.json();
   }
 };
