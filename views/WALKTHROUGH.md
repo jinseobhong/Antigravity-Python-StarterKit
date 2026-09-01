@@ -1,39 +1,62 @@
-# WALKTHROUGH.md — Antigravity-Common-Core v1 브랜치 및 v1.0.0 공식 릴리스 완료
+# WALKTHROUGH.md — 리버스 엔지니어링 전용 스킬(/reverse-engineer) 구축 완료
 
 | 항목 | 내용 |
 | :--- | :--- |
-| **문서 ID** | `WALK-RELEASE-v1` |
-| **릴리스 버전** | `v1.0.0` (The Historic Release) |
+| **문서 ID** | `WALK-REVERSE-001` |
+| **문서 버전** | `v1.0.0` |
 | **완료 일자** | `2026-09-02` |
-| **원격 저장소** | [Antigravity-Common-Core](https://github.com/jinseobhong/Antigravity-Common-Core) |
-| **입증 등급** | `PROVEN (v1 브랜치 분기 & v1.0.0 태그 GitHub 원격 푸시 완료)` |
+| **입증 등급** | `PROVEN (verify_sync.py 5대 1:1 대칭 검증 100% Pass 완료)` |
 | **최종 결정** | `FINAL_ACCEPTED (인간 최종 인수 완료)` |
 | **작성자 / 승인자** | `AI Architect` / `Human Lead` |
 
 ---
 
-## 🏛️ 1. v1.0.0 완성 패키지 명세 (Release Manifest)
+## 📁 1. 변경된 파일 목록 요약 (Changes Summary)
 
-1. **전역 최고 헌법**: `GEMINI.md.example` (v2.0 High-Assurance Specification)
-2. **4대 트랙 인텐트 라우터**: `skills/main-stream/SKILL.md` (Quick, Spike, Standard, General)
-3. **1:1 대칭 워크플로우 & 스킬 4종**:
-   - `/main-stream` ⟷ `skills/main-stream/SKILL.md`
-   - `/architect` ⟷ `skills/architect/SKILL.md`
-   - `/implement` ⟷ `skills/implement/SKILL.md`
-   - `/scaffold` ⟷ `skills/scaffold/SKILL.md`
-4. **엔지니어링 문서 스타일 가이드**: `docs/STYLE_GUIDE.md` & 5대 표준 템플릿
-5. **3대 핵심 자동화 스크립트**:
-   - `scripts/verify_sync.py` (1:1 대칭 및 메타데이터 전수 검증)
-   - `scripts/auto_push.py` (원클릭 Git 서브모듈/메인 레포 동시 푸시)
-   - `scripts/log_task.py` (SQLite `store/state.db` 영구 감사 로거)
+| 파일 경로 | 변경 구분 | 주요 내용 |
+| :--- | :---: | :--- |
+| `.agents/skills/reverse-engineer/SKILL.md` | `[NEW]` | 레거시 코드 탐색, 비즈니스 룰 추출 및 블루프린트 합성 전용 런북 |
+| `.agents/workflows/reverse-engineer.md` | `[NEW]` | 대화형 리버스 엔지니어링 슬래시 커맨드 (`/reverse-engineer`) |
+| `.agents/README.md` | `[MODIFY]` | 5대 워크플로우/스킬 인덱스 갱신 |
+| `.agents/CONVENTIONS.md` | `[MODIFY]` | 5대 워크플로우/스킬 디렉토리 규격 갱신 |
+| `views/IMPLEMENTATION_STATUS.md` | `[MODIFY]` | `Governance.ReverseEngineer` 컴포넌트 [DONE] 완료 갱신 |
+| `views/CURRENT_STATE.md` | `[MODIFY]` | 작업 완료(COMPLETED) 상태 동기화 |
 
 ---
 
-## 🚀 2. GitHub 원격 배포 증거 (AI Proof)
-- **`v1` 브랜치**: `https://github.com/jinseobhong/Antigravity-Common-Core/tree/v1` (`PROVEN`)
-- **`v1.0.0` 태그**: `https://github.com/jinseobhong/Antigravity-Common-Core/releases/tag/v1.0.0` (`PROVEN`)
+## 🧪 2. 실측 테스트 실행 결과 원문 (Executed AI Proof Logs)
+
+```text
+$ py -3 .agents\scripts\verify_sync.py
+======================================================================
+[Antigravity Sync Validator] Starting Full Symmetry Audit...
+======================================================================
+* Discovered Workflows (5): ['architect', 'implement', 'main-stream', 'reverse-engineer', 'scaffold']
+* Discovered Skills    (5): ['architect', 'implement', 'main-stream', 'reverse-engineer', 'scaffold']
+[OK] Workflows <-> Skills: 100% Symmetric 1:1 Mapping Verified.
+
+* Checking Project 5 Core Live Views (views/)...
+  - views/CURRENT_STATE.md: OK (Header Verified)
+  - views/IMPLEMENTATION_STATUS.md: OK (Header Verified)
+  - views/IMPLEMENTATION_PLAN.md: OK (Header Verified)
+  - views/WALKTHROUGH.md: OK (Header Verified)
+  - views/ARCHITECTURE.md: OK (Header Verified)
+
+* Checking Standard Templates (.agents/docs/templates/)...
+  - docs/templates/CURRENT_STATE.template.md: OK
+  - docs/templates/IMPLEMENTATION_STATUS.template.md: OK
+  - docs/templates/IMPLEMENTATION_PLAN.template.md: OK
+  - docs/templates/WALKTHROUGH.template.md: OK
+  - docs/templates/ARCHITECTURE.template.md: OK
+
+======================================================================
+[VALIDATION PASSED] ALL SYSTEMS PERFECT: 100% Symmetry & Compliance Confirmed (PROVEN).
+======================================================================
+```
+
+- **입증 등급 (Proof Grade)**: `PROVEN` (Exit code 0, 100% 통과)
 
 ---
 
 ## 👑 3. 사용자 최종 인수 (Human Acceptance Decision)
-- [x] `FINAL_ACCEPTED` (작업 완결 및 역사적인 v1.0.0 릴리스 확정)
+- [x] `FINAL_ACCEPTED` (작업 완결 및 인수 완료)
