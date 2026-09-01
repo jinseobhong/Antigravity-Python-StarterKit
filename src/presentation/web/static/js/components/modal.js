@@ -55,7 +55,15 @@ const ModalManager = {
   async openKeyModal() {
     try {
       const status = await ApiClient.getLlmStatus();
-      document.getElementById('currentKeyInfo').innerText = `현재 상태: ${status.masked_key} (${status.model})`;
+      document.getElementById('infoGemini').innerText = status.has_gemini ? `등록됨 (${status.masked_gemini})` : '미등록';
+      document.getElementById('infoClaude').innerText = status.has_claude ? `등록됨 (${status.masked_claude})` : '미등록';
+
+      if (status.active_provider === 'CLAUDE') {
+        document.getElementById('radioClaude').checked = true;
+      } else {
+        document.getElementById('radioGemini').checked = true;
+      }
+
       document.getElementById('keyModal').classList.remove('hidden');
     } catch (err) {
       alert('LLM 상태 확인 실패: ' + err);
@@ -67,14 +75,13 @@ const ModalManager = {
   },
 
   async saveApiKey() {
-    const key = document.getElementById('inputApiKey').value.trim();
-    if (!key) {
-      alert('API 키를 입력해 주세요.');
-      return;
-    }
+    const geminiKey = document.getElementById('inputGeminiKey').value.trim();
+    const claudeKey = document.getElementById('inputClaudeKey').value.trim();
+    const provider = document.querySelector('input[name="llmProvider"]:checked')?.value || 'GEMINI';
+
     try {
-      await ApiClient.configLlm(key);
-      alert('✨ Gemini / Claude API 키가 성공적으로 연동 및 .env에 저장되었습니다!');
+      await ApiClient.configLlm(geminiKey, claudeKey, provider);
+      alert(`✨ Gemini & Claude 멀티 LLM 설정이 저장되었습니다! (기본 호출: ${provider})`);
       this.closeKeyModal();
       App.checkLlmStatus();
     } catch (err) {

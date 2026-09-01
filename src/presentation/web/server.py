@@ -137,9 +137,19 @@ class WebStudioHandler(BaseHTTPRequestHandler):
             self._send_json({"prompt": prompt})
 
         elif parsed.path == "/api/llm_status":
-            has_key = bool(STUDIO_APP.llm_client.api_key)
-            masked = (STUDIO_APP.llm_client.api_key[:6] + "..." + STUDIO_APP.llm_client.api_key[-4:]) if has_key else "미등록 (오프라인 시뮬레이터 동작 중)"
-            self._send_json({"has_key": has_key, "masked_key": masked, "model": STUDIO_APP.llm_client.model})
+            has_gemini = bool(STUDIO_APP.llm_client.gemini_key)
+            has_claude = bool(STUDIO_APP.llm_client.claude_key)
+            masked_gemini = (STUDIO_APP.llm_client.gemini_key[:6] + "..." + STUDIO_APP.llm_client.gemini_key[-4:]) if has_gemini else "미등록"
+            masked_claude = (STUDIO_APP.llm_client.claude_key[:6] + "..." + STUDIO_APP.llm_client.claude_key[-4:]) if has_claude else "미등록"
+            self._send_json({
+                "has_key": has_gemini or has_claude,
+                "has_gemini": has_gemini,
+                "has_claude": has_claude,
+                "masked_gemini": masked_gemini,
+                "masked_claude": masked_claude,
+                "active_provider": STUDIO_APP.llm_client.active_provider,
+                "active_model": STUDIO_APP.llm_client.model
+            })
 
         else:
             self.send_response(404)
@@ -152,9 +162,11 @@ class WebStudioHandler(BaseHTTPRequestHandler):
         data = json.loads(body) if body else {}
 
         if parsed.path == "/api/config_llm":
-            key = data.get("api_key", "").strip()
-            STUDIO_APP.llm_client.set_api_key(key)
-            self._send_json({"status": "SUCCESS", "has_key": bool(key)})
+            g_key = data.get("gemini_key", "").strip()
+            c_key = data.get("claude_key", "").strip()
+            provider = data.get("provider", "GEMINI").strip()
+            STUDIO_APP.llm_client.set_keys_and_provider(gemini_key=g_key, claude_key=c_key, provider=provider)
+            self._send_json({"status": "SUCCESS", "active_provider": STUDIO_APP.llm_client.active_provider})
 
         elif parsed.path == "/api/select_character":
             seed = data.get("seed_hash", "")

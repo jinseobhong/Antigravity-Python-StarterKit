@@ -33,50 +33,123 @@ load_local_env()
 
 
 class MultiLLMClient:
-    """멀티 LLM 비동기/동기 호출 어댑터"""
+    """Gemini / Claude 자동 캐스케이드 멀티 LLM 클라이언트"""
 
-    def __init__(self, api_key: Optional[str] = None, model: str = "gemini-2.5-flash"):
+    def __init__(
+        self,
+        gemini_key: Optional[str] = None,
+        claude_key: Optional[str] = None,
+        active_provider: str = "GEMINI",
+        gemini_model: str = "gemini-2.5-flash",
+        claude_model: str = "claude-3-7-sonnet-20250219"
+    ):
         load_local_env()
-        self.api_key = api_key or os.getenv("GEMINI_API_KEY", "") or os.getenv("ANTHROPIC_API_KEY", "")
-        self.model = model
+        self.gemini_key = gemini_key or os.getenv("GEMINI_API_KEY", "")
+        self.claude_key = claude_key or os.getenv("ANTHROPIC_API_KEY", "") or os.getenv("CLAUDE_API_KEY", "")
+        self.active_provider = active_provider  # "GEMINI" 또는 "CLAUDE"
+        self.gemini_model = gemini_model
+        self.claude_model = claude_model
 
-    def set_api_key(self, key: str) -> None:
-        self.api_key = key.strip()
-        os.environ["GEMINI_API_KEY"] = self.api_key
-        # .env 파일에 영구 저장
+    @property
+    def api_key(self) -> str:
+        if self.active_provider == "CLAUDE":
+            return self.claude_key
+        return self.gemini_key or self.claude_key
+
+    @property
+    def model(self) -> str:
+        if self.active_provider == "CLAUDE":
+            return self.claude_model
+        return self.gemini_model
+
+    def set_keys_and_provider(self, gemini_key: str = "", claude_key: str = "", provider: str = "GEMINI") -> None:
+        if gemini_key.strip():
+            self.gemini_key = gemini_key.strip()
+            os.environ["GEMINI_API_KEY"] = self.gemini_key
+        if claude_key.strip():
+            self.claude_key = claude_key.strip()
+            os.environ["ANTHROPIC_API_KEY"] = self.claude_key
+
+        if provider in ["GEMINI", "CLAUDE"]:
+            self.active_provider = provider
+
+        # .env 파일에 영구 동기화
         try:
             with open(".env", "w", encoding="utf-8") as f:
-                f.write(f"GEMINI_API_KEY={self.api_key}\n")
+                f.write(f"GEMINI_API_KEY={self.gemini_key}\n")
+                f.write(f"ANTHROPIC_API_KEY={self.claude_key}\n")
+                f.write(f"ACTIVE_LLM_PROVIDER={self.active_provider}\n")
         except Exception:
             pass
 
     def generate_text(self, system_instruction: str, user_prompt: str, temperature: float = 0.85) -> str:
-        """LLM 호출 (키가 없을 경우 고품질 결정론적 Mock 엔진으로 Fallback)"""
-        if not self.api_key:
-            return self._mock_probabilistic_response(system_instruction, user_prompt)
+        """선택된 프로바이더로 호출하고 장애 시 자동 캐스케이드 스왑"""
+        if self.active_provider == "CLAUDE" and self.claude_key:
+            try:
+                return self._call_claude(system_instruction, user_prompt, temperature)
+            except Exception as e:
+                # Claude 실패 시 Gemini로 캐스케이드
+                if self.gemini_key:
+                    try:
+                        return self._call_gemini(system_instruction, user_prompt, temperature)
+                    except Exception:
+                        pass
+        elif self.gemini_key:
+            try:
+                return self._call_gemini(system_instruction, user_prompt, temperature)
+            except Exception as e:
+                # Gemini 실패 시 Claude로 캐스케이드
+                if self.claude_key:
+                    try:
+                        return self._call_claude(system_instruction, user_prompt, temperature)
+                    except Exception:
+                        pass
 
-        # Gemini REST API 호출
-        try:
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.model}:generateContent?key={self.api_key}"
-            payload = {
-                "system_instruction": {"parts": [{"text": system_instruction}]},
-                "contents": [{"parts": [{"text": user_prompt}]}],
-                "generationConfig": {
-                    "temperature": temperature,
-                    "maxOutputTokens": 4096
-                }
+        # 둘 다 없거나 실패 시 오프라인 시뮬레이터 Fallback
+        return self._mock_probabilistic_response(system_instruction, user_prompt)
+
+    def _call_gemini(self, system_instruction: str, user_prompt: str, temperature: float) -> str:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.gemini_model}:generateContent?key={self.gemini_key}"
+        payload = {
+            "system_instruction": {"parts": [{"text": system_instruction}]},
+            "contents": [{"parts": [{"text": user_prompt}]}],
+            "generationConfig": {
+                "temperature": temperature,
+                "maxOutputTokens": 4096
             }
-            req = urllib.request.Request(
-                url,
-                data=json.dumps(payload).encode("utf-8"),
-                headers={"Content-Type": "application/json"}
-            )
-            with urllib.request.urlopen(req, timeout=30) as resp:
-                result = json.loads(resp.read().decode("utf-8"))
-                text = result["candidates"][0]["content"]["parts"][0]["text"]
-                return text
-        except Exception as e:
-            return self._mock_probabilistic_response(system_instruction, user_prompt)
+        }
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type": "application/json"}
+        )
+        with urllib.request.urlopen(req, timeout=35) as resp:
+            result = json.loads(resp.read().decode("utf-8"))
+            return result["candidates"][0]["content"]["parts"][0]["text"]
+
+    def _call_claude(self, system_instruction: str, user_prompt: str, temperature: float) -> str:
+        url = "https://api.anthropic.com/v1/messages"
+        payload = {
+            "model": self.claude_model,
+            "max_tokens": 4096,
+            "temperature": temperature,
+            "system": system_instruction,
+            "messages": [
+                {"role": "user", "content": user_prompt}
+            ]
+        }
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={
+                "x-api-key": self.claude_key,
+                "anthropic-version": "2023-06-01",
+                "content-type": "application/json"
+            }
+        )
+        with urllib.request.urlopen(req, timeout=35) as resp:
+            result = json.loads(resp.read().decode("utf-8"))
+            return result["content"][0]["text"]
 
     def _mock_probabilistic_response(self, system: str, user: str) -> str:
         """API 키 부재 시 테스트 및 오프라인 구동을 위한 고밀도 문학 시뮬레이터"""

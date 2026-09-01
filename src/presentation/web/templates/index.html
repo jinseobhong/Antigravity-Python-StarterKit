@@ -440,25 +440,55 @@
     </div>
   </div>
 
-  <!-- LLM API Key Config Modal -->
+  <!-- LLM Dual API Key Config Modal -->
   <div id="keyModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="glass-panel rounded-2xl p-6 max-w-md w-full border border-amber-500/50 shadow-2xl space-y-4">
+    <div class="glass-panel rounded-3xl p-6 max-w-lg w-full border border-amber-500/50 shadow-2xl space-y-4">
       <div class="flex items-center justify-between pb-2 border-b border-gray-800">
         <h4 class="text-sm font-black text-amber-300 flex items-center gap-2">
-          <i class="fa-solid fa-key"></i> Gemini / Claude API 키 연동
+          <i class="fa-solid fa-key"></i> Gemini & Claude 멀티 LLM 연동 설정
         </h4>
         <button onclick="ModalManager.closeKeyModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div>
-        <label class="text-xs text-gray-300 block mb-1">Google Gemini API Key (또는 Anthropic Key)</label>
-        <input type="password" id="inputApiKey" placeholder="AIzaSy..." class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
-        <p id="currentKeyInfo" class="text-[10px] text-gray-400 mt-1.5"></p>
+
+      <!-- Active Provider Radio -->
+      <div class="space-y-1.5">
+        <label class="text-xs font-bold text-gray-300">기본 우선 호출 AI 프로바이더</label>
+        <div class="grid grid-cols-2 gap-2">
+          <label class="flex items-center gap-2 p-2.5 rounded-xl bg-gray-950 border border-gray-800 cursor-pointer hover:border-purple-500 transition">
+            <input type="radio" name="llmProvider" value="GEMINI" id="radioGemini" checked class="text-purple-600 focus:ring-0">
+            <span class="text-xs font-bold text-white">✨ Google Gemini</span>
+          </label>
+          <label class="flex items-center gap-2 p-2.5 rounded-xl bg-gray-950 border border-gray-800 cursor-pointer hover:border-amber-500 transition">
+            <input type="radio" name="llmProvider" value="CLAUDE" id="radioClaude" class="text-amber-600 focus:ring-0">
+            <span class="text-xs font-bold text-white">🎭 Anthropic Claude</span>
+          </label>
+        </div>
+        <p class="text-[10px] text-gray-400">※ 한쪽 API 장애나 Quota 초과(429) 시 다른 쪽으로 자동 캐스케이드 스왑됩니다.</p>
       </div>
+
+      <!-- Gemini Key Input -->
+      <div>
+        <div class="flex justify-between items-center mb-1">
+          <label class="text-xs text-gray-300 font-bold">Google Gemini API Key</label>
+          <span id="infoGemini" class="text-[10px] text-gray-400 font-mono"></span>
+        </div>
+        <input type="password" id="inputGeminiKey" placeholder="AIzaSy..." class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500 font-mono">
+      </div>
+
+      <!-- Claude Key Input -->
+      <div>
+        <div class="flex justify-between items-center mb-1">
+          <label class="text-xs text-gray-300 font-bold">Anthropic Claude API Key</label>
+          <span id="infoClaude" class="text-[10px] text-gray-400 font-mono"></span>
+        </div>
+        <input type="password" id="inputClaudeKey" placeholder="sk-ant-api..." class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500 font-mono">
+      </div>
+
       <div class="flex justify-end gap-2 pt-2 border-t border-gray-800">
-        <button onclick="ModalManager.saveApiKey()" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold transition shadow">
-          저장 & 연동 활성화
+        <button onclick="ModalManager.saveApiKey()" class="px-5 py-2.5 bg-gradient-to-r from-amber-600 to-purple-600 hover:from-amber-500 hover:to-purple-500 text-white rounded-xl text-xs font-bold transition shadow">
+          저장 & 멀티 LLM 연동 활성화
         </button>
-        <button onclick="ModalManager.closeKeyModal()" class="px-4 py-2 bg-gray-800 text-gray-300 rounded-xl text-xs font-bold hover:bg-gray-700 transition">
+        <button onclick="ModalManager.closeKeyModal()" class="px-4 py-2.5 bg-gray-800 text-gray-300 rounded-xl text-xs font-bold hover:bg-gray-700 transition">
           닫기
         </button>
       </div>

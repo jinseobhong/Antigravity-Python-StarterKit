@@ -19,10 +19,11 @@ const App = {
       const label = document.getElementById('keyStatusLabel');
       const btn = document.getElementById('btnKeyModal');
       if (status.has_key) {
-        if (label) label.innerText = '⚡ LLM 온라인';
+        const providerName = status.active_provider === 'CLAUDE' ? 'Claude 3.7' : 'Gemini 2.5';
+        if (label) label.innerText = `⚡ ${providerName} 온라인`;
         if (btn) btn.className = 'px-3 py-2 rounded-xl text-xs font-bold bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-900/50 transition flex items-center gap-1.5';
       } else {
-        if (label) label.innerText = '🔑 API 키 입력';
+        if (label) label.innerText = '🔑 API 키 설정';
         if (btn) btn.className = 'px-3 py-2 rounded-xl text-xs font-bold bg-amber-950/40 border border-amber-500/40 text-amber-300 hover:bg-amber-900/50 transition flex items-center gap-1.5 animate-pulse';
       }
     } catch (err) {

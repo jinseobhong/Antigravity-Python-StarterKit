@@ -14,11 +14,15 @@ const ApiClient = {
     return await res.json();
   },
 
-  async configLlm(apiKey) {
+  async configLlm(geminiKey, claudeKey, provider) {
     const res = await fetch('/api/config_llm', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ api_key: apiKey })
+      body: JSON.stringify({
+        gemini_key: geminiKey,
+        claude_key: claudeKey,
+        provider: provider
+      })
     });
     return await res.json();
   },
