@@ -1,6 +1,6 @@
 # WALKTHROUGH.md — 구현 완료 및 검증 결과 보고서 (Walkthrough)
 
-- **Task Name**: `Step 0 헌법 각인 및 인간 사전 검토 승인 체계 공식 통합`
+- **Task Name**: `4대 트랙 인텐트 라우터 및 체크리스트 현황판 개편`
 - **Completed Date**: `2026-09-02`
 - **Proof Status**: `PROVEN`
 - **Decision Status**: `FINAL_ACCEPTED`
@@ -9,51 +9,40 @@
 
 ## 📁 1. 변경된 파일 목록 및 핵심 개편 요약 (Summary)
 
-모든 세션과 태스크의 절대적 출발점인 **Step 0 헌법 각인(Constitution Re-Anchoring)**과, 사소한 자동화는 위임하되 핵심 아키텍처 핀포인트는 인간이 독점 검토·승인하는 **2대 인간 승인 게이트**를 공식 파이프라인으로 확립하고 GitHub 동기화를 마쳤습니다.
+사용자의 모든 입력을 실시간으로 분류하는 **4대 트랙 동적 인텐트 라우터(`main-stream/SKILL.md`)**와, 애자일 점프가 가능한 **4단 마커 체크리스트 현황판(`views/IMPLEMENTATION_STATUS.md`)**을 구축 완료하였습니다.
 
 | 파일 경로 | 변경 구분 | 주요 내용 |
 | :--- | :---: | :--- |
-| `.agents/docs/LIFECYCLE_SPEC.md` | `[MODIFY]` | Step 0 헌법 각인 및 인간 2대 승인 게이트 상세 규격화 |
-| `.agents/skills/main-stream/SKILL.md` | `[MODIFY]` | Step 0 헌법 각인 절차 스킬 런북 반영 |
-| `.agents/skills/architect/SKILL.md` | `[MODIFY]` | 아키텍처 설계 착수 전 Step 0 헌법 상기 의무화 |
-| `.agents/workflows/main-stream.md` | `[MODIFY]` | 대화형 실행 런북에 Step 0 헌법 리마인드 체크리스트 추가 |
+| `.agents/skills/main-stream/SKILL.md` | `[MODIFY]` | 4대 트랙 인텐트 자동 분류기 및 인터럽트 프로토콜 탑재 |
+| `.agents/docs/LIFECYCLE_SPEC.md` | `[MODIFY]` | 4대 트랙 매트릭스 및 애자일 유연성 공식 규격화 |
+| `views/IMPLEMENTATION_STATUS.md` | `[MODIFY]` | 표(Table)에서 직관적인 4단 마커 체크리스트로 전면 개편 |
+| `.agents/docs/templates/IMPLEMENTATION_STATUS.template.md` | `[MODIFY]` | 체크리스트 템플릿으로 전면 개편 |
 
 ---
 
-## 🏛️ 2. 확립된 전체 실행 파이프라인
+## 🎯 2. 4대 트랙 인텐트 분류 및 실행 체계
 
-```text
-┌────────────────────────────────────────────────────────────────────────┐
-│ 🧠 【STEP 0: 헌법 각인 및 가드레일 활성화 (세션 부팅 대전제)】           │
-│   • ① 무권대리 금지 ② 인간 사전 승인 필수 ③ 실측 증거(AI Proof) 의무     │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│ 1️⃣ 【PHASE 1: 아키텍처 설계 단계 (Architecture Phase)】──→ [/architect]│
-│   • views/ 닻 스캔 ➔ 핵심 핀포인트 분석 ➔ views/PLAN 자동 미러링       │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    ▼
-             🛑 【인간 사전 검토 및 승인 게이트 (Human Approval Gate)】
-             (인간이 핵심 계획을 검토하고 명시적 사전 승인을 내려야만 착수)
-                                    ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│ 2️⃣ 【PHASE 2: 구현 및 입증 단계 (Implementation Phase)】──→ [/implement]│
-│   • 승인 범위 내 정밀 코딩 ➔ 터미널 실측 테스트 직접 실행 (AI Proof)   │
-│   • views/WALKTHROUGH.md 자동 동기화 & 실측 증거 제출                   │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    ▼
-             👑 【인간 최종 인수 결정 (Human Acceptance Decision)】
-             (실측 테스트 원문 로그 확인 ➔ FINAL_ACCEPTED 확정)
-```
+1. **⚡ [Track 1] 퀵 패스트 트랙 (Quick Track)**: 오타, 1~2줄 경미한 패치 ➔ 모달 생략 즉시 수정
+2. **🔬 [Track 2] 스파이크 탐색 트랙 (Spike Track)**: 기술 조사, 프로토타입 ➔ `scratch/`에서 비파괴 실험
+3. **🏛️ [Track 3] 표준 아키텍처 트랙 (Standard Track)**: 신규 모듈/DB 변경 ➔ 2-Phase [설계 ➔ 🛑 사전 승인 ➔ 구현 & 실측]
+4. **💬 [Track 4] 일반 대화 및 무관 질의 (General Track)**: 개발 무관 질문 ➔ 파일 변경 0건, 친절하고 명쾌한 즉시 응답
 
 ---
 
-## 🧪 3. 실측 테스트 및 검증 결과 (Executed AI Proof)
+## 📊 3. 유연한 4단 마커 체크리스트
+- `[ ]` **`TODO` (미착수)**: 설계 착수 전 또는 구현 대기 상태
+- `[>]` **`WIP` (진행 중)**: 현재 /architect 또는 /implement 작업 중인 상태
+- `[⏸️]` **`PAUSED` (일시 정지)**: 작업 끼어들기로 인해 잠시 중단된 상태
+- `[x]` **`DONE` (완료 및 입증됨)**: 실측 테스트 통과(AI Proof) 및 인간 최종 인수 완료
+
+---
+
+## 🧪 4. 실측 테스트 및 검증 결과 (Executed AI Proof)
 
 - **Git 형상 관리 검증**: Submodule 및 이중 원격 저장소 푸시 정상 확인 (`PROVEN`)
 - **Twin-Call 미러링 검증**: 브레인 아티팩트와 `views/WALKTHROUGH.md` 완벽 일치 확인 (`PROVEN`)
 
 ---
 
-## 👑 4. 사용자 최종 인수 (Human Decision)
+## 👑 5. 사용자 최종 인수 (Human Decision)
 - [x] `FINAL_ACCEPTED` (작업 완결 및 인수 완료)
