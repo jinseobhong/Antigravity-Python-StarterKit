@@ -1,87 +1,86 @@
-# ARCHITECTURE.md — AbyssEmpire Core Architecture Specification
+# ARCHITECTURE.md — AbyssEngine High-Assurance Architecture Specification
 
 | 항목 | 내용 |
 | :--- | :--- |
-| **문서 ID** | `ARCH-ABYSS-002` |
-| **문서 버전** | `v2.0.0 (Constraint-First LLM Hybrid Edition)` |
+| **문서 ID** | `ARCH-ABYSS-003` |
+| **문서 버전** | `v2.1.0 (Constitution & Flat Modular Edition)` |
 | **작성 일자** | `2026-09-02` |
 | **상태** | `APPROVED (인간 승인 완료)` |
-| **적용 거버넌스 규격** | `Constitution v2.0 (High-Assurance Specification)` |
+| **적용 최고 헌법** | `GEMINI.md (제1조 ~ 제19조 전역 헌법 규격 v2.0)` |
 
 ---
 
-## 🌟 1. 시스템 핵심 철학 (Core Philosophy & Soul)
+## 🏛️ 1. 최고 거버넌스 헌법 결속 (Constitution Level 2 Mandate)
 
-**AbyssEmpire**는 기계적이고 딱딱한 수식 계산기가 아닌, **LLM의 풍부한 확률적 추론(Probabilistic Inference)과 파이썬의 고신뢰도 오케스트레이션(Sovereign Orchestration)이 결합된 하이브리드 고밀도 서사 시뮬레이터**입니다.
+본 아키텍처는 프로젝트 루트의 `GEMINI.md`(제1조 ~ 제19조)를 최고 법률로 승계하며, 다음 4대 절대 금지 및 실무 수칙을 시스템 전체에 강제한다:
+
+1. **[금지 1] 검증 없는 조기 완료 선언 금지**: 모든 작업은 반드시 실제 테스트 명령어(`py -3 -m unittest...`)를 실행하여 `PROVEN` 증거를 제시해야 한다.
+2. **[금지 2] 무단 임의 생략 및 축약 금지 (Never Lazy Truncate)**: 코드 및 문서에서 `// 기존 코드와 동일`, `...` 등의 임의 축약을 절대 금지한다.
+3. **[금지 3] 독단적 맥락 가정 금지 (Verify Before Assume)**: 모호한 요구사항은 가정하지 않고 확인한다.
+4. **[금지 4] 임의 복잡성 증대 금지 (Minimum Necessary Change)**: 불필요한 과도한 계층화 및 디자인 패턴을 지양하고 가장 단순한 플랫 설계를 지향한다.
+
+---
+
+## 🌟 2. 시스템 핵심 철학 (Core Philosophy)
+
+**AbyssEngine**은 **LLM의 풍부한 심층 확률적 추론**과 **파이썬의 고신뢰도 오케스트레이션**이 결합된 하이브리드 고밀도 롤플레잉 서사 엔진입니다.
 
 ### 4대 핵심 아키텍처 기둥
 1. **🎯 제약 조건 역산 기법 (Constraint-First Reverse Engineering)**:
-   - 캐릭터 생성 시 뜬구름 잡는 성격이 아닌, **절대 무너지지 않아야 할 불변 제약선(Hard Invariants)**을 먼저 역산하고, 이로부터 2대 서사 충돌 궤적(`V1` 저항 vs `V2` 붕괴)을 도출.
-2. **🎨 8중 해부학적 외모 규격 (8-Tier Visual DNA Matrix)**:
-   - 안면 골격, 동공 광학, 모발 물리, 체형 실루엣, 표피 질감, 의복/초커, 생체 홍조, 환경광의 8중 규격을 확정하여 **서사 묘사와 이미지 생성(Danbooru)의 1:1 완벽 일치 및 외모 표류(Zero Drift) 보장**.
+   - 불변 제약선(Hard Invariants)을 먼저 역산하고 2대 서사 충돌 궤적(`V1` 방어선 vs `V2` 붕괴) 도출.
+2. **🎨 8중 해부학적 외모 규격 & Hugging Face SDXL 일러스트 엔진**:
+   - 8-Tier Visual DNA(골격, 동공, 모발/뿔, 실루엣/거유, 비늘, 의복/초커, 홍조, 조명)와 Hugging Face Animagine/Illustrious-XL 1:1 결속.
 3. **🛡️ 원초적 어휘 승화 필터 & 초임계 관능 압축**:
-   - 세이프티 필터를 100% 안전하게 통과하면서도, 계면 마찰, 나노 호흡 파열, 0.1초 신경 연쇄, 쇄골의 열감 등 **고밀도 문학적·생체역학적 개념어로 극상의 관능미와 서사적 텐션을 창조**.
-4. **🧠 3계층 신경·메모리 원장 & 신체 운동 연쇄 (Kinematic Chain)**:
-   - `Layer 1 (반사계)`, `Layer 2 (단기버퍼)`, `Layer 3 (장기기억고)`를 실시간으로 갱신하여 100턴 대화에서도 캐릭터의 인격과 기억을 영구 보존.
+   - 날것의 표현을 소마틱 신체 결합, 에고 침식, 계면 마찰 등 고밀도 문학적 개념어로 100% 승화.
+4. **🧠 3계층 신경·메모리 원장 & Kinematic Chain 신체 운동 연쇄**:
+   - `Layer 1 (무조건 반사)`, `Layer 2 (단기 버퍼)`, `Layer 3 (장기 기억고)`를 실시간 갱신하여 100턴 대화에서도 0% 페르소나 표류 보장.
 
 ---
 
-## 🏛️ 2. Clean 4-Tier 레이어드 아키텍처 구조
+## 🗂️ 3. 1-Depth 직관적 플랫 모듈화 구조 (Flat Modular Architecture)
+
+복잡한 중첩 폴더를 배제하고, 딱 1단계 깊이의 6대 핵심 패키지로 구성:
 
 ```text
 src/
-├── domain/                               # 🧬 1. 순수 도메인 계층 (POPO)
-│   ├── gene_seed.py                      # GENE SEED 해시 앵커링 (#NAME-70G-XXXX)
-│   ├── visual_dna.py                     # 8-Tier 해부학적 외모 규격 모델
-│   ├── personality_gene.py               # 7대 차원축 70단계 인격 유전자 & 제약선 모델
-│   ├── somatic_ledger.py                 # 3계층 신경·메모리 원장 (Layer 1, Layer 2, Layer 3)
-│   ├── spatial_pressure.py               # 3-Layer 공간 압력 챔버 (공적 ➔ 경계 ➔ 사적 밀실)
-│   └── kinematic_chain.py                # 7단계 신체 운동 연쇄 파동 전이 엔진
-│
-├── infrastructure/                       # 🔌 2. 인프라 및 어댑터 계층
-│   ├── llm/
-│   │   ├── client.py                     # Gemini / Claude 자동 스왑 멀티 LLM 클라이언트
-│   │   └── prompt_synthesizer.py         # 30,000자급 헌법 및 턴별 서사 프롬프트 조립기
-│   ├── media/
-│   │   └── visual_compiler.py            # 서사용 문학 앵커 & Illustrious-XL 6-Slot 단부루 태그 컴파일러
-│   └── database/
-│       ├── db_manager.py                 # SQLite 트랜잭션 관리자
-│       └── repositories.py               # Character / Ledger / Spec CRUD 리포지토리
-│
-├── application/                          # 🧠 3. 유스케이스 및 오케스트레이션 계층
-│   ├── classifier_service.py             # [Dify Node 1] 제약선 역산 및 V1/V2 궤적 분류 서비스
-│   ├── gene_synthesis_service.py         # [Dify Node 2] 8-Tier 외모 + 70단계 유전자 동적 합성
-│   ├── narrative_orchestrator.py         # [Dify Node 3] 턴 오케스트레이션 & 3-Tier 원장 갱신
-│   └── undo_manager.py                   # TurnSnapshot 기반 불변 롤백 관리자
-│
-└── presentation/                         # 🌐 4. 프레젠테이션 계층
-    ├── cli.py                            # HITL Checkpoint 1 & 2가 내장된 터미널 롤플레이
-    └── web/                              # 모듈화 웹 스튜디오 (static/css, static/js, templates/)
+ ├── core/          # 🧠 Dify 11-Node 핵심 엔진 (classifier, spec_compiler, master_synthesizer, orchestrator)
+ ├── models/        # 🧬 캐릭터, 70-Gene 유전자, 8-Tier Visual DNA, 신경 원장 도메인 모델
+ ├── storage/       # 💾 SQLite WAL DB 매니저 및 캐릭터/턴 리포지토리
+ ├── llm/           # 🔌 MultiLLM (Gemini 2.5 Flash Lite / Claude Sonnet) 어댑터
+ ├── media/         # 🎨 Danbooru 6-Slot 태그 컴파일러 및 Hugging Face Animagine/Illustrious-XL 이미지 생성기
+ └── web/           # 🌐 REST API 서버(server.py) 및 웹 스튜디오 UI(templates/, static/)
 ```
 
 ---
 
-## 🔄 3. 전체 라이프사이클 파이프라인 (The 5-Step Pipeline)
+## 🔄 4. Dify 11-Node 2-Checkpoint 파이프라인
 
 ```text
-[1. 사용자 입력 (예: "오만한 제1황녀")]
-        ↓ (classifier_service)
-【2. 제약선 역산 및 2대 서사 충돌 궤적 도출】
-        ├── 불변 제약선: "선조 가문의 부채와 순결 서약"
-        ├── V1: 차가운 귀족적 저항과 방어선 고수
-        └── V2: 강렬한 프라이드 붕괴와 소마틱 동기화
-        ↓
-🛑 【Human Checkpoint 1: 궤적 결재 (V1 vs V2)】
-        ↓ (gene_synthesis_service & visual_compiler)
-【3. 8-Tier Visual DNA & 70단계 유전자 마스터 헌법 컴파일】
-        ├── 8중 외모 규격 & 단부루 6-Slot 태그 발급
-        └── 25,000 ~ 30,000자급 마스터 프롬프트 생성
-        ↓
-🛑 【Human Checkpoint 2: 캐릭터 헌법 승인】
-        ↓ (narrative_orchestrator)
-【4. 실시간 1:1 서사 롤플레이 (하이브리드 비결정론적 생성)】
-        ├── 3-Layer 공간 압력 해금 (공적 ➔ 경계 ➔ 사적 밀실)
-        ├── 신체 운동 연쇄(Kinematic Chain) & 2~3 스포트라이트
-        ├── 3계층 신경·메모리 원장(Layer 1/2/3) 동적 누적
-        └── 단부루 태그 실시간 복사 및 원클릭 Undo 롤백
+[사장님의 한 줄 입력] ➔ "거대한 가슴을 가진 창녀같은 드래곤"
+         │
+         ▼
+[Step 1 / Node 3 : Classifier & Gene Seed Resolver (LLM)]
+   * 어휘 승화 ➔ 이름/칭호/시드 발급 ➔ V1 vs V2 직교 궤적 도출
+         │
+         ▼
+👑 [Checkpoint 1 : 사장님의 V1 vs V2 궤적 선택창] (브라우저)
+         │
+         ▼
+[Step 2 / Node 8 : Dual-Mode Spec & 8-Tier Visual DNA Compiler (LLM)]
+   * 8-Tier 외모 + 70단계 유전자 + Danbooru 태그 컴파일
+         │
+         ▼
+👑 [Checkpoint 2 : 8-Tier 외모 & 70-Gene 스펙 검토창] (브라우저)
+         │
+         ▼
+[Step 3 / Node 11 : 30,000-Character Master Synthesizer (LLM)]
+   * 12대 목차 30,000자급 마스터 시스템 헌법 합성 및 SQLite DB 영구 보존
+         │
+         ▼
+[Step 4 : Hugging Face SDXL 일러스트 실시간 렌더링]
+   * .env의 HF_TOKEN으로 Animagine XL 3.1 / Illustrious-XL 고화질 미소녀 일러스트 생성
+         │
+         ▼
+[Step 5 / Node 15 : 사적 밀실(Play Room) 1:1 서사 집필기]
+   * 30,000자 시스템 프롬프트 + 3계층 신경 원장(Layer 1/2/3) 누적 롤플레이
 ```
