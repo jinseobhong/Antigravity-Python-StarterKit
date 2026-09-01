@@ -35,19 +35,19 @@
 
 ---
 
-### 3. 🧠 [AbyssEngine] 유스케이스 및 애플리케이션 계층 (Application Layer)
+### 3. 🔌 [AbyssEngine] 인프라 및 어댑터 계층 (Infrastructure Layer)
+- [x] **`Infra.Database`**: DatabaseManager 및 캐릭터/턴/텐션 리포지토리 (`DONE`)
+- [x] **`Infra.MultiLLM`**: UniversalLLMClient (Gemini/Claude 자동 캐스케이드 & 스왑 어댑터) (`DONE`)
+- [x] **`Infra.PromptBuilder`**: Somatic Prose 주입 및 서사 프롬프트 빌더 (`DONE`)
+- [x] **`Infra.Media`**: HuggingFace SD 초상화 렌더링 클라이언트 (`DONE`)
+
+---
+
+### 4. 🧠 [AbyssEngine] 유스케이스 및 애플리케이션 계층 (Application Layer)
 - [ ] **`Application.NarrativeOrchestrator`**: 턴 라이프사이클 관리 및 서사 오프닝 생성 (`TODO`)
 - [ ] **`Application.UndoManager`**: TurnSnapshot 기반 불변 롤백 스택 (`TODO`)
 - [ ] **`Application.ActionParserService`**: 자연어 지문/대사 분할 및 의미론적 디스패처 (`TODO`)
 - [ ] **`Application.CharacterService`**: 캐릭터 생성, 결핍 특성 주입 및 워크숍 서비스 (`TODO`)
-
----
-
-### 4. 🔌 [AbyssEngine] 인프라 및 어댑터 계층 (Infrastructure Layer)
-- [ ] **`Infra.Database`**: DatabaseManager 및 캐릭터/턴/텐션 리포지토리 (`TODO`)
-- [ ] **`Infra.MultiLLM`**: UniversalLLMManager (Gemini/Claude 자동 캐스케이드 & 스왑 어댑터) (`TODO`)
-- [ ] **`Infra.PromptBuilder`**: Somatic Prose 주입 및 3+1 전술 선택지 프롬프트 빌더 (`TODO`)
-- [ ] **`Infra.Media`**: HuggingFace SD 초상화 렌더링 클라이언트 (`TODO`)
 
 ---
 
