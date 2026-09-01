@@ -1,57 +1,39 @@
-# WALKTHROUGH.md — Git 원클릭 이중 푸시 및 SQLite 영구 감사 로거 구축 완료
+# WALKTHROUGH.md — Antigravity-Common-Core v1 브랜치 및 v1.0.0 공식 릴리스 완료
 
 | 항목 | 내용 |
 | :--- | :--- |
-| **문서 ID** | `WALK-AUTO-001` |
-| **문서 버전** | `v1.0.0` |
+| **문서 ID** | `WALK-RELEASE-v1` |
+| **릴리스 버전** | `v1.0.0` (The Historic Release) |
 | **완료 일자** | `2026-09-02` |
-| **입증 등급** | `PROVEN (스크립트 실행, SQLite DB 생성 및 Git 동기화 검증 완료)` |
+| **원격 저장소** | [Antigravity-Common-Core](https://github.com/jinseobhong/Antigravity-Common-Core) |
+| **입증 등급** | `PROVEN (v1 브랜치 분기 & v1.0.0 태그 GitHub 원격 푸시 완료)` |
 | **최종 결정** | `FINAL_ACCEPTED (인간 최종 인수 완료)` |
 | **작성자 / 승인자** | `AI Architect` / `Human Lead` |
 
 ---
 
-## 📁 1. 변경된 파일 목록 요약 (Changes Summary)
+## 🏛️ 1. v1.0.0 완성 패키지 명세 (Release Manifest)
 
-| 파일 경로 | 변경 구분 | 주요 내용 |
-| :--- | :---: | :--- |
-| `.agents/scripts/auto_push.py` | `[NEW]` | 서브모듈 및 메인 레포 원클릭 Git 컨벤셔널 커밋 & 동시 푸시 도구 |
-| `.agents/scripts/log_task.py` | `[NEW]` | SQLite 영구 감사 DB(`store/state.db`) 태스크/증거/5W1H 로깅 CLI 도구 |
-| `.agents/CONVENTIONS.md` | `[MODIFY]` | 신규 자동화 스크립트 2종 공식 규격 및 디렉토리 구조 등록 |
-| `views/IMPLEMENTATION_STATUS.md` | `[MODIFY]` | `Governance.AutoPush`, `Governance.SQLiteLogger` 컴포넌트 [DONE] 완료 갱신 |
-| `views/CURRENT_STATE.md` | `[MODIFY]` | 작업 완료(COMPLETED) 상태 동기화 |
+1. **전역 최고 헌법**: `GEMINI.md.example` (v2.0 High-Assurance Specification)
+2. **4대 트랙 인텐트 라우터**: `skills/main-stream/SKILL.md` (Quick, Spike, Standard, General)
+3. **1:1 대칭 워크플로우 & 스킬 4종**:
+   - `/main-stream` ⟷ `skills/main-stream/SKILL.md`
+   - `/architect` ⟷ `skills/architect/SKILL.md`
+   - `/implement` ⟷ `skills/implement/SKILL.md`
+   - `/scaffold` ⟷ `skills/scaffold/SKILL.md`
+4. **엔지니어링 문서 스타일 가이드**: `docs/STYLE_GUIDE.md` & 5대 표준 템플릿
+5. **3대 핵심 자동화 스크립트**:
+   - `scripts/verify_sync.py` (1:1 대칭 및 메타데이터 전수 검증)
+   - `scripts/auto_push.py` (원클릭 Git 서브모듈/메인 레포 동시 푸시)
+   - `scripts/log_task.py` (SQLite `store/state.db` 영구 감사 로거)
 
 ---
 
-## 🧪 2. 실측 테스트 실행 결과 원문 (Executed AI Proof Logs)
-
-### A. SQLite 영구 감사 DB 생성 및 태스크 적재 테스트
-```text
-$ py -3 .agents\scripts\log_task.py --record-task "Governance Automation: auto_push & log_task" --phase "Completed" --proof "PROVEN" --decision "FINAL_ACCEPTED"
-[OK] SQLite database initialized successfully at: D:\Development\projects\antigravity\아키텍트 설계안\.agents\store\state.db
-[OK] Task recorded successfully (Task ID: 1)
-
-$ py -3 .agents\scripts\log_task.py --status
-================================================================================
-🗄️  [Antigravity SQLite Store] Recent Audit Logs (state.db)
-================================================================================
-ID   | Task Name                           | Phase      | Proof    | Decision      
---------------------------------------------------------------------------------
-1    | Governance Automation: auto_push    | Completed  | PROVEN   | FINAL_ACCEPTED
-================================================================================
-```
-
-### B. 시스템 전수 무결성 검증 (verify_sync.py)
-```text
-$ py -3 .agents\scripts\verify_sync.py
-======================================================================
-[VALIDATION PASSED] ALL SYSTEMS PERFECT: 100% Symmetry & Compliance Confirmed (PROVEN).
-======================================================================
-```
-
-- **입증 등급 (Proof Grade)**: `PROVEN` (Exit code 0, 100% 통과)
+## 🚀 2. GitHub 원격 배포 증거 (AI Proof)
+- **`v1` 브랜치**: `https://github.com/jinseobhong/Antigravity-Common-Core/tree/v1` (`PROVEN`)
+- **`v1.0.0` 태그**: `https://github.com/jinseobhong/Antigravity-Common-Core/releases/tag/v1.0.0` (`PROVEN`)
 
 ---
 
 ## 👑 3. 사용자 최종 인수 (Human Acceptance Decision)
-- [x] `FINAL_ACCEPTED` (작업 완결 및 인수 완료)
+- [x] `FINAL_ACCEPTED` (작업 완결 및 역사적인 v1.0.0 릴리스 확정)
