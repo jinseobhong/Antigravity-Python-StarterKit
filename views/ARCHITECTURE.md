@@ -13,9 +13,9 @@
    └── user_global (GEMINI.md) ──→ 상시 강제 (ALWAYS ON)
 
 [Tier 2: Central Governance & Customization Hub (.agents/)]
-   ├── workflows/               ──→ 🎮 [인간 리모컨] main-stream.md, design.md, implement.md
-   ├── skills/                  ──→ 🤖 [AI 전문 뇌] main-stream/, design/, implement/
-   ├── docs/LIFECYCLE_SPEC.md   ──→ 2-Phase [설계 ➔ 구현] 라이프사이클 설계 명세서
+   ├── workflows/               ──→ 🎮 [인간 리모컨] main-stream.md, architect.md, implement.md
+   ├── skills/                  ──→ 🤖 [AI 전문 뇌] main-stream/, architect/, implement/
+   ├── docs/LIFECYCLE_SPEC.md   ──→ 2-Phase [아키텍처 ➔ 구현] 라이프사이클 설계 명세서
    ├── docs/templates/          ──→ 5대 표준 문서 템플릿
    ├── store/schema.sql         ──→ SQLite 영구 누적 로그 저장소
    ├── CONVENTIONS.md           ──→ 파일 시스템 및 명명 규칙 공식 명세
