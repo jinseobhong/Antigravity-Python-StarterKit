@@ -18,6 +18,8 @@
 - [x] **`Governance.StyleGuide`**: 공식 문서 작성 스타일 가이드(STYLE_GUIDE.md) 제정 및 템플릿 개편 (`DONE`)
 - [x] **`Governance.SyncValidator`**: 1:1 대칭 동기화 자동 검증 도구(verify_sync.py) 구축 (`DONE`)
 - [x] **`Governance.Scaffold`**: 컨벤션 100% 강제 파일/디렉토리 생성 스캐폴딩 스킬 & 워크플로우 (`DONE`)
+- [x] **`Governance.AutoPush`**: Git 서브모듈 및 메인 레포 원클릭 이중 푸시 자동화(auto_push.py) (`DONE`)
+- [x] **`Governance.SQLiteLogger`**: SQLite 영구 감사 로그 적재 CLI 도구(log_task.py) (`DONE`)
 - [x] **`Store.SQLite`**: 영구 누적 감사 로그 및 5W1H 오버라이드 스키마 (`DONE`)
 - [x] **`Views.Live`**: views/ 5대 핵심 실시간 관측 뷰 구축 (`DONE`)
 
