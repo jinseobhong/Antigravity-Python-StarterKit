@@ -21,7 +21,7 @@ if sys.platform == "win32":
 from src.presentation.web.server import run_server
 
 if __name__ == "__main__":
-    port = 8080
+    port = 8000
     if len(sys.argv) > 1:
         try:
             port = int(sys.argv[1])

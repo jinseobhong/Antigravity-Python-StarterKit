@@ -295,10 +295,10 @@ class StudioHandler(SimpleHTTPRequestHandler):
         return mapping.get(suffix, "application/octet-stream")
 
 
-def run_server(port: int = 8080, db_path: str = None) -> None:
+def run_server(port: int = 8000, db_path: str = None) -> None:
     """Web Studio 서버 구동 함수"""
     StudioHandler.initialize_services(db_path)
-    server_address = ("127.0.0.1", port)
+    server_address = ("0.0.0.0", port)
     httpd = ThreadedHTTPServer(server_address, StudioHandler)
     print(f"======================================================================")
     print(f"[AbyssEngine Studio Server] Running on http://127.0.0.1:{port}")
