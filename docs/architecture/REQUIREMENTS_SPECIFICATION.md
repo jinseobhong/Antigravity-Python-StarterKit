@@ -4,153 +4,182 @@
 | 메타데이터 항목 | 세부 내용 |
 | :--- | :--- |
 | **문서 표준** | `IEEE 830 / ISO/IEC/IEEE 29148 Software Requirements Specification` |
-| **문서 ID** | `SRS-ABYSS-2026-v4.0 (Enterprise Dify Pipeline Edition)` |
-| **기반 DSL 규격** | `다중 에이전트 25대 마스터 서사 엔진 & 시드 시스템 (v0.7.0)` |
+| **문서 ID** | `SRS-ABYSS-2026-v5.0 (Full UI/UX Specification Edition)` |
+| **기반 UI 캡처** | `Lobby Hub, Play Room Theater, Character Studio & Vault 3대 뷰 확정` |
 | **장르 & 세계관** | `다크 판타지 소마틱 롤플레잉 게임 (Dark Fantasy Somatic RPG)` |
 | **등장인물 규칙** | `플레이어(User) 제외 전원 여성형 캐릭터 (All-Female Cast Invariant)` |
 | **관계 확장 모델** | `Phase 1 (1:1 밀실) ➔ Phase 2 (1:N 파벌/하렘) ➔ Phase 3 (N:N 자율 상호작용)` |
-| **핵심 생성 철학** | `제약 조건 및 NSFW 소마틱 트리거 비가역적 선행 역산 (Constraint-First)` |
+| **생성 벡터 모델** | `V1(1안) & V2(2안) : 상호 직교하는 2대 전략/서사 전개 벡터 (Orthogonal Candidate Vectors)` |
 | **비주얼 연동** | `8-Tier 해부학적 Visual DNA ➔ 서사 문학 앵커 & Illustrious 단부루 6-Slot 1:1 컴파일` |
 | **최종 수정일** | `2026-09-02` |
 
 ---
 
-## 1. Dify 파이프라인 전수 분석 및 요구사항 매핑 (Pipeline Extraction)
+## 1. 시스템 범위 및 핵심 아키텍처 비전 (Vision & Scope)
 
-사용자의 Dify 마스터 DSL 파이프라인(`app.kind == 'app'`)으로부터 추출된 11단계 핵심 엔지니어링 프로세스 규격은 다음과 같다:
+### 1.1 시스템 목적 (Purpose)
+본 시스템은 **다크 판타지 세계관**을 배경으로, 플레이어가 고유한 인격을 지닌 여성형 캐릭터들과 깊이 있는 관계와 심리적·신체적 긴장감을 교환하는 **고밀도 소마틱 서사 시뮬레이션 엔진**이다.
+
+### 1.2 핵심 벡터 정의 (V1 & V2 Candidate Vectors)
+- `V1`과 `V2`는 특정 서사(저항/붕괴 등)로 고정된 것이 아니며, **캐릭터의 제약 조건(Hard Invariants)과 세계관 설정으로부터 도출된 "상호 직교하는(Orthogonal) 2가지 해결/서사 궤적(1안 vs 2안)"**이다.
+- 유저는 Human Checkpoint 1에서 자신의 취향에 맞는 벡터(1안 또는 2안)를 자유롭게 선택하여 서사 방향성을 확정한다.
+
+---
+
+## 2. 웹 앱 UI/UX 3대 화면 구조 명세 (3-View Web Architecture)
+
+제공된 디자인 캡처에 의거하여, 웹 앱은 다음 3대 핵심 뷰로 완전하게 구조화된다:
 
 ```text
-[Node 1: Start] ──→ [Node 2: DB Hydration]
-                          ↓
-[Node 3: CLASSIFIER & GENE SEED RESOLVER] (LLM 추론)
-  - 입력 분류: GENERAL_SPEC vs ROLEPLAY_INTERACTION
-  - 고유 시드 발급: #NAME-70G-XXXX (시드 입력 시 100% 계승)
-  - 불변 제약선(Hard Invariants) 및 2대 충돌 궤적(V1 vs V2) 역산
-  - 원초적 어휘 승화 필터 (NSFW ➔ 소마틱 신체 결합/피부 밀착 개념어)
-                          ↓
-[Node 4: View Renderer] ──→ [Node 5: HUMAN CHECKPOINT 1 (V1/V2 결재창)]
-                                  ↓ (V1 채택 or V2 채택)
-[Node 6: Vector Selector] ──→ [Node 7: DUAL-MODE SPEC COMPILER] (LLM 추론)
-  - 8-Tier Visual DNA & 17대 생체·의복 텐서 매핑
-  - 70단계 인격 유전자 & Kinematic Chain 신체 운동 연쇄 파동 전이
-  - 2~3개 동적 스포트라이트 & 턴 진행별 심층 유전자 순환
-                          ↓
-[Node 8: Spec Linter] ──→ [Node 9: HUMAN CHECKPOINT 2 (25대 마스터 결재창)]
-                                  ↓ (APPLY 승인)
-[Node 10: 30,000자 MASTER SYNTHESIZER] (LLM 추론)
-  - 무수치 순수 감각어 헌법 (N, bpm 배제 ➔ 살결의 냉기, 호흡 승강)
-  - 동적 가변 완급 조절 엔진 (Level 1: 2~4문단 / Level 2: 5~8문단 / Level 3: 10~15+문단)
-  - 3계층 신경·메모리 원장 (Layer 1 반사 / Layer 2 단기버퍼 / Layer 3 장기기억)
-                          ↓
-[Node 11: Static Validator & SQLite/Supabase Save]
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ [Header] 👑 심연의 혈통 : 침식의 제국    [Claude 3.7 / Gemini 3.6 설정]    │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ [VIEW 1 : MAIN LOBBY HUB]                                                    │
+│  - 좌측: Hero 문구 + [Play Room 입장] & [Character Studio 입장] 2대 포털 카드 │
+│  - 우측: [ACTIVE PERSONA] 액자 (전신 일러스트 + 3대 속성 행 + 빠른 액션)       │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ [VIEW 2 : PLAY ROOM THEATER]                                                 │
+│  - 상단: 상태 게이지 (신뢰, 성애, 수치심, 죄책감, 굴종) + Undo / Regenerate  │
+│  - 중앙: 고밀도 서사 극장 말풍선 (캐릭터 턴 / 플레이어 턴 / 3계층 원장)       │
+│  - 하단: 5대 실시간 전술 선택지 (순애 / 압박 / 탐색 / 제압 / 유혹) + 입력창 │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ [VIEW 3 : CHARACTER STUDIO & VAULT]                                          │
+│  - 상단: 7대 액션 바 (+ 1.생성 / 2.조회 / 3.수정 / 4.불러오기 / 5.삭제 / 사전)│
+│  - 검색 & 필터: Rigid, Endurer, Controller, Deprived 아키타입 탭             │
+│  - 중앙: 4열 캐릭터 카드 그리드 (액션 아이콘, JSON, 복사, AI 일러스트 생성) │
+│  - 하단: 실시간 활성 캐릭터 정밀 인스펙터 패널 (16 RDB Traits & 생체 수치)   │
+└──────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 2. 8-Tier Visual DNA & 유전자 합성 인과 메커니즘 (Visual-Gene Synthesis)
+### 2.1 [VIEW 1] 메인 로비 허브 (Main Lobby Hub)
 
-### 2.1 인과 역산 원칙 (Causal Invariant Chain)
-외모는 단순한 장식이 아니라, **"캐릭터가 목숨보다 지키려는 불변의 제약선(트라우마/결벽증/순결 서약)"**과 **"NSFW 신체 취약 부위"**를 감추고 방어하기 위해 형성된 생체적/의복적 필연성으로 도출된다.
+#### 1. 좌측 히어로 섹션 (Hero Intro & Action Portals)
+- **배지**: `✨ Next-Gen Persona & Narrative Architecture`
+- **메인 타이틀**:
+  > **가장 완벽한 인격과의 조우,<br><span style="color:#f472b6;">한계를 넘는 서사의 심연.</span>**
+- **서브텍스트**: "17대 생체 텐서와 3계층 신경·메모리 원장으로 구동되는 독점 서사 엔진입니다. 당신만의 고유한 인격을 포착하고, 숨 막히는 1:1 롤플레이에 몰입하세요."
+- **2대 포털 카드**:
+  1. **Play Room 카드**:
+     - 아이콘: `🎭`
+     - 설명: "현재 상주 중인 캐릭터와 1:1 실시간 롤플레이 서사에 돌입합니다."
+     - 버튼: `▶ Play Room 입장` (핑크/보라 그라데이션), `👥 캐릭터 교체`
+  2. **Character Studio 카드**:
+     - 아이콘: `🪄`
+     - 설명: "RDB 캐릭터 보관소, 유전자 튜닝 및 JSON/프롬프트 사출을 관리합니다."
+     - 버튼: `🪄 Character Studio 입장 →`
+
+#### 2. 우측 활성 캐릭터 스포트라이트 카드 (Active Persona Card)
+- **헤더**: `ACTIVE PERSONA` | `#LILI-70G-BFFF` (시드 해시 배지)
+- **초상화 액자 (Portrait Frame)**:
+  - 캐릭터 전신 일러스트 렌더링
+  - 하단 우측 오버레이 액션 버튼: `🪄 생성` (AI 이미지 생성 트리거), `📁 업로드` (로컬 이미지 교체)
+- **캐릭터 정보**:
+  - 이름 및 칭호: `릴리스` (`제1황녀 • 제국 황실 | Rigid (결벽주의 척추 방어)`)
+- **3대 핵심 속성 행 (3 Key Trait Rows)**:
+  - `외모 & 체형`: 차가운 은발과 서늘한 금빛 눈동자, 목에 채워진 서늘한 금속 초커
+  - `핵심 결핍 & 트라우마`: 선조 가문의 막대한 부채와 순결 서약의 도덕적 결벽증
+  - `은밀한 비밀 & 약점`: 가문의 비밀 금고 열쇠를 소유하고 있으며 체온에 극도로 취약함
+- **하단 빠른 제어 바**: `▶ Play Room 입장`, `👥 교체`, `🪄 Studio 입장`
+
+---
+
+### 2.2 [VIEW 2] 플레이 룸 서사 극장 (Play Room Theater)
+
+#### 1. 상단 상태 바 (Top Status & Control Bar)
+- **캐릭터 식별**: `← Lobby` 버튼 | `릴리스 (제1황녀)` | `#LILI-70G-BFFF`
+- **소마틱 상태 배지**:
+  - 아키타입: `Rigid 3/7`
+  - 진행 공간: `Stage 1 (침실 개방 - 포섭된 요새와 결벽)`
+  - 5대 심리 게이지: `신뢰 20%`, `성애 0%`, `수치심 -30`, `죄책감 15%`, `굴종 20%`
+- **우측 제어 버튼**: `Claude 3.7` 설정 | `👥 캐릭터 교체` | `↺ Undo` | `🔄 Regenerate` | `🗑️ Reset`
+
+#### 2. 중앙 대화 및 서사 스트림 (Narrative Stream)
+- **캐릭터 턴 버블**:
+  - 상단 라벨: `릴리스 (Stage 1 침실 개방 - 포섭된 요새와 결벽 | TURN {N})`
+  - 고밀도 문학적 묘사 (무수치 순수 감각어 + 신체 운동 연쇄 전이 + 대화)
+- **플레이어 턴 버블**:
+  - `당신의 행동 / 대사` (우측 정렬, 보라색 하이라이트)
+
+#### 3. 하단 실시간 5대 전술 선택지 (5 Categorized Tactical Chips)
+- 유저가 클릭 시 즉시 해당 의도와 행동이 입력창에 자동 바인딩되거나 즉시 실행됨:
+  1. `🌟 [순애/위로]`: 차분한 위로 (손을 두 손으로 감싸 쥐어 따스한 체온을 전하며 안도시킨다)
+  2. `⚡ [압박/정복]`: 턱선 강제 치켜올리기 (시선을 강제로 맞추며 무조건적인 복종 요구)
+  3. `🌊 [탐색/동조]`: 호흡 및 체온 동조 (나란히 앉아 서로의 은밀한 온기와 호흡을 맞춘다)
+  4. `⚡ [제압/이완]`: 어깨 긴장 완화 (단단하게 굳은 어깨를 지그시 주무르며 신체 방어선 이완)
+  5. `🔥 [유혹/자극]`: 금속 초커 자극 (목에 걸린 차가운 초커 가장자리를 손끝으로 쓸어내림)
+
+#### 4. 자연어 입력 폼 (Natural Action Input)
+- Placeholder: `당신의 행동이나 대사를 자유롭게 입력하세요... (Enter 전송 / Shift+Enter 줄바꿈)`
+- 전송 버튼: `전송 🚀` (핑크/보라 그라데이션)
+
+---
+
+### 2.3 [VIEW 3] 캐릭터 스튜디오 & 보관소 (Character Studio & Vault)
+
+#### 1. 상단 글로벌 제어 바 (Top 7-Action Bar)
+- `← Lobby` 버튼 | `🪄 Character Studio & Vault`
+- 우측 7대 액션 버튼:
+  1. `+ 1. 생성` [보라 그라데이션] : HITL 2단계 결재선 캐릭터 발현 모달 오픈
+  2. `🔍 2. 조회` : 캐릭터 정밀 데이터 뷰어
+  3. `✏️ 3. 수정` : 8-Tier Visual DNA 및 유전자 편집기
+  4. `📥 4. 불러오기` : 외부 JSON / 시드 해시 임포트
+  5. `🗑️ 5. 삭제` : 캐릭터 영구 삭제
+  6. `📖 6. 70대 사전` : 70단계 마스터 인격 유전자 도감 뷰어
+  7. `Claude 3.7 / Gemini 설정` : 멀티 LLM 런타임 설정
+
+#### 2. 검색 및 4대 아키타입 필터 (Search & Archetype Filters)
+- 검색창: `이름, 칭호, 라이브러리, 결핍/약점 검색...`
+- 필터 탭:
+  - `전체`
+  - `Rigid` (결벽주의 척추 방어형 - 예: 릴리스)
+  - `Endurer` (성직자형 금욕 인내형 - 예: 에이라)
+  - `Controller` (오만한 지배/역전형 - 예: 세라피나)
+  - `Deprived` (가련한 유기 불안형 - 예: 실비아)
+
+#### 3. 4열 캐릭터 카드 그리드 (4-Column Roster Grid)
+- 각 카드 구성:
+  - 대표 이니셜 아바타 (`릴`, `에`, `세`, `실`) + 이름 + 칭호
+  - `시드 해시` (`#LILI-70G-BFFF`) + `아키타입 배지` (`Rigid` 등)
+  - 핵심 외모 특징 및 은밀한 약점 요약 텍스트
+  - 4대 아이콘 액션: `🔍 (조회)`, `✏️ (수정)`, `▶ (플레이)`, `🗑️ (삭제)`
+  - 하단 유틸리티: `📥 JSON`, `📋 복사`, `🪄 AI 일러스트 생성` (Danbooru 태그 연동)
+
+#### 4. 하단 활성 캐릭터 정밀 인스펙터 패널 (Active Character Inspector)
+- 썸네일 + 이름 + 칭호 + 시드
+- 우측 액션: `▶ Play Room 입장`, `✏️ 수정`, `📥 JSON 추출`, `📋 25대 프롬프트`, `🗑️ 삭제`
+- 상세 상태: `현재 신체 징후 & 발현 단계`, `생체 수치 (ODO / TAINT)`, `16 RDB Traits 상세 표`
+
+---
+
+## 3. Dify 파이프라인 및 8-Tier Visual DNA 연동 (Pipeline Integration)
 
 ```text
-[Hard Invariants : 가문 부채 & 순결 서약 & 초커 접촉 취약]
+[User Concept Input] 
         ↓
-[8-Tier Visual DNA 인과 역산]
-  ├── 1. face_geometry      : 결벽증을 방어하기 위한 날렵한 V-line 턱선과 굳게 다문 창백한 입술
-  ├── 2. ocular_optics      : 상대를 위압하며 동요를 숨기는 금빛 홍채와 짙은 호박색 림
-  ├── 3. hair_physics       : 엄격한 규율의 백은색 긴 생머리, 뺨을 타고 흐르는 단정한 옆머리
-  ├── 4. body_silhouette    : 꼿꼿한 귀족적 척추와 도드라진 쇄골 패임 (168cm 호리호리한 체형)
-  ├── 5. dermal_texture     : 햇빛을 보지 않은 창백한 백옥 피부와 목덜미의 푸른 핏줄
-  ├── 6. apparel_accents    : 제약선을 상징하는 은색 금속 초커와 어깨가 드러난 검은 실크 드레스
-  ├── 7. somatic_flush_cue  : 쾌락/수치 굴복 시 쇄골 패임과 귓바퀴를 타고 번지는 붉은 열감
-  └── 8. lighting_contrast  : 차가운 달빛과 어두운 밀실의 짙은 명암 대비
+[1. Classifier & Gene Seed Resolver] 
+  - 고유 시드 발급 (#NAME-70G-XXXX)
+  - Hard Invariants & NSFW 소마틱 트리거 역산
+  - 상호 직교하는 2대 해결 궤적 도출 (V1 1안 vs V2 2안)
         ↓
-[Illustrious-XL 6-Slot 단부루 태그 & 서사 앵커 동시 컴파일]
-  - Slot 1: Master Quality Tags (masterpiece, best quality, ultra-detailed)
-  - Slot 2: Character Name & Base Pose (lilith, solo, 1girl, standing)
-  - Slot 3: Hair & Eyes (silver_hair, straight_hair, golden_eyes, amber_eyes)
-  - Slot 4: Apparel & Choker (black_dress, off-shoulder, silver_choker, ribbon)
-  - Slot 5: Somatic & Sensorial Cues (collarbone, pale_skin, blushing, trembling)
-  - Slot 6: Lighting & Atmosphere (dark_fantasy, moonlight, dramatic_shadow)
+[2. Human Checkpoint 1 (V1/V2 결재)] ──→ 유저가 1안 or 2안 채택!
+        ↓
+[3. 8-Tier Visual DNA & 70단계 유전자 동적 합성]
+  - 8중 외모 규격 (골격, 동공, 모발, 체형, 표피, 의복/초커, 홍조, 조명)
+  - Illustrious-XL 6-Slot 단부루 태그 자동 컴파일 (AI 일러스트 생성 버튼 연동)
+  - Kinematic Chain(신체 운동 연쇄 파동 전이) 및 7대 축 심층 순환 탑재
+        ↓
+[4. Human Checkpoint 2 (25대 마스터 규격 승인)] ──→ [APPLY]
+        ↓
+[5. RDB 영구 저장 및 Play Room 실시간 롤플레이 즉시 돌입]
 ```
 
 ---
 
-## 3. 핵심 서사 엔진 5대 절대 헌법 (Narrative Core Invariants)
+## 4. 인수 조건 (Acceptance Criteria)
 
-### 3.1 헌법 1: 상태값 무(無)수치 순수 감각어 헌법 (Zero-Unit Sensory Law)
-- 원장과 서사 본문에서 `2.0N`, `80bpm`, `38.4°C`, `1:3.5` 같은 기계적 아라비아 숫자나 물리 단위를 100% 영구 배제한다.
-- 모든 상태는 **'살결의 서늘한 냉기'**, **'가라앉은 흉곽의 미세한 승강'**, **'목덜미를 옥죄는 초커의 금속성 압박감'**, **'오만하게 가늘어진 동공의 떨림'** 등 100% 현상학적 생체 감각어와 심리 문학으로 기록한다.
-
-### 3.2 헌법 2: 신체 운동 연쇄 전이 (Kinematic Chain Wave Law)
-- 신체 자극과 접촉 반응이 특정 부위(얼굴/입술)에 고정되지 않고 파동처럼 전이되어야 한다:
-  $$\text{시선} \longrightarrow \text{성대/호흡} \longrightarrow \text{흉곽/심박} \longrightarrow \text{부속기관(꼬리/날개/뿔)} \longrightarrow \text{의복 장력} \longrightarrow \text{손끝 악력} \longrightarrow \text{족부 접지력}$$
-- 매 턴마다 2~3개의 새로운 접촉 텐서만 동적으로 점등(Spotlight On)하고, 직전 턴의 텐서는 쿨다운(Spotlight Off)한다.
-
-### 3.3 헌법 3: 7대 차원축 심층 순환 (Deep Gene Cycler)
-- 턴이 누적될수록 캐릭터의 반응은 단순한 물리 반사에서 심연으로 깊숙이 파고든다:
-  $$\text{축 I (물리적 기질 반사)} \longrightarrow \text{축 III (과거 사회적 결핍)} \longrightarrow \text{축 IV (인지 왜곡)} \longrightarrow \text{축 V (그림자 에고 붕괴)} \longrightarrow \text{축 VI (연금술적 척수 굴종)}$$
-
-### 3.4 헌법 4: 3-Layer 공간 압력 챔버 (Spatial Pressure Progression)
-- **Layer 0 (공적 공간)**: 사회적 가면, 완벽한 예의와 방어선 유지, 일상적 대화.
-- **Layer 1 (경계 공간)**: 시선 집중, 1:1 대면, 신체적 거리 좁힘, 미세한 호흡 교란.
-- **Layer 2 (사적 밀실)**: 닫힌 문, 신체 밀착 허용, 에고 붕괴, NSFW 소마틱 본능 해금.
-
-### 3.5 헌법 5: 동적 가변 완급 조절 엔진 (Dynamic Pacing Scale)
-- **Level 1 (경량 텐션 / 2~4문단)**: 가벼운 탐색, Layer 0 공적 대화, 서서히 조여오는 분위기.
-- **Level 2 (서사 고조 / 5~8문단)**: 물리적 접촉 시작, 제약선과의 내적 갈등, Layer 1 경계 텐션.
-- **Level 3 (대하 클라이맥스 / 10~15+문단)**: 사적 밀실(Layer 2), 한계점 파열, 관능적 절정과 자아 붕괴.
-
----
-
-## 4. 3계층 신경·메모리 원장 (3-Tier Somatic Neural & Memory Ledger)
-
-매 턴 응답의 하단에 단일 진실 공급원(SSOT)으로 갱신되는 원장 구조:
-
-```text
-[CUMULATIVE NEURAL & MEMORY LEDGER]
-• Layer 1 (Primitive Reflex Matrix)
-  - 척추/호흡/성대/눈동자의 즉각적 무조건 반사 및 근육 긴장 상태
-• Layer 2 (Short-Term Somatic Buffer)
-  - 체온 잔향, 피부의 붉은 열감, 헐떡이는 호흡의 물리적 흐트러짐 (이력현상)
-• Layer 3 (Long-Term Somatic & Semantic Archive)
-  - 영구 신체 각인, 정서적 부채 원장, 플레이어에게 의존/굴종하는 관계성 전복률 (%)
-```
-
----
-
-## 5. 다자간 상호작용 확장 모델 (Interaction Progression)
-
-| 단계 | 토폴로지 | 상호작용 및 파벌 역학 |
-| :--- | :--- | :--- |
-| **Phase 1** | `1:1 Focused` | 플레이어와 단일 여성 캐릭터 간의 밀실 심층 심리 및 소마틱 롤플레이 |
-| **Phase 2** | `1:N Multi-Party` | 플레이어 1인에 대해 복수의 여성 캐릭터가 질투, 충성 경쟁, 협력 서사 전개 |
-| **Phase 3** | `N:N Living Abyss`| 플레이어가 개입하지 않아도 여성 캐릭터 간의 자율적 파벌 충돌, 관계 전이, 암투 |
-
----
-
-## 6. 기능 요구사항 I/O 계약 (Functional Requirements)
-
-### [FR-01] Classifier & Gene Seed Resolver
-- **입력**: `user_query` (자연어 텍스트)
-- **출력**: `seed_hash` (`#NAME-70G-XXXX`), `hard_invariants` (제약선, NSFW 트리거), `resolution_vectors` (V1 저항 vs V2 붕괴).
-
-### [FR-02] 8-Tier Visual DNA & Gene Spec Compiler
-- **입력**: 승인된 `selected_vector` + `hard_invariants`
-- **출력**: 8-Tier Visual DNA, Illustrious-XL 6-Slot Danbooru 태그, 70단계 유전자, 운동 연쇄 파동 맵.
-
-### [FR-03] Narrative Orchestrator & 3-Tier Ledger Synchronizer
-- **입력**: 플레이어의 행동/대사 (`action_text`)
-- **출력**:
-  1. `STATUS META` (GENE SEED 해시, Level 1~3 호흡, 공간 Layer 0~2, 활성 스포트라이트 텐서)
-  2. `NARRATIVE PROSE` (무수치 감각 문학 및 초임계 관능 압축 본문)
-  3. `CUMULATIVE NEURAL & MEMORY LEDGER` (Layer 1/2/3 실시간 갱신)
-
----
-
-## 7. 인수 조건 (Acceptance Criteria & Test Oracles)
-
-- [ ] **AC-01 (Dify 11-Node Compliance)**: Dify 마스터 DSL의 모든 노드 규칙(시드 앵커, 2단계 결재선, 3계층 원장, 무수치 헌법)이 완벽히 만족되어야 한다.
-- [ ] **AC-02 (Constraint-First with NSFW Trigger)**: 제약 조건과 소마틱 트리거가 먼저 역산되지 않은 캐릭터 생성 요청은 원천 거부되어야 한다.
-- [ ] **AC-03 (Zero Visual Drift & Danbooru Parity)**: 8중 외모 규격이 서사 텍스트와 Danbooru 6-Slot 태그에 1:1로 결합되어 100턴 대화에서도 외모 표류가 0%여야 한다.
-- [ ] **AC-04 (Hybrid Engine Integrity)**: Native Python이 상태/스택/되돌리기를 100% 무결하게 제어하고, LLM이 문학적 텐션을 비결정론적으로 생산해야 한다.
+- [ ] **AC-01 (UI Screenshot Pixel-Parity)**: 캡처된 3대 화면(Lobby, Play Room, Character Studio & Vault)의 레이아웃, 컬러 팔레트, 버튼 배치, 5대 전술 칩, 카드 그리드가 완벽히 구현되어야 한다.
+- [ ] **AC-02 (V1/V2 Orthogonal Selection)**: V1과 V2는 고정된 속성이 아닌 상호 직교하는 2대 대안 궤적으로서 유저의 Checkpoint 1 결재에 의해 선택되어야 한다.
+- [ ] **AC-03 (8-Tier Visual DNA & Illustrious Tag Generation)**: 모든 캐릭터는 8중 외모 규격을 보유하며, 'AI 일러스트 생성' 버튼 클릭 시 6-Slot 단부루 태그가 즉시 생성되어야 한다.
+- [ ] **AC-04 (Zero-Friction Asynchronous UX)**: 비동기 멀티스레드 서빙으로 턴 전송, 캐릭터 생성, 프롬프트 복사 시 브라우저 UI 프리징이 0%여야 한다.
