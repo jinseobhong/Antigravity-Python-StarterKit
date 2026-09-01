@@ -112,7 +112,15 @@ class StudioHandler(SimpleHTTPRequestHandler):
                 }
                 self._send_json(state_data)
             else:
-                self._send_json({"error": "No character found"}, status=404)
+                self._send_json({
+                    "character": None,
+                    "chat_history": [],
+                    "step": 1,
+                    "last_action": "",
+                    "last_narrative": "",
+                    "active_tensors": [],
+                    "choices": []
+                })
             return
 
         # 2. 전체 캐릭터 목록 조회

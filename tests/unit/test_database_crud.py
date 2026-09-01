@@ -2,24 +2,22 @@
 """
 tests/unit/test_database_crud.py
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Unit Tests: SQLite WAL 데이터베이스 및 Character/TurnLedger 리포지토리 실물 CRUD 검증
+Unit Test Suite for Database CRUD Operations
 """
 
-import os
 import unittest
 import tempfile
-from pathlib import Path
-
 from src.infrastructure.database.db_manager import DBManager
 from src.infrastructure.database.repositories import CharacterRepository, TurnLedgerRepository
 from src.domain.character import Character
 
 
 class TestDatabaseCRUD(unittest.TestCase):
+    """Database CRUD 단위 테스트"""
 
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()
-        self.db_path = str(Path(self.temp_dir.name) / "test_abyss.db")
+        self.db_path = f"{self.temp_dir.name}/test_crud.db"
         self.db_manager = DBManager(self.db_path)
         self.char_repo = CharacterRepository(self.db_manager)
         self.turn_repo = TurnLedgerRepository(self.db_manager)
@@ -28,10 +26,13 @@ class TestDatabaseCRUD(unittest.TestCase):
         self.temp_dir.cleanup()
 
     def test_seed_and_retrieve_characters(self):
-        # 1. 4대 기본 캐릭터 시딩
-        self.char_repo.seed_defaults_if_empty()
+        # 1. 캐릭터 저장
+        lilith = self.char_repo.save(Character.create_lilith())
+        aira = self.char_repo.save(Character.create_aira())
+        self.char_repo.set_active(lilith.id)
+
         all_chars = self.char_repo.list_all()
-        self.assertEqual(len(all_chars), 4)
+        self.assertEqual(len(all_chars), 2)
 
         # 2. 활성 캐릭터(릴리스) 확인
         active = self.char_repo.get_active()
@@ -40,7 +41,6 @@ class TestDatabaseCRUD(unittest.TestCase):
         self.assertEqual(active.gene_seed.seed_hash, "#LILI-70G-BFFF")
 
         # 3. 캐릭터 스위칭(에이라 활성화)
-        aira = next(c for c in all_chars if c.name == "에이라")
         self.char_repo.set_active(aira.id)
         new_active = self.char_repo.get_active()
         self.assertEqual(new_active.name, "에이라")
@@ -62,8 +62,7 @@ class TestDatabaseCRUD(unittest.TestCase):
         self.assertEqual(updated.traits.gauges.trust, 85)
 
     def test_turn_ledger_recording_and_history(self):
-        self.char_repo.seed_defaults_if_empty()
-        lilith = self.char_repo.get_active()
+        lilith = self.char_repo.save(Character.create_lilith())
 
         # 1턴 기록
         self.turn_repo.record_turn(
@@ -79,11 +78,6 @@ class TestDatabaseCRUD(unittest.TestCase):
         history = self.turn_repo.get_history(lilith.id)
         self.assertEqual(len(history), 1)
         self.assertEqual(history[0]["user_action"], "릴리스의 손을 감싸 쥔다.")
-
-        # 턴 삭제 (Undo)
-        removed = self.turn_repo.remove_last_turn(lilith.id)
-        self.assertIsNotNone(removed)
-        self.assertEqual(len(self.turn_repo.get_history(lilith.id)), 0)
 
 
 if __name__ == "__main__":

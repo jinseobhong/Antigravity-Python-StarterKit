@@ -130,23 +130,8 @@ class CharacterRepository:
         return affected > 0
 
     def seed_defaults_if_empty(self) -> None:
-        """DB가 비어있을 때 4대 대표 실물 아키타입(릴리스, 에이라, 세라피나, 실비아) 자동 시딩"""
-        conn = self.db_manager.get_connection()
-        cur = conn.execute("SELECT COUNT(*) as cnt FROM characters;")
-        count = cur.fetchone()["cnt"]
-        conn.close()
-
-        if count == 0:
-            lilith = Character.create_lilith()
-            aira = Character.create_aira()
-            seraphina = Character.create_seraphina()
-            sylvia = Character.create_sylvia()
-
-            self.save(lilith)
-            self.save(aira)
-            self.save(seraphina)
-            self.save(sylvia)
-            self.set_active(lilith.id)
+        """하드코딩 더미 시딩 비활성화 (순수 유저 생성 인격만 관리)"""
+        pass
 
     def _row_to_character(self, row: sqlite3.Row) -> Character:
         data = {
