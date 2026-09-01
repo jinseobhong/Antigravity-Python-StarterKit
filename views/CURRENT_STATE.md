@@ -10,7 +10,7 @@
 ---
 
 ## 📌 현재 당면 작업 (Current Task Focus)
-- **Feature / Task**: `views/ 디렉토리 신설 및 5대 핵심 뷰 배치 & 전수 재매핑`
+- **Feature / Task**: `main-stream.md 워크플로우 및 LIFECYCLE_SPEC.md 명세서 정립 & 전수 동기화`
 - **Current Phase**: `PHASE 2: 구현 및 입증 완료 (COMPLETED)`
 - **Implementation Auth**: `APPROVED`
 - **Proof Status**: `PROVEN`

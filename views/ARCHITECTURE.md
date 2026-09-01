@@ -13,8 +13,9 @@
    └── user_global (GEMINI.md) ──→ 상시 강제 (ALWAYS ON)
 
 [Tier 2: Central Governance & Customization Hub (.agents/)]
-   ├── workflows/workflow.md    ──→ 2-Phase 실전 페어링 파이프라인
+   ├── workflows/main-stream.md ──→ 2-Phase 메인 스트림 실행 런북 (/main-stream)
    ├── skills/workflow/SKILL.md ──→ 자동 활성화 실행 런북
+   ├── docs/LIFECYCLE_SPEC.md   ──→ 2-Phase 라이프사이클 설계 명세서
    ├── docs/templates/          ──→ 5대 표준 문서 템플릿
    ├── store/schema.sql         ──→ SQLite 영구 누적 로그 저장소
    ├── CONVENTIONS.md           ──→ 파일 시스템 및 명명 규칙 공식 명세
