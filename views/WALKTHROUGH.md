@@ -1,40 +1,57 @@
 # WALKTHROUGH.md — 구현 완료 및 검증 결과 보고서 (Walkthrough)
 
-- **Task Name**: `아키텍처 설계도(ARCHITECTURE) 7대 고신뢰도 규격 전면 업그레이드`
-- **Completed Date**: `2026-09-01`
+- **Task Name**: `Step 0 헌법 각인 및 인간 사전 검토 승인 체계 공식 통합`
+- **Completed Date**: `2026-09-02`
 - **Proof Status**: `PROVEN`
 - **Decision Status**: `FINAL_ACCEPTED`
 
 ---
 
-## 📁 1. 변경된 파일 목록 및 개편 요약 (Summary)
+## 📁 1. 변경된 파일 목록 및 핵심 개편 요약 (Summary)
 
-기존의 단순했던 템플릿을 **7대 핵심 고신뢰도 아키텍처 설계도(Architecture Blueprint) 규격**으로 전면 개편하고, 템플릿 및 프로젝트 실시간 뷰에 반영하여 GitHub 동기화를 마쳤습니다.
+모든 세션과 태스크의 절대적 출발점인 **Step 0 헌법 각인(Constitution Re-Anchoring)**과, 사소한 자동화는 위임하되 핵심 아키텍처 핀포인트는 인간이 독점 검토·승인하는 **2대 인간 승인 게이트**를 공식 파이프라인으로 확립하고 GitHub 동기화를 마쳤습니다.
 
 | 파일 경로 | 변경 구분 | 주요 내용 |
 | :--- | :---: | :--- |
-| `.agents/docs/templates/ARCHITECTURE.template.md` | `[MODIFY]` | 7대 고신뢰도 섹션 표준 템플릿으로 전면 개편 |
-| `views/ARCHITECTURE.md` | `[MODIFY]` | 프로젝트 실제 아키텍처에 7대 규격 적용 및 다이어그램 보강 |
-| `views/CURRENT_STATE.md` | `[MODIFY]` | 진행 좌표 및 실시간 상태 동기화 |
+| `.agents/docs/LIFECYCLE_SPEC.md` | `[MODIFY]` | Step 0 헌법 각인 및 인간 2대 승인 게이트 상세 규격화 |
+| `.agents/skills/main-stream/SKILL.md` | `[MODIFY]` | Step 0 헌법 각인 절차 스킬 런북 반영 |
+| `.agents/skills/architect/SKILL.md` | `[MODIFY]` | 아키텍처 설계 착수 전 Step 0 헌법 상기 의무화 |
+| `.agents/workflows/main-stream.md` | `[MODIFY]` | 대화형 실행 런북에 Step 0 헌법 리마인드 체크리스트 추가 |
 
 ---
 
-## 🏛️ 2. 확립된 7대 고신뢰도 아키텍처 설계도 구성
+## 🏛️ 2. 확립된 전체 실행 파이프라인
 
-1. 📌 **시스템 비전 및 핵심 설계 원칙** (System Vision & Tenets)
-2. 🌐 **시스템 컨텍스트 및 외부 경계** (System Context & C4 Model Mermaid)
-3. 🏛️ **계층 구조 및 모듈 인터페이스** (Layered Architecture & Boundaries Mermaid)
-4. 🗄️ **데이터 아키텍처 및 핵심 엔티티** (Data & Domain Models ERD)
-5. 🛡️ **공통 관심사 아키텍처** (Cross-Cutting Concerns: 에러 격리, 로깅, 보안)
-6. 📂 **물리적 파일 시스템 매핑** (Physical Package Topology)
-7. ⚖️ **불변의 아키텍처 제약 조건** (Hard Guardrails & Trade-offs)
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│ 🧠 【STEP 0: 헌법 각인 및 가드레일 활성화 (세션 부팅 대전제)】           │
+│   • ① 무권대리 금지 ② 인간 사전 승인 필수 ③ 실측 증거(AI Proof) 의무     │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│ 1️⃣ 【PHASE 1: 아키텍처 설계 단계 (Architecture Phase)】──→ [/architect]│
+│   • views/ 닻 스캔 ➔ 핵심 핀포인트 분석 ➔ views/PLAN 자동 미러링       │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    ▼
+             🛑 【인간 사전 검토 및 승인 게이트 (Human Approval Gate)】
+             (인간이 핵심 계획을 검토하고 명시적 사전 승인을 내려야만 착수)
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│ 2️⃣ 【PHASE 2: 구현 및 입증 단계 (Implementation Phase)】──→ [/implement]│
+│   • 승인 범위 내 정밀 코딩 ➔ 터미널 실측 테스트 직접 실행 (AI Proof)   │
+│   • views/WALKTHROUGH.md 자동 동기화 & 실측 증거 제출                   │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    ▼
+             👑 【인간 최종 인수 결정 (Human Acceptance Decision)】
+             (실측 테스트 원문 로그 확인 ➔ FINAL_ACCEPTED 확정)
+```
 
 ---
 
 ## 🧪 3. 실측 테스트 및 검증 결과 (Executed AI Proof)
 
 - **Git 형상 관리 검증**: Submodule 및 이중 원격 저장소 푸시 정상 확인 (`PROVEN`)
-- **마크다운 렌더링 검증**: Mermaid 다이어그램 및 테이블 문법 검증 완료 (`PROVEN`)
+- **Twin-Call 미러링 검증**: 브레인 아티팩트와 `views/WALKTHROUGH.md` 완벽 일치 확인 (`PROVEN`)
 
 ---
 
