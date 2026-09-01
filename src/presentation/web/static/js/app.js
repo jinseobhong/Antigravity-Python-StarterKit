@@ -704,12 +704,25 @@ async function selectCreationVector(idx) {
     creationFlowState.compiled_spec = res.spec;
 
     const previewEl = document.getElementById('compiledSpecPreview');
-    if (previewEl) {
+    if (previewEl && res.spec) {
+      const vdna = res.spec.visual_dna || {};
+      const danbooru = (typeof res.spec.danbooru_prompt === 'object' && res.spec.danbooru_prompt) ? res.spec.danbooru_prompt.positive : (res.spec.danbooru_prompt || '');
       previewEl.innerHTML = `
-        <div class="text-amber-300 font-bold">DNA Seed: ${res.spec.seed_hash}</div>
-        <div class="text-purple-300 font-bold">Name: ${res.spec.target_name} (${res.spec.title})</div>
-        <div class="text-pink-300 font-bold">Danbooru Tags: ${res.spec.danbooru_prompt || 'N/A'}</div>
-        <div class="mt-2 text-gray-400">Hard Invariants: ${res.spec.hard_invariants?.length || 0} rules mapped</div>
+        <div class="space-y-2 text-xs">
+          <div class="flex items-center justify-between pb-2 border-b border-gray-800">
+            <span class="text-amber-400 font-mono font-bold">${res.spec.seed_hash}</span>
+            <span class="text-purple-300 font-bold">${res.spec.target_name} (${res.spec.title})</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-[11px] text-gray-300">
+            <div><span class="text-purple-400 font-bold">• 골격/체형:</span> ${vdna.face_geometry || vdna.skeletal || '황실 슬림 골격'}</div>
+            <div><span class="text-purple-400 font-bold">• 안광/동공:</span> ${vdna.ocular_optics || vdna.ocular || '서늘한 금안'}</div>
+            <div><span class="text-purple-400 font-bold">• 모발/결:</span> ${vdna.hair_physics || vdna.hair || '은발 스트레이트'}</div>
+            <div><span class="text-purple-400 font-bold">• 의복/초커:</span> ${vdna.apparel_accents || vdna.apparel || '은색 초커 드레스'}</div>
+          </div>
+          <div class="p-2 bg-purple-950/40 rounded-lg border border-purple-800/40 text-[10px] text-pink-300 font-mono leading-relaxed break-all">
+            <span class="text-purple-300 font-bold">Danbooru Tag:</span> ${danbooru || '1girl, dark fantasy'}
+          </div>
+        </div>
       `;
     }
 

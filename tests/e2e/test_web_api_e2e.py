@@ -52,7 +52,7 @@ class TestWebAPIEndToEnd(unittest.TestCase):
     def _http_get(self, path: str) -> dict:
         url = f"{self.base_url}{path}"
         req = urllib.request.Request(url, method="GET")
-        with urllib.request.urlopen(req, timeout=5) as resp:
+        with urllib.request.urlopen(req, timeout=30) as resp:
             self.assertEqual(resp.status, 200)
             data = resp.read().decode("utf-8")
             return json.loads(data)
@@ -66,7 +66,7 @@ class TestWebAPIEndToEnd(unittest.TestCase):
             headers={"Content-Type": "application/json"},
             method="POST"
         )
-        with urllib.request.urlopen(req, timeout=5) as resp:
+        with urllib.request.urlopen(req, timeout=30) as resp:
             self.assertEqual(resp.status, 200)
             data = resp.read().decode("utf-8")
             return json.loads(data)

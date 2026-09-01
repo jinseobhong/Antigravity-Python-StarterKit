@@ -24,10 +24,16 @@ class GeneSeed:
         """사용자 입력 또는 명시적 시드로부터 결정론적 GeneSeed 생성"""
         clean_name = target_name.strip() or "ANONYMOUS"
 
-        # 명시적 시드 형식 검증
-        if explicit_seed and re.match(r'^#[A-Za-z0-9]{4}-70G-[A-Fa-f0-9]{4}$', explicit_seed.strip()):
+        # 명시적 시드 형식 검증 (유연한 네임태그 2~12글자 허용)
+        if explicit_seed and re.match(r'^#[A-Za-z0-9_-]{2,12}-70G-[A-Fa-f0-9]{4}$', explicit_seed.strip()):
             s = explicit_seed.strip()
             hex_part = s.split("-")[-1].upper()
+            return cls(seed_hash=s, target_name=clean_name, entropy_hex=hex_part)
+
+        if explicit_seed and explicit_seed.strip().startswith("#"):
+            s = explicit_seed.strip()
+            parts = s.split("-")
+            hex_part = parts[-1].upper() if len(parts) > 1 else "INIT"
             return cls(seed_hash=s, target_name=clean_name, entropy_hex=hex_part)
 
         # 4글자 네임태그 결정 (한글 아키타입 매핑 지원)
@@ -39,15 +45,16 @@ class GeneSeed:
                 break
 
         if not name_tag:
-            alpha = re.sub(r'[^A-Za-z0-9]', '', clean_name).upper()
-            if len(alpha) >= 4:
-                name_tag = alpha[:4]
-            else:
-                raw = hashlib.sha256(clean_name.encode("utf-8")).hexdigest().upper()
-                name_tag = (alpha + raw)[:4]
+            # 영문 변환 또는 해시 기반 태그 추출
+            ascii_chars = re.sub(r'[^A-Za-z]', '', clean_name).upper()
+            name_tag = ascii_chars[:4].ljust(4, 'X') if ascii_chars else "GENE"
 
-        # 해시 발급
-        raw_hash = hashlib.sha256(f"{clean_name}::GENE_SEED_ENTROPY".encode("utf-8")).hexdigest()
-        hex_part = raw_hash[:4].upper()
-        full_seed = f"#{name_tag}-70G-{hex_part}"
-        return cls(seed_hash=full_seed, target_name=clean_name, entropy_hex=hex_part)
+        # 결정론적 4자리 16진수 엔트로피 계산
+        entropy_hash = hashlib.sha256(f"{clean_name}:abyss_soul_seed".encode('utf-8')).hexdigest()[:4].upper()
+        seed_hash = f"#{name_tag}-70G-{entropy_hash}"
+
+        return cls(
+            seed_hash=seed_hash,
+            target_name=clean_name,
+            entropy_hex=entropy_hash
+        )

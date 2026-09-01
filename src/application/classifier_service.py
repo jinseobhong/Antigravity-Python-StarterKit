@@ -50,15 +50,15 @@ class ClassifierService:
   "resolution_vectors": [
     {
       "vector_id": "V1",
-      "vector_name": "1안 서사 궤적 명칭",
-      "axis_description": "1안 세부 전개 전략 및 케미",
-      "operation": "STRICT_GUARD"
+      "label": "V1 (1안) : 1안 서사 궤적 명칭",
+      "armor_type": "Rigid",
+      "description": "1안 세부 전개 전략 및 케미"
     },
     {
       "vector_id": "V2",
-      "vector_name": "2안 서사 궤적 명칭",
-      "axis_description": "2안 세부 전개 전략 및 케미",
-      "operation": "SOMATIC_REVERSAL"
+      "label": "V2 (2안) : 2안 서사 궤적 명칭",
+      "armor_type": "Endurer",
+      "description": "2안 세부 전개 전략 및 케미"
     }
   ]
 }
@@ -71,6 +71,15 @@ class ClassifierService:
             if json_match:
                 sanitized = re.sub(r',\s*([\]}])', r'\1', json_match.group(1))
                 data = json.loads(sanitized)
+                # 벡터 필드 정규화
+                vectors = data.get("resolution_vectors", [])
+                for v in vectors:
+                    if not v.get("label"):
+                        v["label"] = v.get("vector_name") or f"{v.get('vector_id', 'V1')} 서사 궤적"
+                    if not v.get("description"):
+                        v["description"] = v.get("axis_description") or ""
+                    if not v.get("armor_type"):
+                        v["armor_type"] = "Rigid" if v.get("vector_id") == "V1" else "Endurer"
                 return data
         except Exception as e:
             print(f"[ClassifierService] LLM vector resolution failed: {e}. Using deterministic fallback.")
@@ -88,15 +97,15 @@ class ClassifierService:
             "resolution_vectors": [
                 {
                     "vector_id": "V1",
-                    "vector_name": "[1안] 차가운 귀족적 긍지와 서서히 번지는 균열",
-                    "axis_description": "단호한 거부 속에서 점진적으로 이완되는 신체 운동 연쇄",
-                    "operation": "STRICT_GUARD"
+                    "label": "V1 (1안) : 차가운 귀족적 긍지와 서서히 번지는 균열",
+                    "armor_type": "Rigid",
+                    "description": "단호한 거부 속에서 점진적으로 이완되는 신체 운동 연쇄"
                 },
                 {
                     "vector_id": "V2",
-                    "vector_name": "[2안] 오만한 주도권 역전과 소마틱 체온 동조",
-                    "axis_description": "상대를 시험하다가 역으로 종속되는 격정적 서사 전개",
-                    "operation": "SOMATIC_REVERSAL"
+                    "label": "V2 (2안) : 오만한 주도권 역전과 소마틱 체온 동조",
+                    "armor_type": "Endurer",
+                    "description": "상대를 시험하다가 역으로 종속되는 격정적 서사 전개"
                 }
             ]
         }

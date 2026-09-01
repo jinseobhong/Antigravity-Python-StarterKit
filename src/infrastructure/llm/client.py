@@ -2,9 +2,10 @@
 """
 src/infrastructure/llm/client.py
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Infrastructure Layer: MultiLLMClient (Claude 3.7 & Gemini 3.6 Cascade Adapter)
-- Claude Messages API & Gemini REST API 듀얼 캐스케이드 연동
-- .env 환경변수 자동 로드 및 페일오버 지원
+Infrastructure Layer: MultiLLMClient (Multi-Model Adaptive Cascade Adapter)
+- Google Gemini (gemini-flash-lite-latest, gemini-2.5-flash-lite, gemini-flash-latest, etc.) 
+- Anthropic Claude (claude-3-7-sonnet-20250219)
+- Quota (429) & Model Availability (404) 자동 감지 및 스마트 캐스케이드
 """
 
 from __future__ import annotations
@@ -31,33 +32,43 @@ def load_env() -> None:
 
 
 class MultiLLMClient:
-    """Claude 3.7 / Gemini 3.6 듀얼 LLM 클라이언트"""
+    """Gemini / Claude 멀티 모델 지능형 캐스케이드 클라이언트"""
+
+    # 가용 쿼터 자동 탐색용 Gemini 모델 우선순위 풀
+    GEMINI_FALLBACK_MODELS = [
+        "gemini-flash-lite-latest",
+        "gemini-2.5-flash-lite",
+        "gemini-flash-latest",
+        "gemini-2.5-flash",
+        "gemini-2.5-pro",
+        "gemini-3.6-flash"
+    ]
 
     def __init__(self):
         load_env()
         self.gemini_key = os.getenv("GEMINI_API_KEY", "")
-        self.gemini_model = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
+        self.gemini_model = os.getenv("GEMINI_MODEL", "gemini-flash-lite-latest")
         self.anthropic_key = os.getenv("ANTHROPIC_API_KEY", "")
         self.anthropic_model = os.getenv("ANTHROPIC_MODEL", "claude-3-7-sonnet-20250219")
         self.anthropic_workspace_id = os.getenv("ANTHROPIC_WORKSPACE_ID", "")
         self.primary_provider = os.getenv("LLM_PROVIDER", "gemini").lower()
 
     def generate(self, system_prompt: str, user_prompt: str, max_tokens: int = 4096) -> str:
-        """설정된 기본 프로바이더로 생성 후 오류 시 상호 페일오버"""
+        """설정된 기본 프로바이더로 생성 후 쿼터/오류 시 모델 풀 및 프로바이더 자동 페일오버"""
         if self.primary_provider == "claude" and self.anthropic_key:
             try:
                 return self._call_claude(system_prompt, user_prompt, max_tokens)
             except Exception as e:
                 print(f"[MultiLLMClient] Claude call failed: {e}. Cascading to Gemini...")
                 if self.gemini_key:
-                    return self._call_gemini(system_prompt, user_prompt, max_tokens)
+                    return self._call_gemini_with_cascade(system_prompt, user_prompt, max_tokens)
                 raise e
         else:
             if self.gemini_key:
                 try:
-                    return self._call_gemini(system_prompt, user_prompt, max_tokens)
+                    return self._call_gemini_with_cascade(system_prompt, user_prompt, max_tokens)
                 except Exception as e:
-                    print(f"[MultiLLMClient] Gemini call failed: {e}. Cascading to Claude...")
+                    print(f"[MultiLLMClient] Gemini cascade failed: {e}. Cascading to Claude...")
                     if self.anthropic_key:
                         return self._call_claude(system_prompt, user_prompt, max_tokens)
                     raise e
@@ -66,8 +77,33 @@ class MultiLLMClient:
             else:
                 raise ValueError("No valid API Key found in .env (GEMINI_API_KEY or ANTHROPIC_API_KEY required)")
 
-    def _call_gemini(self, system_prompt: str, user_prompt: str, max_tokens: int = 4096) -> str:
-        model = self.gemini_model if self.gemini_model != "gemini-2.5-flash" else "gemini-3.6-flash"
+    def _call_gemini_with_cascade(self, system_prompt: str, user_prompt: str, max_tokens: int = 4096) -> str:
+        """지정 모델 우선 시도 후 429/404 발생 시 대체 모델 풀 순차 회전"""
+        models_to_try = [self.gemini_model] + [m for m in self.GEMINI_FALLBACK_MODELS if m != self.gemini_model]
+        last_error = None
+
+        for model in models_to_try:
+            try:
+                result = self._call_gemini_single(model, system_prompt, user_prompt, max_tokens)
+                if result:
+                    # 성공한 활성 모델로 업데이트
+                    self.gemini_model = model
+                    return result
+            except urllib.error.HTTPError as e:
+                last_error = e
+                # 429 (Quota) 또는 404 (Model not found) 발생 시 다음 모델 시도
+                if e.code in (404, 429, 400):
+                    continue
+                raise e
+            except Exception as e:
+                last_error = e
+                continue
+
+        if last_error:
+            raise last_error
+        raise RuntimeError("All Gemini models in cascade failed to generate content.")
+
+    def _call_gemini_single(self, model: str, system_prompt: str, user_prompt: str, max_tokens: int = 4096) -> str:
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={self.gemini_key}"
         
         payload = {
