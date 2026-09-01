@@ -9,13 +9,13 @@ import unittest
 import tempfile
 from unittest.mock import MagicMock
 
-from src.infrastructure.database.db_manager import DBManager
-from src.infrastructure.database.repositories import CharacterRepository, TurnLedgerRepository
-from src.application.classifier_service import ClassifierService
-from src.application.gene_synthesis_service import GeneSynthesisService
-from src.application.narrative_orchestrator import NarrativeOrchestrator
-from src.application.undo_manager import UndoManager
-from src.domain.character import Character
+from src.storage.db_manager import DBManager
+from src.storage.repositories import CharacterRepository, TurnLedgerRepository
+from src.core.classifier_service import ClassifierService
+from src.core.gene_synthesis_service import GeneSynthesisService
+from src.core.narrative_orchestrator import NarrativeOrchestrator
+from src.core.undo_manager import UndoManager
+from src.models.character import Character
 
 
 class TestApplicationServices(unittest.TestCase):

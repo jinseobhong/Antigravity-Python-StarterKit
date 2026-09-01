@@ -18,7 +18,7 @@ from pathlib import Path
 class ImageGeneratorService:
     """AI 캐릭터 일러스트 고속 생성 서비스"""
 
-    BASE_IMAGE_DIR = Path("src/presentation/web/static/images/portraits")
+    BASE_IMAGE_DIR = Path("src/web/static/images/portraits")
 
     @classmethod
     def generate_portrait(cls, seed_hash: str, danbooru_prompt: str) -> str:

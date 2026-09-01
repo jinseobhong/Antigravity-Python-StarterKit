@@ -14,8 +14,8 @@ import json
 import tempfile
 from pathlib import Path
 
-from src.infrastructure.database.db_manager import DBManager
-from src.presentation.web.server import ThreadedHTTPServer, StudioHandler
+from src.storage.db_manager import DBManager
+from src.web.server import ThreadedHTTPServer, StudioHandler
 
 
 class TestWebAPIEndToEnd(unittest.TestCase):

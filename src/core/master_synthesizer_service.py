@@ -12,7 +12,7 @@ import json
 import re
 from typing import Dict, Any
 
-from src.infrastructure.llm.client import MultiLLMClient
+from src.llm.client import MultiLLMClient
 
 
 class MasterSynthesizerService:

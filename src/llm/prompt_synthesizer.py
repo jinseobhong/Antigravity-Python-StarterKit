@@ -9,8 +9,8 @@ Infrastructure Layer: 30,000자급 엔터프라이즈 마스터 시스템 지시
 
 from __future__ import annotations
 from typing import Dict, Any, List
-from src.domain.character import Character
-from src.domain.kinematic_chain import KinematicChain
+from src.models.character import Character
+from src.models.kinematic_chain import KinematicChain
 
 
 class PromptSynthesizer:

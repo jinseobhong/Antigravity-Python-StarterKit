@@ -10,7 +10,7 @@ Infrastructure Layer: Illustrious-XL 6-Slot Danbooru Tag Compiler
 from __future__ import annotations
 import re
 from typing import Dict, Tuple
-from src.domain.visual_dna import VisualDNA
+from src.models.visual_dna import VisualDNA
 
 
 class VisualCompiler:

@@ -12,12 +12,12 @@ import json
 from dataclasses import dataclass, field
 from typing import Dict, Any, Optional
 
-from src.domain.gene_seed import GeneSeed
-from src.domain.visual_dna import VisualDNA
-from src.domain.personality_gene import PersonalityGene, HardInvariants
-from src.domain.character_traits import CharacterTraits, PsychologicalGauges, SomaticMetrics
-from src.domain.somatic_ledger import SomaticLedger
-from src.domain.spatial_pressure import SpatialPressure
+from src.models.gene_seed import GeneSeed
+from src.models.visual_dna import VisualDNA
+from src.models.personality_gene import PersonalityGene, HardInvariants
+from src.models.character_traits import CharacterTraits, PsychologicalGauges, SomaticMetrics
+from src.models.somatic_ledger import SomaticLedger
+from src.models.spatial_pressure import SpatialPressure
 
 
 @dataclass

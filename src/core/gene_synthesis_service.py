@@ -12,16 +12,16 @@ import json
 import re
 from typing import Dict, Any, Optional
 
-from src.domain.gene_seed import GeneSeed
-from src.domain.visual_dna import VisualDNA
-from src.domain.personality_gene import PersonalityGene, HardInvariants
-from src.domain.character_traits import CharacterTraits, PsychologicalGauges, SomaticMetrics
-from src.domain.somatic_ledger import SomaticLedger
-from src.domain.spatial_pressure import SpatialPressure
-from src.domain.character import Character
-from src.infrastructure.database.repositories import CharacterRepository
-from src.infrastructure.media.visual_compiler import VisualCompiler
-from src.infrastructure.llm.client import MultiLLMClient
+from src.models.gene_seed import GeneSeed
+from src.models.visual_dna import VisualDNA
+from src.models.personality_gene import PersonalityGene, HardInvariants
+from src.models.character_traits import CharacterTraits, PsychologicalGauges, SomaticMetrics
+from src.models.somatic_ledger import SomaticLedger
+from src.models.spatial_pressure import SpatialPressure
+from src.models.character import Character
+from src.storage.repositories import CharacterRepository
+from src.media.visual_compiler import VisualCompiler
+from src.llm.client import MultiLLMClient
 
 
 class GeneSynthesisService:

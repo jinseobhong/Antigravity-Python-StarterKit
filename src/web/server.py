@@ -17,20 +17,20 @@ from http.server import SimpleHTTPRequestHandler
 from pathlib import Path
 from typing import Dict, Any, List
 
-from src.infrastructure.database.db_manager import DBManager
-from src.infrastructure.database.repositories import CharacterRepository, TurnLedgerRepository
-from src.infrastructure.media.visual_compiler import VisualCompiler
-from src.infrastructure.llm.client import MultiLLMClient
-from src.infrastructure.llm.prompt_synthesizer import PromptSynthesizer
-from src.application.classifier_service import ClassifierService
-from src.application.gene_synthesis_service import GeneSynthesisService
-from src.application.spec_compiler_service import SpecCompilerService
-from src.application.master_synthesizer_service import MasterSynthesizerService
-from src.application.static_validator import StaticValidator
-from src.application.narrative_orchestrator import NarrativeOrchestrator
-from src.application.undo_manager import UndoManager
-from src.domain.character import Character
-from src.domain.gene_seed import GeneSeed
+from src.storage.db_manager import DBManager
+from src.storage.repositories import CharacterRepository, TurnLedgerRepository
+from src.media.visual_compiler import VisualCompiler
+from src.llm.client import MultiLLMClient
+from src.llm.prompt_synthesizer import PromptSynthesizer
+from src.core.classifier_service import ClassifierService
+from src.core.gene_synthesis_service import GeneSynthesisService
+from src.core.spec_compiler_service import SpecCompilerService
+from src.core.master_synthesizer_service import MasterSynthesizerService
+from src.core.static_validator import StaticValidator
+from src.core.narrative_orchestrator import NarrativeOrchestrator
+from src.core.undo_manager import UndoManager
+from src.models.character import Character
+from src.models.gene_seed import GeneSeed
 
 
 class ThreadedHTTPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
@@ -287,7 +287,7 @@ class StudioHandler(SimpleHTTPRequestHandler):
             seed_hash = body_data.get("seed_hash", "#GENE-70G-INIT")
             danbooru_prompt = body_data.get("danbooru_prompt", "1girl, dark fantasy, masterpiece")
             
-            from src.infrastructure.media.image_generator import ImageGeneratorService
+            from src.media.image_generator import ImageGeneratorService
             try:
                 portrait_url = ImageGeneratorService.generate_portrait(seed_hash, danbooru_prompt)
                 

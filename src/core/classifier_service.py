@@ -14,8 +14,8 @@ import json
 import re
 from typing import Dict, Any, List
 
-from src.domain.gene_seed import GeneSeed
-from src.infrastructure.llm.client import MultiLLMClient
+from src.models.gene_seed import GeneSeed
+from src.llm.client import MultiLLMClient
 
 
 class ClassifierService:

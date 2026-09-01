@@ -7,9 +7,9 @@ Unit Test Suite for Database CRUD Operations
 
 import unittest
 import tempfile
-from src.infrastructure.database.db_manager import DBManager
-from src.infrastructure.database.repositories import CharacterRepository, TurnLedgerRepository
-from src.domain.character import Character
+from src.storage.db_manager import DBManager
+from src.storage.repositories import CharacterRepository, TurnLedgerRepository
+from src.models.character import Character
 
 
 class TestDatabaseCRUD(unittest.TestCase):

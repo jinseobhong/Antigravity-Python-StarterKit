@@ -13,11 +13,11 @@ import json
 import re
 from typing import Dict, Any, List
 
-from src.infrastructure.llm.client import MultiLLMClient
-from src.domain.visual_dna import VisualDNA
-from src.domain.personality_gene import PersonalityGene, HardInvariants
-from src.domain.character_traits import CharacterTraits, PsychologicalGauges, SomaticMetrics
-from src.infrastructure.media.visual_compiler import VisualCompiler
+from src.llm.client import MultiLLMClient
+from src.models.visual_dna import VisualDNA
+from src.models.personality_gene import PersonalityGene, HardInvariants
+from src.models.character_traits import CharacterTraits, PsychologicalGauges, SomaticMetrics
+from src.media.visual_compiler import VisualCompiler
 
 
 class SpecCompilerService:

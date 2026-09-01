@@ -6,14 +6,14 @@ Unit Tests: 순수 도메인 모델(POPO) 무결성 및 불변식 검증
 """
 
 import unittest
-from src.domain.gene_seed import GeneSeed
-from src.domain.visual_dna import VisualDNA
-from src.domain.personality_gene import PersonalityGene, HardInvariants
-from src.domain.character_traits import CharacterTraits, PsychologicalGauges, SomaticMetrics
-from src.domain.somatic_ledger import SomaticLedger
-from src.domain.spatial_pressure import SpatialPressure
-from src.domain.kinematic_chain import KinematicChain
-from src.domain.character import Character
+from src.models.gene_seed import GeneSeed
+from src.models.visual_dna import VisualDNA
+from src.models.personality_gene import PersonalityGene, HardInvariants
+from src.models.character_traits import CharacterTraits, PsychologicalGauges, SomaticMetrics
+from src.models.somatic_ledger import SomaticLedger
+from src.models.spatial_pressure import SpatialPressure
+from src.models.kinematic_chain import KinematicChain
+from src.models.character import Character
 
 
 class TestDomainModels(unittest.TestCase):

@@ -8,9 +8,9 @@ Application Layer: 불변 턴 스냅샷 기반 Undo / Rollback 관리자
 
 from __future__ import annotations
 from typing import Optional, Dict, Any
-from src.infrastructure.database.repositories import TurnLedgerRepository, CharacterRepository
-from src.domain.somatic_ledger import SomaticLedger
-from src.domain.character_traits import PsychologicalGauges
+from src.storage.repositories import TurnLedgerRepository, CharacterRepository
+from src.models.somatic_ledger import SomaticLedger
+from src.models.character_traits import PsychologicalGauges
 
 
 class UndoManager:

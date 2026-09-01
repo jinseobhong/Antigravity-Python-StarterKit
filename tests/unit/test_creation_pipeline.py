@@ -7,11 +7,11 @@ Unit Test Suite for Dify 11-Node 2-Checkpoint Character Creation Pipeline
 
 import unittest
 from unittest.mock import MagicMock
-from src.application.classifier_service import ClassifierService
-from src.application.spec_compiler_service import SpecCompilerService
-from src.application.master_synthesizer_service import MasterSynthesizerService
-from src.application.static_validator import StaticValidator
-from src.domain.character import Character
+from src.core.classifier_service import ClassifierService
+from src.core.spec_compiler_service import SpecCompilerService
+from src.core.master_synthesizer_service import MasterSynthesizerService
+from src.core.static_validator import StaticValidator
+from src.models.character import Character
 
 
 class TestCreationPipeline(unittest.TestCase):

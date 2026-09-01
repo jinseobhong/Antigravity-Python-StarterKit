@@ -18,7 +18,7 @@ if sys.platform == "win32":
     except Exception:
         pass
 
-from src.presentation.web.server import run_server
+from src.web.server import run_server
 
 if __name__ == "__main__":
     port = 8000

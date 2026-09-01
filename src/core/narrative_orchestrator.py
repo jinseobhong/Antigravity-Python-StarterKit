@@ -12,12 +12,12 @@ from __future__ import annotations
 import re
 from typing import Dict, Any, Tuple
 
-from src.domain.character import Character
-from src.domain.kinematic_chain import KinematicChain
-from src.domain.somatic_ledger import SomaticLedger
-from src.infrastructure.database.repositories import CharacterRepository, TurnLedgerRepository
-from src.infrastructure.llm.client import MultiLLMClient
-from src.infrastructure.llm.prompt_synthesizer import PromptSynthesizer
+from src.models.character import Character
+from src.models.kinematic_chain import KinematicChain
+from src.models.somatic_ledger import SomaticLedger
+from src.storage.repositories import CharacterRepository, TurnLedgerRepository
+from src.llm.client import MultiLLMClient
+from src.llm.prompt_synthesizer import PromptSynthesizer
 
 
 class NarrativeOrchestrator:

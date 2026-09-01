@@ -12,8 +12,8 @@ import json
 import sqlite3
 from typing import List, Optional, Dict, Any
 
-from src.domain.character import Character
-from src.infrastructure.database.db_manager import DBManager
+from src.models.character import Character
+from src.storage.db_manager import DBManager
 
 
 class CharacterRepository:
