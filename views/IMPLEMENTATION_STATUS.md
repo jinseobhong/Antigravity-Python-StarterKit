@@ -44,16 +44,16 @@
 ---
 
 ### 4. 🧠 [AbyssEngine] 유스케이스 및 애플리케이션 계층 (Application Layer)
-- [ ] **`Application.NarrativeOrchestrator`**: 턴 라이프사이클 관리 및 서사 오프닝 생성 (`TODO`)
-- [ ] **`Application.UndoManager`**: TurnSnapshot 기반 불변 롤백 스택 (`TODO`)
-- [ ] **`Application.ActionParserService`**: 자연어 지문/대사 분할 및 의미론적 디스패처 (`TODO`)
-- [ ] **`Application.CharacterService`**: 캐릭터 생성, 결핍 특성 주입 및 워크숍 서비스 (`TODO`)
+- [x] **`Application.NarrativeOrchestrator`**: 턴 라이프사이클 관리 및 서사 오케스트레이터 (`DONE`)
+- [x] **`Application.UndoManager`**: TurnSnapshot 기반 불변 롤백 스택 관리자 (`DONE`)
+- [x] **`Application.ActionParserService`**: 자연어 지문/대사 분할 및 의미론적 디스패처 (`DONE`)
+- [x] **`Application.CharacterService`**: 캐릭터 생성, 결핍 특성 주입 및 워크숍 서비스 (`DONE`)
 
 ---
 
 ### 5. 🌐 [AbyssEngine] 프레젠테이션 계층 (Presentation Layer)
-- [ ] **`Presentation.ProseSanitizer`**: 시스템 태그 소멸 및 대사 줄바꿈 정제기 (`TODO`)
-- [ ] **`Presentation.WebUI`**: 웹 인터페이스 및 실시간 롤플레이 뷰 (`TODO`)
+- [x] **`Presentation.ProseSanitizer`**: 시스템 태그 완전 소멸 및 대사 줄바꿈 정제기 (`DONE`)
+- [x] **`Presentation.CLI`**: 터미널 대화형 롤플레이 인터페이스 (`DONE`)
 
 ---
 
