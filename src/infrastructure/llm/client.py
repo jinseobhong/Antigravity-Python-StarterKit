@@ -51,8 +51,9 @@ class MultiLLMClient:
         raw_prov = (active_provider or os.getenv("LLM_PROVIDER", "") or os.getenv("ACTIVE_LLM_PROVIDER", "CLAUDE")).strip().upper()
         self.active_provider = "CLAUDE" if "CLAUDE" in raw_prov else "GEMINI"
 
-        self.gemini_model = gemini_model or os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+        self.gemini_model = gemini_model or os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
         self.claude_model = claude_model or os.getenv("ANTHROPIC_MODEL", "claude-3-7-sonnet-20250219")
+        self.anthropic_workspace_id = os.getenv("ANTHROPIC_WORKSPACE_ID", "")
         self.hf_token = os.getenv("HF_TOKEN", "")
 
     @property
@@ -85,6 +86,8 @@ class MultiLLMClient:
                 f.write(f"GEMINI_MODEL={self.gemini_model}\n")
                 f.write(f"ANTHROPIC_API_KEY={self.claude_key}\n")
                 f.write(f"ANTHROPIC_MODEL={self.claude_model}\n")
+                if self.anthropic_workspace_id:
+                    f.write(f"ANTHROPIC_WORKSPACE_ID={self.anthropic_workspace_id}\n")
                 f.write(f"LLM_PROVIDER={self.active_provider.lower()}\n")
                 if self.hf_token:
                     f.write(f"HF_TOKEN={self.hf_token}\n")
@@ -147,14 +150,18 @@ class MultiLLMClient:
                 {"role": "user", "content": user_prompt}
             ]
         }
+        headers = {
+            "x-api-key": self.claude_key,
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json"
+        }
+        if self.anthropic_workspace_id:
+            headers["anthropic-workspace-id"] = self.anthropic_workspace_id
+
         req = urllib.request.Request(
             url,
             data=json.dumps(payload).encode("utf-8"),
-            headers={
-                "x-api-key": self.claude_key,
-                "anthropic-version": "2023-06-01",
-                "content-type": "application/json"
-            }
+            headers=headers
         )
         with urllib.request.urlopen(req, timeout=35) as resp:
             result = json.loads(resp.read().decode("utf-8"))

@@ -15,7 +15,13 @@ import webbrowser
 import threading
 from typing import Optional, Dict, Any
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from socketserver import ThreadingMixIn
 from urllib.parse import urlparse
+
+
+class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+    """비동기 AJAX 동시 처리를 위한 멀티스레드 HTTP 서버"""
+    daemon_threads = True
 
 # Windows 콘솔 UTF-8 인코딩 안전 보장
 if sys.platform == "win32":
@@ -273,8 +279,8 @@ def launch_web_studio(port: int = 8877, open_browser: bool = True):
     target_port = port
     while target_port < port + 20:
         try:
-            HTTPServer.allow_reuse_address = True
-            server = HTTPServer(("127.0.0.1", target_port), WebStudioHandler)
+            ThreadedHTTPServer.allow_reuse_address = True
+            server = ThreadedHTTPServer(("127.0.0.1", target_port), WebStudioHandler)
             break
         except OSError:
             target_port += 1
