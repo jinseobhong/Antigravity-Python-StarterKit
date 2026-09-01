@@ -4,7 +4,8 @@
 | :--- | :--- |
 | **프로젝트 명칭** | `AbyssEmpire (AbyssEngine Core)` |
 | **아키텍처** | `Clean 4-Tier Layered Architecture (DDD + Pure Domain)` |
-| **현재 버전** | `v2.0.0 (High-Assurance Architecture Edition)` |
+| **프로젝트 버전** | `v1.0.0` |
+| **적용 거버넌스 규격** | `Constitution v2.0 (High-Assurance Specification)` |
 | **검증 상태** | `23 Unit Tests 100% Pass (PROVEN)` |
 | **원격 저장소** | [GitHub Repository](https://github.com/jinseobhong/AbyssEmpire-python-narrative) |
 
