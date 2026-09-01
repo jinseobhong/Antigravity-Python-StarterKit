@@ -27,11 +27,11 @@
 ---
 
 ### 2. 🧬 [AbyssEngine] 도메인 계층 재구축 (Domain Layer - Pure Python)
-- [ ] **`Domain.Character`**: Character 엔티티 및 LowenArmor (5대 로웬 신체 갑주) (`TODO`)
-- [ ] **`Domain.TensorMatrix`**: 17대 생체 텐서 매트릭스 & Kinematic Chain 운동 연쇄 전이 엔진 (`TODO`)
-- [ ] **`Domain.PressureStage`**: 4단계 신경생리학적 압력 궤적 상태 머신 (`TODO`)
-- [ ] **`Domain.RelationalVector`**: 5대 범용 관계역학 상성 벡터 & N:N 텐션 그리드 (`TODO`)
-- [ ] **`Domain.ActionFrame`**: ActionFrame & ObservableEvent 모델 (화행/강도/5D 델타) (`TODO`)
+- [x] **`Domain.Character`**: Character 엔티티 및 LowenArmor (5대 로웬 신체 갑주) (`DONE`)
+- [x] **`Domain.TensorMatrix`**: 17대 생체 텐서 매트릭스 & Kinematic Chain 운동 연쇄 전이 엔진 (`DONE`)
+- [x] **`Domain.PressureStage`**: 4단계 신경생리학적 압력 궤적 상태 머신 (`DONE`)
+- [x] **`Domain.RelationalVector`**: 5대 범용 관계역학 상성 벡터 & N:N 텐션 그리드 (`DONE`)
+- [x] **`Domain.ActionFrame`**: ActionFrame & ObservableEvent 모델 (화행/강도/5D 델타) (`DONE`)
 
 ---
 
