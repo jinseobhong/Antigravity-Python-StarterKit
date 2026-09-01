@@ -10,15 +10,15 @@
 ---
 
 ## 📌 현재 당면 작업 (Current Task Focus)
-- **Feature / Task**: `프로젝트 루트 5대 핵심 뷰 체계 확립 및 전수 매핑 검증`
+- **Feature / Task**: `views/ 디렉토리 신설 및 5대 핵심 뷰 배치 & 전수 재매핑`
 - **Current Phase**: `PHASE 2: 구현 및 입증 완료 (COMPLETED)`
 - **Implementation Auth**: `APPROVED`
 - **Proof Status**: `PROVEN`
 - **Decision Status**: `FINAL_ACCEPTED`
 
-## 📁 프로젝트 5대 핵심 실시간 뷰 (The 5 Core Live Views)
-1. `CURRENT_STATE.md` (현재 상황 — SSOT & 파이프라인)
-2. `IMPLEMENTATION_STATUS.md` (구현 상황도 — 전체 컴포넌트 현황)
-3. `IMPLEMENTATION_PLAN.md` (구현 계획 — 브레인 실시간 미러링)
-4. `WALKTHROUGH.md` (구현 완료 — 브레인 실시간 미러링)
-5. `ARCHITECTURE.md` (아키텍처 전체 설계도 — 시스템 청사진)
+## 📁 views/ 5대 핵심 실시간 뷰 (The 5 Core Live Views)
+1. `views/CURRENT_STATE.md` (현재 상황 — SSOT & 파이프라인)
+2. `views/IMPLEMENTATION_STATUS.md` (구현 상황도 — 전체 컴포넌트 현황)
+3. `views/IMPLEMENTATION_PLAN.md` (구현 계획 — 브레인 실시간 미러링)
+4. `views/WALKTHROUGH.md` (구현 완료 — 브레인 실시간 미러링)
+5. `views/ARCHITECTURE.md` (아키텍처 전체 설계도 — 시스템 청사진)

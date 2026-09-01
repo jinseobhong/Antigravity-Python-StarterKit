@@ -17,14 +17,15 @@
    ├── skills/workflow/SKILL.md ──→ 자동 활성화 실행 런북
    ├── docs/templates/          ──→ 5대 표준 문서 템플릿
    ├── store/schema.sql         ──→ SQLite 영구 누적 로그 저장소
-   └── CONVENTIONS.md           ──→ 파일 시스템 및 명명 규칙 공식 명세
+   ├── CONVENTIONS.md           ──→ 파일 시스템 및 명명 규칙 공식 명세
+   └── GEMINI.md.example        ──→ 전역 최고 헌법 규격서 예시 (v2.0)
 
-[Tier 3: Project 5 Core Live Views (실시간 관측 뷰 5종)]
-   ├── CURRENT_STATE.md         ──→ 👁️ [1] 당면 작업 및 5단계 파이프라인 좌표 (SSOT)
-   ├── IMPLEMENTATION_STATUS.md ──→ 👁️ [2] 전체 컴포넌트 완성도 현황판
-   ├── IMPLEMENTATION_PLAN.md   ──→ 👁️ [3] 구현 계획서 (세션 브레인 자동 미러링)
-   ├── WALKTHROUGH.md           ──→ 👁️ [4] 구현 완료 보고서 (세션 브레인 자동 미러링)
-   └── ARCHITECTURE.md          ──→ 👁️ [5] 시스템 설계 청사진
+[Tier 3: Project 5 Core Live Views (views/ 실시간 관측 뷰 5종)]
+   ├── views/CURRENT_STATE.md         ──→ 👁️ [1] 당면 작업 및 5단계 파이프라인 좌표 (SSOT)
+   ├── views/IMPLEMENTATION_STATUS.md ──→ 👁️ [2] 전체 컴포넌트 완성도 현황판
+   ├── views/IMPLEMENTATION_PLAN.md   ──→ 👁️ [3] 구현 계획서 (세션 브레인 자동 미러링)
+   ├── views/WALKTHROUGH.md           ──→ 👁️ [4] 구현 완료 보고서 (세션 브레인 자동 미러링)
+   └── views/ARCHITECTURE.md          ──→ 👁️ [5] 시스템 설계 청사진
 ```
 
 ---
