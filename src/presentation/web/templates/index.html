@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>심연의 혈통 : 침식의 제국 — AbyssEngine Studio</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <div class="brand-container" id="btn-nav-lobby">
+      <span class="brand-icon">👑</span>
+      <div>
+        <span class="brand-title">심연의 혈통 : 침식의 제국</span>
+        <span class="brand-sub">Enterprise Recursive Narrative Engine • Gemini 3.6 / Claude 3.7</span>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span class="pill-badge" id="top-config-badge">CLAUDE 3.7 (ONLINE)</span>
+    </div>
+  </header>
+
+  <main class="app-container">
+
+    <!-- =============================================================
+         VIEW 1: Main Lobby Hub
+         ============================================================= -->
+    <section class="view-section active" id="view-lobby">
+      <div class="lobby-grid">
+        
+        <!-- Left Hero Section -->
+        <div class="hero-left">
+          <div class="hero-badge">✨ Next-Gen Persona & Narrative Architecture</div>
+          <h1 class="hero-title">
+            가장 완벽한 인격과의 조우,<br>
+            <span class="gradient">한계를 넘는 서사의 심연.</span>
+          </h1>
+          <p class="hero-sub">
+            17대 생체 텐서와 3계층 신경·메모리 원장으로 구동되는 독점 서사 엔진입니다.<br>
+            당신만의 고유한 인격을 포착하고, 숨 막히는 1:1 롤플레이에 몰입하세요.
+          </p>
+
+          <div class="portal-cards-grid">
+            <!-- Play Room Card -->
+            <div class="portal-card">
+              <div class="portal-card-header">
+                <div class="portal-card-icon">🎭</div>
+                <div class="portal-card-title">Play Room</div>
+              </div>
+              <div class="portal-card-desc">현재 상주 중인 캐릭터와 1:1 실시간 롤플레이 서사에 돌입합니다.</div>
+              <div class="portal-card-actions">
+                <button class="btn btn-primary" id="btn-portal-play">▶ Play Room 입장</button>
+                <button class="btn" id="btn-lobby-switch">👥 캐릭터 교체</button>
+              </div>
+            </div>
+
+            <!-- Character Studio Card -->
+            <div class="portal-card">
+              <div class="portal-card-header">
+                <div class="portal-card-icon">🪄</div>
+                <div class="portal-card-title">Character Studio</div>
+              </div>
+              <div class="portal-card-desc">RDB 캐릭터 보관소, 유전자 튜닝 및 JSON/프롬프트 사출을 관리합니다.</div>
+              <div class="portal-card-actions">
+                <button class="btn btn-purple" id="btn-portal-vault">🪄 Character Studio 입장 →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Active Persona Card -->
+        <div class="active-persona-card">
+          <div class="active-persona-header">
+            <span style="font-weight: 700; font-size: 0.85rem; color: var(--text-muted);">ACTIVE PERSONA</span>
+            <span class="pill-badge amber" id="lobby-seed-badge">#LILI-70G-BFFF</span>
+          </div>
+
+          <div class="portrait-frame">
+            <img id="lobby-portrait-img" src="" alt="Portrait" style="display: none;">
+            <div class="portrait-placeholder" id="lobby-portrait-placeholder">
+              <span style="font-size: 3.5rem;">👑</span>
+              <span style="font-size: 0.9rem; font-weight: 600;">8-Tier Visual DNA Frame</span>
+            </div>
+            <div class="portrait-actions-overlay">
+              <button class="btn btn-sm btn-purple" id="btn-lobby-generate-danbooru">🪄 생성</button>
+            </div>
+          </div>
+
+          <div>
+            <div style="font-size: 1.35rem; font-weight: 800;" id="lobby-char-name">릴리스</div>
+            <div style="font-size: 0.85rem; color: var(--text-pink);" id="lobby-char-title">제1황녀 • 제국 황실 | Rigid (결벽주의 척추 방어)</div>
+          </div>
+
+          <div class="trait-rows-container" id="lobby-traits-container">
+            <!-- Dynamic Trait Rows -->
+          </div>
+
+          <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+            <button class="btn btn-primary" style="flex: 1;" onclick="App.switchView('play')">▶ Play Room 입장</button>
+            <button class="btn" onclick="App.switchView('vault')">👥 교체</button>
+            <button class="btn" onclick="App.switchView('vault')">🪄 Studio 입장</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =============================================================
+         VIEW 2: Play Room Theater
+         ============================================================= -->
+    <section class="view-section" id="view-play">
+      <div class="play-header">
+        <div class="play-header-left">
+          <button class="btn btn-sm" id="btn-play-lobby">← Lobby</button>
+          <div>
+            <span style="font-weight: 800; font-size: 1.05rem;" id="play-char-name">릴리스</span>
+            <span class="pill-badge" id="play-char-seed" style="margin-left: 0.5rem;">#LILI-70G-BFFF</span>
+            <span class="pill-badge emerald" id="play-stage-badge" style="margin-left: 0.3rem;">Stage 1</span>
+          </div>
+        </div>
+
+        <div class="gauge-bar-group">
+          <span class="pill-badge" id="gauge-trust">신뢰 20%</span>
+          <span class="pill-badge rose" id="gauge-eroticism">성애 0%</span>
+          <span class="pill-badge amber" id="gauge-shame">수치심 -30</span>
+          <span class="pill-badge" id="gauge-guilt">죄책감 15%</span>
+          <span class="pill-badge emerald" id="gauge-submission">굴종 20%</span>
+        </div>
+
+        <div style="display: flex; gap: 0.4rem;">
+          <button class="btn btn-sm" id="btn-play-switch">👥 캐릭터 교체</button>
+          <button class="btn btn-sm" id="btn-play-undo">↺ Undo</button>
+          <button class="btn btn-sm" id="btn-play-reset" style="color: #f43f5e;">🗑️ Reset</button>
+        </div>
+      </div>
+
+      <!-- Main Chat Narrative Stream -->
+      <div class="chat-theater" id="chat-stream">
+        <!-- Dynamic Turn Bubbles -->
+      </div>
+
+      <!-- 5 Categorized Tactical Action Chips -->
+      <div class="tactical-chips-bar">
+        <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; white-space: nowrap;">⚡ 실시간 전술 선택지:</span>
+        <button class="tactical-chip" data-stimulus="순애" data-action-text="차분한 위로 (상대의 손을 두 손으로 감싸 쥐어 따스한 체온을 전하며 안도시킨다)">🌟 [순애] 차분한 위로</button>
+        <button class="tactical-chip" data-stimulus="압박" data-action-text="턱선 치켜올리기 (턱선을 강하게 움켜쥐며 턱을 치켜올려 내게 마주보도록 요구한다)">⚡ [압박] 턱선 치켜올리기</button>
+        <button class="tactical-chip" data-stimulus="탐색" data-action-text="호흡 및 체온 동조 (나란히 앉아 서로의 은밀한 온기와 호흡을 맞춘다)">🌊 [탐색] 호흡·체온 동조</button>
+        <button class="tactical-chip" data-stimulus="제압" data-action-text="어깨 긴장 완화 (단단하게 굳은 어깨를 지그시 주무르며 서서히 신체 긴장을 이완시킨다)">⚡ [제압] 어깨 긴장 완화</button>
+        <button class="tactical-chip" data-stimulus="유혹" data-action-text="금속 초커 자극 (목에 건 차가운 금속 초커 가장자리를 손가락으로 쓸어내린다)">🔥 [유혹] 금속 초커 자극</button>
+      </div>
+
+      <!-- Natural Action Input Form -->
+      <div class="chat-input-form">
+        <textarea class="chat-textarea" id="chat-input" placeholder="당신의 행동이나 대사를 자유롭게 입력하세요... (Enter 전송 / Shift+Enter 줄바꿈)"></textarea>
+        <button class="btn btn-primary" id="btn-send-turn">전송 🚀</button>
+      </div>
+    </section>
+
+    <!-- =============================================================
+         VIEW 3: Character Studio & Vault
+         ============================================================= -->
+    <section class="view-section" id="view-vault">
+      <div class="vault-header-bar">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <button class="btn btn-sm" id="btn-vault-lobby">← Lobby</button>
+          <span style="font-weight: 800; font-size: 1.15rem;">🪄 Character Studio & Vault</span>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-primary" id="btn-vault-create">+ 1. 생성</button>
+        </div>
+      </div>
+
+      <!-- Search & Archetype Filters -->
+      <div class="vault-search-filter">
+        <div class="search-input-wrapper">
+          <input type="text" class="search-input" placeholder="이름, 칭호, 라이브러리, 결핍/약점 검색...">
+        </div>
+        <div class="filter-pills">
+          <button class="filter-pill active" onclick="VaultView.setFilter('전체')">전체</button>
+          <button class="filter-pill" onclick="VaultView.setFilter('Rigid')">Rigid</button>
+          <button class="filter-pill" onclick="VaultView.setFilter('Endurer')">Endurer</button>
+          <button class="filter-pill" onclick="VaultView.setFilter('Controller')">Controller</button>
+          <button class="filter-pill" onclick="VaultView.setFilter('Deprived')">Deprived</button>
+        </div>
+      </div>
+
+      <!-- 4-Column Character Grid -->
+      <div class="character-grid" id="vault-character-grid">
+        <!-- Dynamic Character Cards -->
+      </div>
+
+      <!-- Bottom Detailed Inspector Panel -->
+      <div class="vault-inspector-panel" id="vault-inspector-body">
+        <!-- Dynamic Inspector Content -->
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="global-footer">
+    © 2026 Abyss Engine • Enterprise 25-Master Architecture | Released under the MIT License
+  </footer>
+
+  <!-- =============================================================
+       Modals
+       ============================================================= -->
+  <!-- Danbooru Tags Modal -->
+  <div class="modal-backdrop" id="danbooru-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title">🪄 Illustrious-XL 6-Slot Danbooru Prompt</div>
+        <button class="modal-close" onclick="Modal.close('danbooru-modal')">✕</button>
+      </div>
+      <div id="danbooru-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Prompt Modal -->
+  <div class="modal-backdrop" id="prompt-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title">📋 25대 마스터 시스템 프롬프트</div>
+        <button class="modal-close" onclick="Modal.close('prompt-modal')">✕</button>
+      </div>
+      <div id="prompt-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Character Creation Modal (HITL 2단계 결재선) -->
+  <div class="modal-backdrop" id="create-character-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title">✨ 고유 인격체 발현기 (HITL 2단계 결재)</div>
+        <button class="modal-close" onclick="Modal.close('create-character-modal')">✕</button>
+      </div>
+      
+      <!-- Step 1: Concept Input -->
+      <div id="create-step-1" style="display: flex; flex-direction: column; gap: 1rem;">
+        <label style="font-size: 0.85rem; color: var(--text-secondary);">원하는 여성 캐릭터의 이름, 세계관, 신분, 결벽증 또는 성적/신체적 결핍을 자연어로 적어주세요:</label>
+        <textarea id="create-concept-input" style="width: 100%; height: 120px; background: #0f111c; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #f1f5f9; padding: 0.75rem; font-size: 0.9rem; resize: none;" placeholder="예: 제국의 차가운 은룡 황녀 '실비아', 가문의 멸망과 막대한 부채를 갚기 위해 순결 서약을 맺고 목에 은색 초커를 채운 채 침실에 상주하고 있다."></textarea>
+        <button class="btn btn-primary" id="btn-start-classify" onclick="App.handleStartClassification()">1. 제약선 & 2대 직교 궤적 역산 시작</button>
+      </div>
+
+      <!-- Step 2: Checkpoint 1 (V1 vs V2 Selection) -->
+      <div id="create-step-2" style="display: none; flex-direction: column; gap: 1rem;">
+        <div style="font-size: 0.9rem; font-weight: 700; color: #c084fc;" id="cp1-char-info"></div>
+        <div style="background: #0f111c; padding: 0.75rem; border-radius: 8px; font-size: 0.8rem; color: var(--text-secondary);">
+          <strong>[역산된 불변 제약선]</strong>
+          <ul id="cp1-invariants-list" style="margin-left: 1.2rem; margin-top: 0.3rem;"></ul>
+        </div>
+        <label style="font-size: 0.85rem; font-weight: 700;">상호 직교하는 2대 서사 전개 궤적 중 하나를 결재하십시오:</label>
+        <div id="cp1-vectors-container" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/components/modal.js"></script>
+  <script src="/static/js/views/lobby.js"></script>
+  <script src="/static/js/views/play.js"></script>
+  <script src="/static/js/views/vault.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
