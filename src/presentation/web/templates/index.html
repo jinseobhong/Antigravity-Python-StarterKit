@@ -260,7 +260,12 @@
             <p id="vaultCountLabel" class="text-xs text-gray-400 mt-0.5">조회 중...</p>
           </div>
           
-          <input type="text" id="vaultSearchInput" oninput="VaultView.filterAndRender()" placeholder="이름, 칭호, 시드로 검색..." class="bg-gray-950 border border-gray-800 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-purple-500 w-full sm:w-64">
+          <div class="flex items-center gap-2.5 w-full sm:w-auto">
+            <input type="text" id="vaultSearchInput" oninput="VaultView.filterAndRender()" placeholder="이름, 칭호, 시드로 검색..." class="bg-gray-950 border border-gray-800 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-purple-500 flex-1 sm:w-64">
+            <button onclick="ModalManager.openCreationModal()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-xl text-xs font-bold shadow-xl transition flex items-center gap-1.5 shrink-0">
+              <i class="fa-solid fa-wand-magic-sparkles text-xs"></i> ✨ 새 캐릭터 발현 (HITL)
+            </button>
+          </div>
         </div>
       </div>
 
@@ -328,6 +333,107 @@
           닫기
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- HITL Multi-Step Character Creation Modal -->
+  <div id="creationModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="glass-panel rounded-3xl p-6 max-w-2xl w-full max-h-[90vh] flex flex-col justify-between border border-purple-800/80 shadow-2xl overflow-y-auto">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-gray-800 mb-4">
+        <div>
+          <h4 class="text-base font-black text-white flex items-center gap-2">
+            <i class="fa-solid fa-wand-magic-sparkles text-pink-400"></i> ✨ HITL 신규 캐릭터 제약선 역산 발현기
+          </h4>
+          <p class="text-xs text-gray-400 mt-0.5">Dify 아키텍처 2단계 인간 결재선 파이프라인</p>
+        </div>
+        <button onclick="ModalManager.closeCreationModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <!-- STEP 1: Intent Input -->
+      <div id="createStep1" class="space-y-4">
+        <div>
+          <label class="text-xs font-bold text-purple-300 block mb-1">캐릭터 핵심 컨셉 및 세계관 설정</label>
+          <textarea id="createInputIntent" placeholder="예: 차가운 성격의 백은색 장발 제1황녀. 가문의 순결 서약과 도덕적 결벽증이 있으나 쇄골과 목덜미 온기에 쉽게 무너지는 캐릭터" class="w-full bg-gray-950 border border-gray-800 rounded-2xl p-4 text-xs sm:text-sm text-white focus:outline-none focus:border-purple-500 h-28 resize-none"></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-[11px] font-bold text-gray-400 block mb-1">이름 (선택, 비워둘 시 자동 작명)</label>
+            <input type="text" id="createInputName" placeholder="예: 릴리스, 에이라, 실비아" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500">
+          </div>
+          <div>
+            <label class="text-[11px] font-bold text-gray-400 block mb-1">칭호 / 세력 (선택)</label>
+            <input type="text" id="createInputTitle" placeholder="예: 제1황녀 &bull; 제국 황실" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500">
+          </div>
+        </div>
+        <div class="pt-2">
+          <button onclick="ModalManager.submitCreationStep1()" id="btnStep1Submit" class="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-xl text-xs sm:text-sm font-extrabold shadow-xl transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-brain"></i> [1단계] 제약 조건 역산 및 2대 서사 궤적 분석 시작 &rarr;
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Human Checkpoint 1 (V1 vs V2 Trajectory Decision) -->
+      <div id="createStep2" class="hidden space-y-4">
+        <div class="p-4 rounded-2xl bg-gradient-to-br from-purple-950/60 to-pink-950/40 border border-purple-800/60 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold text-amber-400 uppercase tracking-wider flex items-center gap-1">
+              <i class="fa-solid fa-shield-halved"></i> 불변 제약선 (Hard Invariants)
+            </span>
+            <span id="createResSeed" class="text-xs font-mono text-amber-300 font-bold bg-gray-950/80 px-2 py-0.5 rounded border border-amber-500/30">#SEED</span>
+          </div>
+          <p id="createResBoundary" class="text-xs text-white font-bold"></p>
+          <div class="text-[11px] text-gray-300 grid grid-cols-2 gap-2 pt-1 border-t border-gray-800/60">
+            <div><span class="text-pink-400 font-semibold">• 붕괴 트리거:</span> <span id="createResTrigger"></span></div>
+            <div><span class="text-cyan-400 font-semibold">• 생체 취약 부위:</span> <span id="createResHeel"></span></div>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <span class="text-xs font-black text-purple-300 flex items-center gap-1.5">
+            🛑 【HUMAN CHECKPOINT 1 : 서사 충돌 궤적 결재】
+          </span>
+          <p class="text-[11px] text-gray-400">채택하실 1안 또는 2안 서사 궤적을 선택해 주십시오:</p>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            <!-- V1 Card -->
+            <div class="p-4 rounded-2xl bg-gray-950 border border-purple-800/60 hover:border-purple-500 transition flex flex-col justify-between space-y-3">
+              <div>
+                <span class="px-2 py-0.5 rounded bg-purple-950 text-purple-300 text-[10px] font-bold border border-purple-700/50">V1 (1안 궤적)</span>
+                <h5 id="createV1Title" class="text-xs font-bold text-white mt-1.5">1안: 귀족적 저항</h5>
+                <p id="createV1Desc" class="text-[11px] text-gray-400 mt-1 leading-snug"></p>
+              </div>
+              <button onclick="ModalManager.selectVectorAndSynthesize('V1')" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-bold transition shadow">
+                [V1] 1안 채택 & 8-Tier 외모 합성 &rarr;
+              </button>
+            </div>
+
+            <!-- V2 Card -->
+            <div class="p-4 rounded-2xl bg-gray-950 border border-pink-800/60 hover:border-pink-500 transition flex flex-col justify-between space-y-3">
+              <div>
+                <span class="px-2 py-0.5 rounded bg-pink-950 text-pink-300 text-[10px] font-bold border border-pink-700/50">V2 (2안 궤적)</span>
+                <h5 id="createV2Title" class="text-xs font-bold text-white mt-1.5">2안: 프라이드 붕괴 & 동조</h5>
+                <p id="createV2Desc" class="text-[11px] text-gray-400 mt-1 leading-snug"></p>
+              </div>
+              <button onclick="ModalManager.selectVectorAndSynthesize('V2')" class="w-full py-2 bg-pink-600 hover:bg-pink-500 text-white rounded-xl text-xs font-bold transition shadow">
+                [V2] 2안 채택 & 8-Tier 외모 합성 &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-2 flex justify-between items-center text-xs">
+          <button onclick="ModalManager.backToStep1()" class="text-gray-400 hover:text-white">&larr; 다시 입력하기</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Loading Indicator -->
+      <div id="createLoading" class="hidden p-8 text-center space-y-3">
+        <div class="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+        <p id="createLoadingText" class="text-xs font-bold text-purple-300">LLM 하이브리드 추론 및 8-Tier Visual DNA 합성 중...</p>
+      </div>
+
     </div>
   </div>
 
