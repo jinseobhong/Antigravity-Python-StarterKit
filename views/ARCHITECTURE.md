@@ -1,9 +1,14 @@
 # ARCHITECTURE.md — 아키텍처 전체 설계도 (Architecture Blueprint)
 
-- **System / Project Name**: `AbyssEmpire-python-narrative` (Antigravity Governance Infrastructure)
-- **Architectural Style**: `Two-Tier Hybrid Architecture (Live Views + Relational Store + Customization Hub)`
-- **Document Version**: `2.0.0`
-- **Last Updated**: `2026-09-01`
+| 항목 | 내용 |
+| :--- | :--- |
+| **문서 ID** | `ARCH-SPEC-001` |
+| **시스템 명칭** | `AbyssEmpire-python-narrative` (Antigravity Governance Infrastructure) |
+| **아키텍처 스타일** | `Two-Tier Hybrid Architecture (Live Views + Relational Store + Customization Hub)` |
+| **문서 버전** | `v2.0.0` |
+| **최종 개정일** | `2026-09-02` |
+| **상태** | `ENFORCED (상시 강제 적용)` |
+| **작성자 / 승인자** | `AI Architect` / `Human Lead` |
 
 ---
 

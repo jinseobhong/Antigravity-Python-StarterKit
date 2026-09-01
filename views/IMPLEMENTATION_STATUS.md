@@ -17,6 +17,7 @@
 - [x] **`Router.4Track`**: 4대 트랙 동적 인텐트 분류기 & 인터럽트 자동 보정 (`DONE`)
 - [x] **`Governance.StyleGuide`**: 공식 문서 작성 스타일 가이드(STYLE_GUIDE.md) 제정 및 템플릿 개편 (`DONE`)
 - [x] **`Governance.SyncValidator`**: 1:1 대칭 동기화 자동 검증 도구(verify_sync.py) 구축 (`DONE`)
+- [x] **`Governance.Scaffold`**: 컨벤션 100% 강제 파일/디렉토리 생성 스캐폴딩 스킬 & 워크플로우 (`DONE`)
 - [x] **`Store.SQLite`**: 영구 누적 감사 로그 및 5W1H 오버라이드 스키마 (`DONE`)
 - [x] **`Views.Live`**: views/ 5대 핵심 실시간 관측 뷰 구축 (`DONE`)
 
