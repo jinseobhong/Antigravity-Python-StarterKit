@@ -77,6 +77,18 @@ const API = {
     return await res.json();
   },
 
+  async generateImage(seedHash, danbooruPrompt) {
+    const res = await fetch("/api/characters/generate-image", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        seed_hash: seedHash,
+        danbooru_prompt: danbooruPrompt
+      })
+    });
+    return await res.json();
+  },
+
   async createCharacter(data) {
     const res = await fetch("/api/create_character", {
       method: "POST",

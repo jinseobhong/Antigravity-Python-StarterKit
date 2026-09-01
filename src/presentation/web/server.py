@@ -282,6 +282,26 @@ class StudioHandler(SimpleHTTPRequestHandler):
             self._send_json({"success": True, "spec": spec_data})
             return
 
+        # 6-1. AI 일러스트 실시간 생성
+        elif path == "/api/characters/generate-image":
+            seed_hash = body_data.get("seed_hash", "#GENE-70G-INIT")
+            danbooru_prompt = body_data.get("danbooru_prompt", "1girl, dark fantasy, masterpiece")
+            
+            from src.infrastructure.media.image_generator import ImageGeneratorService
+            try:
+                portrait_url = ImageGeneratorService.generate_portrait(seed_hash, danbooru_prompt)
+                
+                # 활성 캐릭터가 있으면 portrait_url 업데이트
+                active = self.char_repo.get_by_seed(seed_hash) or self.char_repo.get_active()
+                if active:
+                    active.portrait_url = portrait_url
+                    self.char_repo.save(active)
+                
+                self._send_json({"success": True, "portrait_url": portrait_url})
+            except Exception as e:
+                self._send_json({"success": False, "error": str(e)}, status=500)
+            return
+
         # 7. Dify Node 10: 30,000자급 마스터 시스템 헌법 합성
         elif path == "/api/characters/synthesize-master":
             char_data = body_data.get("character_data", {})

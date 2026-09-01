@@ -633,6 +633,33 @@ function copyDanbooruPrompt() {
   }
 }
 
+async function triggerGenerateActiveImage() {
+  if (!AppState.activeCharacter) {
+    showToast('활성화된 인격이 없습니다.');
+    return;
+  }
+
+  const char = AppState.activeCharacter;
+  const danbooru = char.danbooru_prompt || (char.visual_dna && char.visual_dna.danbooru_prompt) || '1girl, dark fantasy, masterpiece';
+
+  showLoading('🎨 AI 일러스트 실시간 렌더링 중 (Flux Anime Core)...');
+  try {
+    const res = await API.generateImage(char.seed_hash, danbooru);
+    if (res && res.success && res.portrait_url) {
+      char.portrait_url = res.portrait_url;
+      const imgEl = document.getElementById('hubCharImg');
+      if (imgEl) imgEl.src = res.portrait_url + '?t=' + new Date().getTime();
+      showToast('🎨 AI 일러스트가 성공적으로 생성되어 적용되었습니다!');
+    } else {
+      showToast('일러스트 생성 실패: ' + (res.error || '알 수 없는 오류'));
+    }
+  } catch (e) {
+    showToast('생성 통신 오류: ' + e);
+  } finally {
+    hideLoading();
+  }
+}
+
 function openCustomImageUrlModal(mode) {
   document.getElementById('customImageUrlModal')?.classList.remove('hidden');
 }
