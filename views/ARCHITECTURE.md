@@ -3,11 +3,11 @@
 | 항목 | 내용 |
 | :--- | :--- |
 | **문서 ID** | `ARCH-SPEC-001` |
-| **시스템 명칭** | `AbyssEmpire-python-narrative` (Antigravity Governance Infrastructure) |
-| **아키텍처 스타일** | `Two-Tier Hybrid Architecture (Live Views + Relational Store + Customization Hub)` |
-| **문서 버전** | `v2.0.0` |
+| **시스템 명칭** | `AbyssEngine` (심연의 제국: 생체 역학 및 인터랙티브 서사 롤플레이 엔진) |
+| **아키텍처 스타일** | `Clean Layered Architecture (DDD 4-Tier + Resilient Multi-LLM Adapter)` |
+| **문서 버전** | `v2.1.0 (Reverse-Engineered Specification)` |
 | **최종 개정일** | `2026-09-02` |
-| **상태** | `ENFORCED (상시 강제 적용)` |
+| **상태** | `REVIEW_REQUIRED (사용자 사전 승인 대기)` |
 | **작성자 / 승인자** | `AI Architect` / `Human Lead` |
 
 ---
@@ -15,13 +15,17 @@
 ## 📌 1. 시스템 비전 및 핵심 설계 원칙 (System Vision & Tenets)
 
 ### 1.1 시스템 목적 및 핵심 가치
-- **비전**: Google Antigravity 에이전트 환경에서 인간과 AI가 1:1 페어 프로그래밍을 수행할 때, AI의 독단적 자의적 판단, 미검증 조기 완료(Fake Completion), 환각을 원천 차단하고 고신뢰도 소프트웨어를 기민하게 생산하는 전역 거버넌스 및 워크플로우 인프라를 제공한다.
+- **비전**: 대규모 언어 모델(Gemini / Claude)의 문학적 서사 생성 능력과, 100% 결정론적인 **순수 파이썬 생체 역학(Somatic Tensor) 및 로웬 신체 갑주(Lowen Character Armor) 물리 엔진**을 결합하여, 환각 없는 수치 인과율과 고밀도 몰입감을 제공하는 인터랙티브 텍스트 롤플레이 시뮬레이션 시스템.
 
 ### 1.2 불변의 4대 아키텍처 원칙 (Architectural Tenets)
-1. **인간 최종 결정권 및 무권대리 금지 (Human Authority & Anti-Compromise)**: AI는 입증책임자(Evidence Bearer)이자 공동 창조자이며, 아키텍처 승인 및 최종 인수는 인간(Human Lead)이 독점한다.
-2. **Two-Tier 상태 분리 원칙 (Hot Views vs Cold Store)**: 실시간 작업에 필요한 닻(Anchor)은 `views/` 마크다운으로 가볍게 유지하고, 대용량 감사/테스트 로그는 SQLite(`store/`)로 격리하여 컨텍스트 토큰 낭비를 방지한다.
-3. **1:1 대칭 모듈화 원칙 (Symmetric Workflow & Skill Topology)**: 인간이 지휘하는 슬래시 커맨드(`workflows/`)와 AI의 자율 런북(`skills/`)을 `main-stream`, `architect`, `implement`로 1:1 완벽하게 대칭시킨다.
-4. **객관적 사실 기반 실측 검증 (AI Proof Mandate)**: 모든 변경은 실제 터미널 테스트 명령어(`run_command`)를 통한 `PROVEN` 원문 로그로만 완료를 입증한다.
+1. **결정론적 상태 인과율 (Deterministic State Computation)**:
+   - 자아 내구도, 신경 오염도, 17대 생체 텐서, 운동 연쇄(Kinematic Chain) 전이 연산은 LLM의 확률에 맡기지 않고 **100% 순수 파이썬 네이티브 도메인 로직(0토큰, 0ms, 무오차)**으로 연산한다.
+2. **탄력적 멀티 LLM 캐스케이드 (Resilient Multi-Provider Fallback)**:
+   - LLM 호출 실패, Quota Exceeded (429), 타임아웃 발생 시 Gemini ➔ Claude 간 크로스 프로바이더 자동 스왑을 통해 서사 생성이 중단되지 않는 고가용성을 보장한다.
+3. **단방향 의존성 및 순수 도메인 격리 (Strict Clean Domain Isolation)**:
+   - 도메인 계층(Character, TensorMatrix, LowenArmor, ActionFrame)은 DB나 LLM API 등 외부 인프라 라이브러리를 일절 참조하지 않는 순수 POPO(Plain Old Python Object)로 격리한다.
+4. **완벽한 불변 스냅샷 롤백 (Turn Snapshot & Undo Capability)**:
+   - 매 턴의 상태와 서사는 불변 스냅샷(`TurnSnapshot`)으로 스택에 보존되어, 언제든 직전 턴으로 100% 오차 없이 롤백(Undo)될 수 있어야 한다.
 
 ---
 
@@ -29,129 +33,174 @@
 
 ```mermaid
 graph TD
-    User([👤 개발자 / Decision Owner]) -->|Slash Commands: /architect, /implement, /main-stream| AGY[🤖 Antigravity Agent]
-    AGY -->|1. Context Read & Plan Mirror| Views[👁️ views/ 실시간 관측 뷰 5종]
-    AGY -->|2. Scoped Code Execution| Source[💻 src/ & tests/ 소스코드 및 테스트]
-    AGY -->|3. Terminal Test Execution| Terminal[🧪 Test Runner: pytest / npm test]
-    Terminal -->|4. AI Proof Logs| AGY
-    AGY -->|5. Permanent Log Archival| Store[(🗄️ .agents/store/state.db SQLite)]
+    User([👤 플레이어 / 사용자]) -->|자연어 행동 & 대사 입력| Presentation[🌐 Presentation Layer: Web / CLI]
+    Presentation --> Orchestrator[🧠 Narrative Orchestrator]
+    
+    Orchestrator -->|1. 자연어 파싱 의뢰| ActionParser[⚡ Action Parsing Service]
+    Orchestrator -->|2. 생체 역학 및 상태 전이| DomainCore[🧬 Domain Core: Character & TensorMatrix]
+    Orchestrator -->|3. 고밀도 서사 집필 요청| LLMAdapter[🤖 Resilient Multi-LLM Client]
+    
+    LLMAdapter -->|API Call & Auto Cascade| CloudLLMs[(☁️ Google Gemini & Anthropic Claude)]
+    Orchestrator -->|4. 턴 원장 영구 저장| DBAdapter[(🗄️ SQLite DB: abyss_engine.db)]
 ```
 
 ---
 
-## 🏛️ 3. 계층 구조 및 모듈 인터페이스 (Layered Architecture & Boundaries)
+## 🏛️ 3. 4계층 모듈 구조 및 경계 정의 (Layered Architecture)
 
 ```mermaid
 graph TB
-    subgraph Tier1 ["Tier 1: Global Supreme Constitution (전역 최고 헌법)"]
-        Constitution[user_global / GEMINI.md - 상시 강제 ALWAYS ON]
+    subgraph Presentation ["1. Presentation Layer (인터페이스)"]
+        WebUI[Web Application / Gradio & Streamlit UI]
+        ProseSanitizer[Prose Formatter & Tag Stripper]
     end
 
-    subgraph Tier2 ["Tier 2: Central Governance & Customization Hub (.agents/)"]
-        Workflows["workflows/ (인간 리모컨: main-stream, architect, implement)"]
-        Skills["skills/ (AI 전문 뇌: main-stream, architect, implement)"]
-        Docs["docs/ (LIFECYCLE_SPEC.md & templates/)"]
-        Store["store/ (SQLite schema.sql)"]
-        Conventions["CONVENTIONS.md (공식 명세)"]
+    subgraph Application ["2. Application Layer (유스케이스 조율)"]
+        NarrativeEngine[NarrativeEngine: 턴 오케스트레이션]
+        UndoManager[Undo / Rollback Stack Manager]
+        ActionParserService[Action Parsing & Semantic Dispatcher]
+        CharacterWorkshopService[Character Workshop & Seed Synthesizer]
     end
 
-    subgraph Tier3 ["Tier 3: Project Live Views (views/ 실시간 관측 뷰)"]
-        State["views/CURRENT_STATE.md (SSOT & 5단계 파이프라인)"]
-        Status["views/IMPLEMENTATION_STATUS.md (전체 컴포넌트 현황판)"]
-        Plan["views/IMPLEMENTATION_PLAN.md (구현 계획서 미러링)"]
-        Walkthrough["views/WALKTHROUGH.md (구현 완료 보고서 미러링)"]
-        Arch["views/ARCHITECTURE.md (시스템 청사진)"]
+    subgraph Domain ["3. Domain Layer (순수 비즈니스 로직 & 헌법)"]
+        CharacterEntity[Character & LowenArmor: 5대 신체 갑주]
+        PressureStageModel[PressureStage: 4단계 압력 궤적]
+        TensorMatrixModel[TensorMatrix: 17대 생체 텐서 & Kinematic Chain]
+        TensionGridModel[TensionGrid: N x N 관계역학 및 질투/부채]
+        ActionFrameModel[ActionFrame & ObservableEvent: 화행/강도/벡터]
     end
 
-    Tier1 --> Tier2
-    Tier2 --> Tier3
+    subgraph Infrastructure ["4. Infrastructure Layer (인프라 & 어댑터)"]
+        DBManager[DatabaseManager: SQLite CRUD & 외래키 트랜잭션]
+        UniversalLLM[UniversalLLMManager: Gemini/Claude 캐스케이드 어댑터]
+        ImageGen[Portrait Generator Adapter: HuggingFace SD]
+    end
+
+    Presentation --> Application
+    Application --> Domain
+    Application --> Infrastructure
+    Infrastructure -.->|Implements Protocol| Domain
 ```
 
 ---
 
 ## 🗄️ 4. 데이터 아키텍처 및 핵심 엔티티 (Data & Domain Models)
 
-### 4.1 핵심 엔티티 관계도 (Entity Relationship Diagram)
+### 4.1 RDB 엔티티 관계도 (Entity Relationship Diagram)
 
 ```mermaid
 erDiagram
-    TASK ||--o{ COMPONENT_STATUS : updates
-    TASK ||--o{ VERIFICATION_LOG : records
-    TASK ||--o{ DECISION_OVERRIDE : logs
+    CHARACTERS ||--o{ CHARACTER_TRAITS : has_many
+    CHARACTERS ||--o{ TURN_HISTORY : records
+    CHARACTERS ||--o{ TENSION_GRID : sources_and_targets
 
-    TASK {
-        string task_id PK
+    CHARACTERS {
+        int id PK
+        string seed_hash UK
+        string name
         string title
-        string phase
-        string status
+        string faction
+        string armor_type
+        string image_url
+        float ego_durability
+        float neural_taint
+        string pressure_stage
+        text active_spotlights
+        text chain_history
         datetime created_at
     }
-    COMPONENT_STATUS {
-        string module_name PK
-        string status
-        string dependency
+
+    CHARACTER_TRAITS {
+        int id PK
+        int character_id FK
+        string trait_key
+        text trait_value
+    }
+
+    TURN_HISTORY {
+        int id PK
+        int character_id FK
+        int turn_number
+        text user_action
+        string vector_type
+        text narrative_prose
+        float ego_durability
+        float neural_taint
+        string pressure_stage
+        datetime created_at
+    }
+
+    TENSION_GRID {
+        int id PK
+        int source_char_id FK
+        int target_char_id FK
+        float taint_level
+        float debt_amount
+        float jealousy_index
+        string pressure_stage
         datetime updated_at
     }
-    VERIFICATION_LOG {
-        int log_id PK
-        string task_id FK
-        string command
-        string exit_code
-        string proof_grade
-        text output_log
+
+    SOMATIC_NODES {
+        int id PK
+        string node_code UK
+        string body_part
+        string armor_type
+        int stage_level
+        string sensory_vector
+        text reaction_text
     }
-    DECISION_OVERRIDE {
-        int override_id PK
-        string task_id FK
-        text reason_5w1h
-        string approver
-        datetime overridden_at
+
+    KINEMATIC_RULES {
+        int id PK
+        int chain_step
+        string from_node
+        string to_node
+        float propagation_decay
     }
 ```
 
 ---
 
-## 🛡️ 5. 공통 관심사 아키텍처 (Cross-Cutting Concerns)
+## 📂 5. 신규 `src/` 물리 디렉토리 재구축 매핑 (Package Topology)
 
-1. **자동 미러링 프로토콜 (Brain-to-Views Auto-Mirroring)**:
-   - Phase 1 (Architect): 브레인 `implementation_plan.md` ➔ `views/IMPLEMENTATION_PLAN.md` 자동 복사.
-   - Phase 2 (Implement): 브레인 `walkthrough.md` ➔ `views/WALKTHROUGH.md` 자동 복사.
-2. **장애 격리 (STOP-THE-LINE)**:
-   - 요구사항 모호, 데이터 파괴 위험 감지 시 즉시 상태를 `BLOCKED`로 격리하고 사용자 유권해석 요청.
-3. **이중 저장소 형상 관리**:
-   - 중앙 코어(`Antigravity-Common-Core`)는 `.agents/` 서브모듈로 독립 버전 관리, 프로젝트는 상위 레포로 격리.
-
----
-
-## 📂 6. 물리적 파일 시스템 매핑 (Physical Package Topology)
+거대 모놀리스(`web_app.py 249KB`, `narrative_engine.py 53KB`)를 결함 없이 점진적으로 재구축할 대상 디렉토리 구조입니다:
 
 ```text
-my-project/ (AbyssEmpire-python-narrative)
-├── README.md                      # 프로젝트 총괄 설명서
+src/
+├── presentation/                  # 🌐 프레젠테이션 계층
+│   ├── web/                       # 웹 UI 컴포넌트 및 라우터
+│   └── prose_sanitizer.py         # 서사 대사 분리 및 시스템 태그 소멸 정제기
 │
-├── views/                         # 👁️ [Tier 3: 실시간 관측 뷰 5종]
-│   ├── CURRENT_STATE.md           # [Core 1] 현재 상황 (SSOT & 파이프라인)
-│   ├── IMPLEMENTATION_STATUS.md   # [Core 2] 구현 상황도 (컴포넌트 완성도)
-│   ├── IMPLEMENTATION_PLAN.md     # [Core 3] 구현 계획서 (브레인 미러링)
-│   ├── WALKTHROUGH.md             # [Core 4] 구현 완료 보고서 (브레인 미러링)
-│   └── ARCHITECTURE.md            # [Core 5] 아키텍처 전체 설계도 (본 문서)
+├── application/                   # 🧠 유스케이스 계층
+│   ├── narrative_orchestrator.py  # 턴 라이프사이클 오케스트레이터
+│   ├── undo_manager.py            # TurnSnapshot 기반 롤백 스택
+│   ├── action_parser_service.py   # 자연어 지문/대사 분할 및 화행 분석 서비스
+│   └── character_service.py       # 캐릭터 생성/조회 및 시드 생성기
 │
-├── .agents/                       # 🌟 [Tier 2: 중앙 거버넌스 허브 Submodule]
-│   ├── workflows/                 # 🎮 main-stream.md, architect.md, implement.md
-│   ├── skills/                    # 🤖 main-stream/, architect/, implement/
-│   ├── docs/                      # 📄 LIFECYCLE_SPEC.md & templates/
-│   ├── CONVENTIONS.md             # 📜 공식 명세서
-│   ├── GEMINI.md.example          # 🏛️ 전역 헌법 규격 예시
-│   └── store/                     # 🗄️ SQLite schema.sql
+├── domain/                        # 🧬 순수 도메인 계층 (외부 의존성 제로)
+│   ├── character.py               # Character 엔티티 및 LowenArmor
+│   ├── pressure_stage.py          # 4단계 압력 궤적 상태 머신
+│   ├── tensor_matrix.py           # 17대 생체 텐서 & Kinematic Chain 전이 엔진
+│   ├── relational_vector.py       # 5대 관계역학 상성 벡터
+│   ├── tension_grid.py            # N x N 관계역학 매트릭스
+│   └── action_frame.py            # ActionFrame & ObservableEvent 모델
 │
-├── src/                           # 💻 비즈니스 로직 소스코드
-└── tests/                         # 🧪 단위/통합 테스트 스위트
+└── infrastructure/                # 🔌 인프라 계층
+    ├── database/                  # SQLite 데이터베이스 어댑터
+    │   ├── db_manager.py          # 트랜잭션 매니저
+    │   └── repositories.py        # Character, TurnHistory, TensionGrid 리포지토리
+    ├── llm/                       # 멀티 LLM 어댑터
+    │   ├── universal_llm.py       # Gemini / Claude 캐스케이드 클라이언트
+    │   └── prompt_builder.py      # Somatic Prose 및 서사 프롬프트 빌더
+    └── media/                     # 초상화 생성 어댑터
+        └── portrait_client.py     # HuggingFace SD 초상화 생성 클라이언트
 ```
 
 ---
 
-## ⚖️ 7. 불변의 아키텍처 제약 조건 (Hard Guardrails)
+## ⚖️ 6. 불변의 아키텍처 제약 조건 (Hard Guardrails)
 
-- **`G-01` (Default Deny)**: 명시적 승인 없는 `src/` 코드 변경 전면 금지.
-- **`G-02` (AI Proof Mandate)**: 미실행 테스트의 임의 완료 선언(`DONE`) 금지.
-- **`G-03` (No Lazy Truncation)**: 코드/문서 생성 시 `// 기존 코드와 동일` 등 임의 생략 절대 금지.
+- **`G-01` (Deterministic Somatics)**: 모든 텐서 수치 변경 및 신체 운동 연쇄는 `domain/tensor_matrix.py`에서 파이썬 코드로만 연산하며 LLM의 임의 출력을 신뢰하지 않는다.
+- **`G-02` (Pure Domain)**: `src/domain/` 내부의 모듈은 `sqlite3`, `urllib`, `requests` 등 외부 I/O 패키지를 임포트할 수 없다.
+- **`G-03` (Prose Sanitization)**: 플레이어에게 노출되는 최종 문학 서사에는 `[SOM_...]`, `[STATUS]` 등의 시스템 태그나 스탯 단어가 100% 제거되어야 한다.

@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | :--- | :--- |
 | **문서 ID** | `STATUS-001` |
-| **문서 버전** | `v1.0.0` |
+| **문서 버전** | `v2.0.0` |
 | **상태** | `ACTIVE` |
 | **최종 동기화** | `2026-09-02` |
 
@@ -24,8 +24,36 @@
 - [x] **`Store.SQLite`**: 영구 누적 감사 로그 및 5W1H 오버라이드 스키마 (`DONE`)
 - [x] **`Views.Live`**: views/ 5대 핵심 실시간 관측 뷰 구축 (`DONE`)
 
-### 2. 💻 비즈니스 로직 및 기능 (Domain Features)
-- [ ] **`Feature.SampleModule`**: [프로젝트 첫 번째 비즈니스 기능] (`TODO`)
+---
+
+### 2. 🧬 [AbyssEngine] 도메인 계층 재구축 (Domain Layer - Pure Python)
+- [ ] **`Domain.Character`**: Character 엔티티 및 LowenArmor (5대 로웬 신체 갑주) (`TODO`)
+- [ ] **`Domain.TensorMatrix`**: 17대 생체 텐서 매트릭스 & Kinematic Chain 운동 연쇄 전이 엔진 (`TODO`)
+- [ ] **`Domain.PressureStage`**: 4단계 신경생리학적 압력 궤적 상태 머신 (`TODO`)
+- [ ] **`Domain.RelationalVector`**: 5대 범용 관계역학 상성 벡터 & N:N 텐션 그리드 (`TODO`)
+- [ ] **`Domain.ActionFrame`**: ActionFrame & ObservableEvent 모델 (화행/강도/5D 델타) (`TODO`)
+
+---
+
+### 3. 🧠 [AbyssEngine] 유스케이스 및 애플리케이션 계층 (Application Layer)
+- [ ] **`Application.NarrativeOrchestrator`**: 턴 라이프사이클 관리 및 서사 오프닝 생성 (`TODO`)
+- [ ] **`Application.UndoManager`**: TurnSnapshot 기반 불변 롤백 스택 (`TODO`)
+- [ ] **`Application.ActionParserService`**: 자연어 지문/대사 분할 및 의미론적 디스패처 (`TODO`)
+- [ ] **`Application.CharacterService`**: 캐릭터 생성, 결핍 특성 주입 및 워크숍 서비스 (`TODO`)
+
+---
+
+### 4. 🔌 [AbyssEngine] 인프라 및 어댑터 계층 (Infrastructure Layer)
+- [ ] **`Infra.Database`**: DatabaseManager 및 캐릭터/턴/텐션 리포지토리 (`TODO`)
+- [ ] **`Infra.MultiLLM`**: UniversalLLMManager (Gemini/Claude 자동 캐스케이드 & 스왑 어댑터) (`TODO`)
+- [ ] **`Infra.PromptBuilder`**: Somatic Prose 주입 및 3+1 전술 선택지 프롬프트 빌더 (`TODO`)
+- [ ] **`Infra.Media`**: HuggingFace SD 초상화 렌더링 클라이언트 (`TODO`)
+
+---
+
+### 5. 🌐 [AbyssEngine] 프레젠테이션 계층 (Presentation Layer)
+- [ ] **`Presentation.ProseSanitizer`**: 시스템 태그 소멸 및 대사 줄바꿈 정제기 (`TODO`)
+- [ ] **`Presentation.WebUI`**: 웹 인터페이스 및 실시간 롤플레이 뷰 (`TODO`)
 
 ---
 
