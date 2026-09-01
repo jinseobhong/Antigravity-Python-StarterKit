@@ -40,6 +40,7 @@
 - [x] **`Infra.MultiLLM`**: UniversalLLMClient (Gemini/Claude 자동 캐스케이드 & 스왑 어댑터) (`DONE`)
 - [x] **`Infra.PromptBuilder`**: Somatic Prose 주입 및 서사 프롬프트 빌더 (`DONE`)
 - [x] **`Infra.Media`**: HuggingFace SD 초상화 렌더링 클라이언트 (`DONE`)
+- [x] **`Infra.DanbooruPrompt`**: Illustrious-XL 6-Slot 단부루 태그 컴파일러 (`DONE`)
 
 ---
 
@@ -47,7 +48,8 @@
 - [x] **`Application.NarrativeOrchestrator`**: 턴 라이프사이클 관리 및 서사 오케스트레이터 (`DONE`)
 - [x] **`Application.UndoManager`**: TurnSnapshot 기반 불변 롤백 스택 관리자 (`DONE`)
 - [x] **`Application.ActionParserService`**: 자연어 지문/대사 분할 및 의미론적 디스패처 (`DONE`)
-- [x] **`Application.CharacterService`**: 캐릭터 생성, 결핍 특성 주입 및 워크숍 서비스 (`DONE`)
+- [x] **`Application.CharacterService`**: 캐릭터 생성 및 시드 관리 서비스 (`DONE`)
+- [x] **`Application.CharacterWorkshopService`**: 4대 로스터 시딩, 마스터 프롬프트 추출, JSON I/O (`DONE`)
 
 ---
 

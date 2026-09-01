@@ -6,5 +6,9 @@ src/infrastructure/media
 """
 
 from .portrait_client import PortraitClient
+from .danbooru_prompt_builder import DanbooruPromptBuilder
 
-__all__ = ["PortraitClient"]
+__all__ = [
+    "PortraitClient",
+    "DanbooruPromptBuilder",
+]
