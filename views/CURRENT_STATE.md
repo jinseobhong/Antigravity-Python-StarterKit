@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | :--- | :--- |
 | **문서 ID** | `STATE-001` |
-| **문서 버전** | `v2.1.0` |
+| **문서 버전** | `v2.2.0` |
 | **상태** | `ACTIVE` |
 | **최종 동기화** | `2026-09-02` |
 
@@ -20,7 +20,7 @@
 ---
 
 ## 📌 현재 당면 작업 (Current Task Focus)
-- **Feature / Task**: `[AbyssEngine] Clean 4-Tier 전용 신규 웹 스튜디오(Web Studio) 구축 및 가동 완료 (31개 단위 테스트 100% PROVEN)`
+- **Feature / Task**: `[AbyssEngine] 웹 스튜디오 프론트엔드 모듈화(static/css, static/js, templates/) 및 원형 3대 뷰 100% 복원 완료 (31개 단위 테스트 100% PROVEN)`
 - **Track Type**: `Track 3: Standard Architecture`
 - **Current Phase**: `COMPLETED`
 - **Implementation Auth**: `APPROVED`

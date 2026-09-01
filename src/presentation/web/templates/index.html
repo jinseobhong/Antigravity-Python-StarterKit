@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>👑 AbyssEmpire &bull; Somatic Narrative Web Studio</title>
+  
+  <!-- Tailwind CSS & Marked.js & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  
+  <!-- Modular Custom CSS -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="h-screen flex flex-col justify-between overflow-hidden bg-[#090a10] text-[#f1f5f9]">
+
+  <!-- ========================================== -->
+  <!-- 1. HEADER NAVBAR                           -->
+  <!-- ========================================== -->
+  <header class="h-16 border-b border-[#23273c] px-6 flex items-center justify-between glass-panel z-30 shrink-0">
+    <div class="flex items-center gap-3.5 cursor-pointer" onclick="App.switchView('LOBBY')">
+      <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-purple-600 via-pink-500 to-amber-400 flex items-center justify-center shadow-xl">
+        <i class="fa-solid fa-crown text-white text-lg"></i>
+      </div>
+      <div>
+        <h1 class="text-lg font-black tracking-wide bg-gradient-to-r from-purple-400 via-pink-300 to-amber-300 bg-clip-text text-transparent">
+          AbyssEmpire Web Studio
+        </h1>
+        <p class="text-[11px] text-gray-400 font-medium">Clean 4-Tier Somatic Engine &bull; Modular Edition</p>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="flex items-center gap-2">
+      <button onclick="App.switchView('LOBBY')" id="navLobby" class="px-4 py-2 rounded-xl text-xs font-bold bg-purple-600 text-white shadow transition flex items-center gap-1.5">
+        <i class="fa-solid fa-house text-xs"></i> 메인 로비
+      </button>
+      <button onclick="App.switchView('PLAY')" id="navPlay" class="px-4 py-2 rounded-xl text-xs font-bold bg-gray-900/80 text-gray-400 hover:text-white hover:bg-gray-800 transition flex items-center gap-1.5">
+        <i class="fa-solid fa-masks-theater text-xs"></i> Play Room
+      </button>
+      <button onclick="App.switchView('VAULT')" id="navVault" class="px-4 py-2 rounded-xl text-xs font-bold bg-gray-900/80 text-gray-400 hover:text-white hover:bg-gray-800 transition flex items-center gap-1.5">
+        <i class="fa-solid fa-users text-xs"></i> 캐릭터 스튜디오
+      </button>
+      <button onclick="ModalManager.openPromptModal()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-gray-900 border border-purple-800/50 text-purple-300 hover:bg-purple-950/80 transition flex items-center gap-1.5">
+        <i class="fa-solid fa-file-code text-xs"></i> 마스터 프롬프트
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 2. MAIN CONTAINER & 3 CORE VIEWS           -->
+  <!-- ========================================== -->
+  <main class="flex-1 flex overflow-hidden p-6 max-w-7xl mx-auto w-full">
+
+    <!-- ---------------------------------------- -->
+    <!-- [VIEW 1] MAIN LOBBY HUB                  -->
+    <!-- ---------------------------------------- -->
+    <section id="viewLobby" class="flex-1 flex flex-col justify-between overflow-y-auto w-full">
+      <div class="my-auto py-4 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <!-- Left Hero Intro (7 cols) -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="inline-block px-3.5 py-1 bg-purple-950/70 border border-purple-800/50 rounded-full text-xs font-extrabold text-purple-300">
+            ✨ Next-Gen Persona & Clean 4-Tier Architecture
+          </div>
+          <h2 class="text-3xl sm:text-5xl font-black text-white leading-tight tracking-tight">
+            가장 완벽한 인격과의 조우,<br>
+            <span class="bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-300 bg-clip-text text-transparent">
+              한계를 넘는 서사의 심연.
+            </span>
+          </h2>
+          <p class="text-sm text-gray-400 leading-relaxed max-w-xl">
+            17대 생체 텐서와 4단계 신경생리학적 압력 궤적으로 구동되는 순수 결정론적 서사 엔진입니다.<br>
+            당신만의 고유한 인격과 마주하고, 숨 막히는 1:1 롤플레이에 몰입하세요.
+          </p>
+
+          <!-- 2 Main Action Portals -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+            
+            <!-- Portal 1: Play Room -->
+            <div class="portal-card glass-panel rounded-2xl p-5 text-left transition duration-200 border border-purple-900/60 group bg-gradient-to-br from-purple-950/30 to-transparent flex flex-col justify-between">
+              <div>
+                <div class="w-10 h-10 rounded-xl bg-purple-600/30 border border-purple-500/40 flex items-center justify-center text-purple-300 mb-3 group-hover:bg-purple-600 group-hover:text-white transition shadow-md">
+                  <i class="fa-solid fa-masks-theater text-lg"></i>
+                </div>
+                <h3 class="text-base font-extrabold text-white mb-1">Play Room</h3>
+                <p class="text-xs text-gray-400 leading-snug mb-4">현재 상주 중인 캐릭터와 실시간 1:1 서사 롤플레이 세션에 돌입합니다.</p>
+              </div>
+              <button onclick="App.switchView('PLAY')" class="w-full py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-xl text-xs font-bold transition shadow flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-play text-[10px]"></i> Play Room 입장 &rarr;
+              </button>
+            </div>
+
+            <!-- Portal 2: Character Studio -->
+            <div class="portal-card glass-panel rounded-2xl p-5 text-left transition duration-200 border border-pink-900/60 group bg-gradient-to-br from-pink-950/30 to-transparent flex flex-col justify-between">
+              <div>
+                <div class="w-10 h-10 rounded-xl bg-pink-600/30 border border-pink-500/40 flex items-center justify-center text-pink-300 mb-3 group-hover:bg-pink-600 group-hover:text-white transition shadow-md">
+                  <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
+                </div>
+                <h3 class="text-base font-extrabold text-white mb-1">Character Studio</h3>
+                <p class="text-xs text-gray-400 leading-snug mb-4">4대 아키타입 로스터, 유전자 튜닝 및 JSON/프롬프트 추출을 관리합니다.</p>
+              </div>
+              <button onclick="App.switchView('VAULT')" class="w-full py-2.5 bg-gradient-to-r from-purple-900/80 to-pink-900/80 hover:from-purple-800 hover:to-pink-800 border border-pink-600/50 text-pink-200 hover:text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
+                <i class="fa-solid fa-users text-[10px]"></i> 캐릭터 보관소 &rarr;
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right Active Character Spotlight (5 cols) -->
+        <div class="lg:col-span-5">
+          <div class="glass-panel rounded-3xl p-6 border border-purple-800/40 shadow-2xl relative overflow-hidden bg-gradient-to-b from-gray-900/90 to-cardBg">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-[11px] font-extrabold text-purple-400 tracking-wider uppercase flex items-center gap-1">
+                <i class="fa-solid fa-anchor"></i> ACTIVE PERSONA
+              </span>
+              <span id="hubCharSeed" class="text-xs font-mono text-amber-400 bg-amber-950/40 px-2 py-0.5 rounded border border-amber-500/30">#SEED</span>
+            </div>
+
+            <!-- Character Portrait Frame -->
+            <div class="relative w-full h-80 rounded-2xl overflow-hidden border border-purple-500/40 mb-4 bg-gray-950 flex items-center justify-center shadow-2xl">
+              <img id="hubCharImg" src="" alt="Portrait" class="hidden w-full h-full object-cover object-top">
+              <div id="hubCharPlaceholder" class="w-24 h-24 rounded-3xl bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center text-white text-4xl font-black shadow-2xl">
+                릴
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <h3 id="hubCharName" class="text-xl font-black text-white">릴리스</h3>
+                <span id="hubCharArmor" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-purple-950/80 text-purple-300 border border-purple-600/50">Rigid</span>
+              </div>
+              <p id="hubCharTitle" class="text-xs text-purple-300 font-medium">제1황녀 &bull; 제국 황실</p>
+              
+              <div id="hubCharTraits" class="bg-gray-950/70 rounded-xl p-3 border border-gray-800/80 space-y-1 mt-3">
+                <!-- Dynamic traits -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---------------------------------------- -->
+    <!-- [VIEW 2] PLAY ROOM (NARRATIVE THEATER)   -->
+    <!-- ---------------------------------------- -->
+    <section id="viewPlay" class="hidden flex-1 flex overflow-hidden gap-5 w-full">
+      
+      <!-- Left Somatic Control Sidebar (340px) -->
+      <aside class="w-80 sm:w-96 glass-panel rounded-2xl p-5 flex flex-col justify-between shrink-0 overflow-y-auto space-y-4">
+        <div>
+          <!-- Character Header -->
+          <div class="flex items-center gap-3.5 pb-4 border-b border-gray-800">
+            <div id="playCharAvatar" class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center text-white text-lg font-black shadow-md shrink-0">
+              릴
+            </div>
+            <div class="overflow-hidden">
+              <h3 id="playCharName" class="text-base font-black text-white truncate">릴리스</h3>
+              <p id="playCharTitle" class="text-xs text-purple-300 truncate">제1황녀 &bull; 제국 황실</p>
+              <span id="playCharArmor" class="inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-950 text-purple-300 border border-purple-700/50">Rigid</span>
+            </div>
+          </div>
+
+          <!-- 17 Somatic Tensors & Ego Section -->
+          <div class="mt-4 space-y-3.5">
+            <div>
+              <div class="flex justify-between text-xs mb-1.5">
+                <span class="text-gray-400 font-bold">자아 내구도</span>
+                <span id="egoVal" class="text-emerald-400 font-extrabold">100.0%</span>
+              </div>
+              <div class="w-full bg-gray-950 rounded-full h-2.5 overflow-hidden border border-gray-800">
+                <div id="egoBar" class="bg-gradient-to-r from-emerald-500 via-purple-500 to-pink-500 h-2.5 rounded-full transition-all duration-300" style="width: 100%"></div>
+              </div>
+            </div>
+
+            <div>
+              <span class="text-[11px] font-bold text-gray-400 uppercase">압력 궤적 단계</span>
+              <p id="pressureStage" class="text-xs text-pink-400 font-black mt-0.5">Stage 1 (정렬 방어)</p>
+            </div>
+
+            <div>
+              <span class="text-[11px] font-bold text-gray-400 uppercase">⚡ 운동 연쇄 (Kinematic Chain)</span>
+              <p id="chainEvent" class="text-xs text-amber-300 font-medium bg-amber-950/30 p-2.5 rounded-xl border border-amber-800/40 mt-1">
+                신체 운동 연쇄 안정
+              </p>
+            </div>
+
+            <div>
+              <span class="text-[11px] font-bold text-gray-400 uppercase">감지된 활성 텐서</span>
+              <div id="activeTensorsBox" class="flex flex-wrap gap-1 mt-1">
+                <span class="text-[10px] text-gray-500">감지된 이상 텐서 없음</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Utility Buttons -->
+        <div class="pt-3 border-t border-gray-800 space-y-2">
+          <button onclick="ModalManager.openDanbooruModal()" class="w-full py-2 bg-pink-950/50 hover:bg-pink-900/60 border border-pink-700/50 text-pink-200 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
+            <i class="fa-solid fa-wand-magic-sparkles text-xs"></i> Illustrious-XL 단부루 태그
+          </button>
+          <div class="flex gap-2">
+            <button onclick="App.triggerUndo()" class="flex-1 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1">
+              <i class="fa-solid fa-rotate-left text-xs"></i> 되돌리기
+            </button>
+            <button onclick="App.triggerReset()" class="px-3 py-2 bg-red-950/40 hover:bg-red-900/60 border border-red-800/50 text-red-300 rounded-xl text-xs font-bold transition">
+              <i class="fa-solid fa-trash text-xs"></i>
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Main Chat & Prose Theater -->
+      <section class="flex-1 glass-panel rounded-2xl p-5 flex flex-col justify-between overflow-hidden">
+        
+        <!-- Chat History Box -->
+        <div id="playChatBox" class="flex-1 overflow-y-auto space-y-4 pr-3 mb-4">
+          <!-- Dynamic chat history rendered by play.js -->
+        </div>
+
+        <!-- Tactical Action Choices Chips -->
+        <div class="space-y-2 mb-3">
+          <span class="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider">🎯 전술 선택지 (Tactical Actions)</span>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="App.sendAction('가까이 다가가 차가운 뺨을 부드럽게 감싸 쥐며 안도감을 주었다.', 'DEVOTION_COMFORT')" class="px-3.5 py-2 bg-purple-950/70 hover:bg-purple-900 border border-purple-700/60 text-purple-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+              💖 [헌신/위로] 뺨 감싸기
+            </button>
+            <button onclick="App.sendAction('차가운 시선으로 턱을 치켜들며 무조건적인 복종을 요구했다.', 'SUBJUGATION')" class="px-3.5 py-2 bg-pink-950/70 hover:bg-pink-900 border border-pink-700/60 text-pink-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+              ⚡ [정복/압박] 턱 치켜들기
+            </button>
+            <button onclick="App.sendAction('나란히 앉아 서로의 은밀한 체온과 호흡을 맞추며 동조했다.', 'SOMATIC_SYNC')" class="px-3.5 py-2 bg-cyan-950/70 hover:bg-cyan-900 border border-cyan-700/60 text-cyan-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+              🌊 [체온/동조] 호흡 맞추기
+            </button>
+          </div>
+        </div>
+
+        <!-- Action Input Bar -->
+        <form onsubmit="event.preventDefault(); App.sendAction();" class="flex gap-2.5">
+          <input type="text" id="actionInput" placeholder="행동이나 대사를 자연어로 입력하세요 (예: 그녀의 손끝을 잡으며 부드럽게 속삭였다.)" class="flex-1 bg-gray-950 border border-gray-800 rounded-xl px-4 py-3.5 text-xs sm:text-sm text-white focus:outline-none focus:border-purple-500 transition">
+          <button type="submit" class="px-6 py-3.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-xl text-xs sm:text-sm font-extrabold shadow-xl transition flex items-center gap-2 shrink-0">
+            <i class="fa-solid fa-paper-plane text-xs"></i> 턴 실행
+          </button>
+        </form>
+
+      </section>
+
+    </section>
+
+    <!-- ---------------------------------------- -->
+    <!-- [VIEW 3] CHARACTER STUDIO & VAULT        -->
+    <!-- ---------------------------------------- -->
+    <section id="viewVault" class="hidden flex-1 flex flex-col justify-between overflow-y-auto w-full space-y-5">
+      
+      <!-- Vault Header & Search Filter -->
+      <div class="glass-panel rounded-2xl p-5 border border-gray-800 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 class="text-lg font-black text-white flex items-center gap-2">
+              <i class="fa-solid fa-users text-purple-400"></i> RDB 캐릭터 보관소 (Character Studio)
+            </h3>
+            <p id="vaultCountLabel" class="text-xs text-gray-400 mt-0.5">조회 중...</p>
+          </div>
+          
+          <input type="text" id="vaultSearchInput" oninput="VaultView.filterAndRender()" placeholder="이름, 칭호, 결핍, 시드로 검색..." class="bg-gray-950 border border-gray-800 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-purple-500 w-full sm:w-64">
+        </div>
+
+        <!-- Filter Chips -->
+        <div class="flex flex-wrap gap-1.5 pt-1 border-t border-gray-800/60">
+          <button onclick="VaultView.setFilter('ALL')" id="chip-ALL" class="px-3 py-1 rounded-xl text-xs font-extrabold bg-purple-600 text-white shadow transition">전체</button>
+          <button onclick="VaultView.setFilter('Rigid')" id="chip-Rigid" class="px-3 py-1 rounded-xl text-xs font-bold bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800 transition">Rigid (척추)</button>
+          <button onclick="VaultView.setFilter('Endurer')" id="chip-Endurer" class="px-3 py-1 rounded-xl text-xs font-bold bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800 transition">Endurer (인내)</button>
+          <button onclick="VaultView.setFilter('Controller')" id="chip-Controller" class="px-3 py-1 rounded-xl text-xs font-bold bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800 transition">Controller (지배)</button>
+          <button onclick="VaultView.setFilter('Deprived')" id="chip-Deprived" class="px-3 py-1 rounded-xl text-xs font-bold bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800 transition">Deprived (애착)</button>
+        </div>
+      </div>
+
+      <!-- Character 3-Col Grid -->
+      <div id="vaultGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pb-6">
+        <!-- Dynamic Cards rendered by vault.js -->
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- 3. MODALS                                  -->
+  <!-- ========================================== -->
+
+  <!-- Master Prompt Modal -->
+  <div id="promptModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="glass-panel rounded-2xl p-6 max-w-2xl w-full max-h-[85vh] flex flex-col justify-between border border-purple-800/60 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-gray-800 mb-3">
+        <h4 class="text-sm font-black text-purple-300 flex items-center gap-2">
+          <i class="fa-solid fa-file-code"></i> 마스터 시스템 프롬프트 (25,000자급)
+        </h4>
+        <button onclick="ModalManager.closePromptModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <textarea id="promptModalText" readonly class="flex-1 w-full bg-gray-950 p-4 rounded-xl text-xs font-mono text-gray-300 border border-gray-800 resize-none h-96 focus:outline-none"></textarea>
+      <div class="mt-4 flex justify-end gap-2">
+        <button onclick="ModalManager.copyPrompt()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow">
+          <i class="fa-solid fa-copy text-xs"></i> 프롬프트 복사
+        </button>
+        <button onclick="ModalManager.closePromptModal()" class="px-4 py-2 bg-gray-800 text-gray-300 rounded-xl text-xs font-bold hover:bg-gray-700 transition">
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Danbooru Tags Modal -->
+  <div id="danbooruModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="glass-panel rounded-2xl p-6 max-w-xl w-full flex flex-col justify-between border border-pink-800/60 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-gray-800 mb-3">
+        <h4 class="text-sm font-black text-pink-300 flex items-center gap-2">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Illustrious-XL 6-Slot 단부루 태그
+        </h4>
+        <button onclick="ModalManager.closeDanbooruModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="space-y-3.5">
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label class="text-[11px] font-bold text-gray-400 uppercase">Positive Tags (Slot 1~6)</label>
+            <button onclick="ModalManager.copyDanbooru('pos')" class="text-[10px] text-pink-400 hover:underline">복사</button>
+          </div>
+          <textarea id="danbooruPos" readonly class="w-full bg-gray-950 p-3 rounded-xl text-xs font-mono text-pink-300 border border-gray-800 resize-none h-24 focus:outline-none"></textarea>
+        </div>
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label class="text-[11px] font-bold text-gray-400 uppercase">Negative Tags</label>
+            <button onclick="ModalManager.copyDanbooru('neg')" class="text-[10px] text-gray-400 hover:underline">복사</button>
+          </div>
+          <textarea id="danbooruNeg" readonly class="w-full bg-gray-950 p-3 rounded-xl text-xs font-mono text-gray-400 border border-gray-800 resize-none h-20 focus:outline-none"></textarea>
+        </div>
+      </div>
+      <div class="mt-4 flex justify-end">
+        <button onclick="ModalManager.closeDanbooruModal()" class="px-4 py-2 bg-gray-800 text-gray-300 rounded-xl text-xs font-bold hover:bg-gray-700 transition">
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modular Javascript Files -->
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/views/somatic.js"></script>
+  <script src="/static/js/views/lobby.js"></script>
+  <script src="/static/js/views/play.js"></script>
+  <script src="/static/js/views/vault.js"></script>
+  <script src="/static/js/components/modal.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

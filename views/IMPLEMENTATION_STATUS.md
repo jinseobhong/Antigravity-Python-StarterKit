@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | :--- | :--- |
 | **문서 ID** | `STATUS-001` |
-| **문서 버전** | `v2.1.0` |
+| **문서 버전** | `v2.2.0` |
 | **상태** | `ACTIVE` |
 | **최종 동기화** | `2026-09-02` |
 
@@ -56,7 +56,7 @@
 ### 5. 🌐 [AbyssEngine] 프레젠테이션 계층 (Presentation Layer)
 - [x] **`Presentation.ProseSanitizer`**: 시스템 태그 완전 소멸 및 대사 줄바꿈 정제기 (`DONE`)
 - [x] **`Presentation.CLI`**: 터미널 대화형 롤플레이 인터페이스 (`DONE`)
-- [x] **`Presentation.WebStudio`**: Clean 4-Tier 전용 웹 스튜디오 대시보드 (`server.py`) (`DONE`)
+- [x] **`Presentation.WebModularUI`**: 컴포넌트 기반 모듈화 웹 스튜디오 (`static/`, `templates/`, `server.py`) (`DONE`)
 
 ---
 
