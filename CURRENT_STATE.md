@@ -9,18 +9,16 @@
 
 ---
 
-## 📌 현재 작업 상세 (Current Task Focus)
-- **Feature / Task**: `표준 워크플로우 전용 스킬 (.agents/skills/workflow/SKILL.md) 및 상태 닻 정돈`
-- **Current Phase**: `PHASE 4: 증거 제출 및 최종 완료 (COMPLETED)`
+## 📌 현재 당면 작업 (Current Task Focus)
+- **Feature / Task**: `Antigravity 5대 핵심 문서 뷰 및 2-Phase 자동 미러링 체계 구축 완료`
+- **Current Phase**: `PHASE 2: 구현 및 입증 완료 (COMPLETED)`
 - **Implementation Auth**: `APPROVED`
 - **Proof Status**: `PROVEN`
 - **Decision Status**: `FINAL_ACCEPTED`
 
-## 📁 최근 변경 내역 (Recent Changes)
-- `[NEW]` `.agents/skills/workflow/SKILL.md`: 표준 4단계 페어링 루프 강제 런북 스킬
-- `[DELETE]` `.agents/skills/hitl-workflow/SKILL.md`: 구 명칭 폴더 정리
-- `[MODIFY]` `CURRENT_STATE.md`: 프로젝트 실시간 상태 및 5단계 파이프라인 이정표
-
-## 🧪 검증 결과 (Executed Evidence)
-- 스킬 파일 구조 및 YAML 메타데이터(`name: workflow`) 유효성 검증 완료 (`PROVEN`)
-- Git 버전 관리 추적 준비 완료 (`PROVEN`)
+## 📁 5대 핵심 실시간 뷰 (The 5 Core Live Views)
+1. `CURRENT_STATE.md` (현재 상황 — SSOT & 파이프라인)
+2. `IMPLEMENTATION_STATUS.md` (구현 상황도 — 전체 컴포넌트 현황)
+3. `IMPLEMENTATION_PLAN.md` (구현 계획 — 브레인 실시간 미러링)
+4. `WALKTHROUGH.md` (구현 완료 — 브레인 실시간 미러링)
+5. `ARCHITECTURE.md` (아키텍처 전체 설계도 — 시스템 청사진)
