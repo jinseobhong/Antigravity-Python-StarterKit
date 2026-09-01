@@ -14,3 +14,7 @@ $RECYCLE.BIN/
 # Temporary & Log files
 *.tmp
 *.log
+
+# Legacy Code for Reverse Engineering
+legacy/
+./legacy/
