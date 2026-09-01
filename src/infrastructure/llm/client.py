@@ -39,21 +39,26 @@ class MultiLLMClient:
         self,
         gemini_key: Optional[str] = None,
         claude_key: Optional[str] = None,
-        active_provider: str = "GEMINI",
-        gemini_model: str = "gemini-2.5-flash",
-        claude_model: str = "claude-3-7-sonnet-20250219"
+        active_provider: Optional[str] = None,
+        gemini_model: Optional[str] = None,
+        claude_model: Optional[str] = None
     ):
         load_local_env()
         self.gemini_key = gemini_key or os.getenv("GEMINI_API_KEY", "")
         self.claude_key = claude_key or os.getenv("ANTHROPIC_API_KEY", "") or os.getenv("CLAUDE_API_KEY", "")
-        self.active_provider = active_provider  # "GEMINI" 또는 "CLAUDE"
-        self.gemini_model = gemini_model
-        self.claude_model = claude_model
+        
+        # 환경변수 LLM_PROVIDER / ACTIVE_LLM_PROVIDER 지원 (대소문자 무관)
+        raw_prov = (active_provider or os.getenv("LLM_PROVIDER", "") or os.getenv("ACTIVE_LLM_PROVIDER", "CLAUDE")).strip().upper()
+        self.active_provider = "CLAUDE" if "CLAUDE" in raw_prov else "GEMINI"
+
+        self.gemini_model = gemini_model or os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+        self.claude_model = claude_model or os.getenv("ANTHROPIC_MODEL", "claude-3-7-sonnet-20250219")
+        self.hf_token = os.getenv("HF_TOKEN", "")
 
     @property
     def api_key(self) -> str:
         if self.active_provider == "CLAUDE":
-            return self.claude_key
+            return self.claude_key or self.gemini_key
         return self.gemini_key or self.claude_key
 
     @property
@@ -62,7 +67,7 @@ class MultiLLMClient:
             return self.claude_model
         return self.gemini_model
 
-    def set_keys_and_provider(self, gemini_key: str = "", claude_key: str = "", provider: str = "GEMINI") -> None:
+    def set_keys_and_provider(self, gemini_key: str = "", claude_key: str = "", provider: str = "CLAUDE") -> None:
         if gemini_key.strip():
             self.gemini_key = gemini_key.strip()
             os.environ["GEMINI_API_KEY"] = self.gemini_key
@@ -70,15 +75,19 @@ class MultiLLMClient:
             self.claude_key = claude_key.strip()
             os.environ["ANTHROPIC_API_KEY"] = self.claude_key
 
-        if provider in ["GEMINI", "CLAUDE"]:
-            self.active_provider = provider
+        if provider.upper() in ["GEMINI", "CLAUDE"]:
+            self.active_provider = provider.upper()
 
         # .env 파일에 영구 동기화
         try:
             with open(".env", "w", encoding="utf-8") as f:
                 f.write(f"GEMINI_API_KEY={self.gemini_key}\n")
+                f.write(f"GEMINI_MODEL={self.gemini_model}\n")
                 f.write(f"ANTHROPIC_API_KEY={self.claude_key}\n")
-                f.write(f"ACTIVE_LLM_PROVIDER={self.active_provider}\n")
+                f.write(f"ANTHROPIC_MODEL={self.claude_model}\n")
+                f.write(f"LLM_PROVIDER={self.active_provider.lower()}\n")
+                if self.hf_token:
+                    f.write(f"HF_TOKEN={self.hf_token}\n")
         except Exception:
             pass
 
