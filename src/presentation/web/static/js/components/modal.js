@@ -1,6 +1,6 @@
 /**
  * src/presentation/web/static/js/components/modal.js
- * 팝업 모달 관리자 (마스터 프롬프트, 단부루 태그)
+ * 팝업 모달 관리자 (마스터 프롬프트, 단부루 태그, HITL 신규 발현 모달)
  */
 
 const ModalManager = {
@@ -22,7 +22,7 @@ const ModalManager = {
     const el = document.getElementById('promptModalText');
     el.select();
     document.execCommand('copy');
-    alert('마스터 시스템 프롬프트가 클립보드에 복사되었습니다.');
+    alert('마스터 시스템 헌법이 클립보드에 복사되었습니다.');
   },
 
   async openDanbooruModal() {

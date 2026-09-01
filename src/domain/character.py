@@ -2,96 +2,64 @@
 """
 src/domain/character.py
 ~~~~~~~~~~~~~~~~~~~~~~~
-순수 객체지향(OOP) 캐릭터 엔티티 및 로웬 신체 갑주 (Character & LowenArmor)
+AbyssEmpire 캐릭터 애그리게이트 루트 (Aggregate Root)
+- GeneSeed, VisualDNA, PersonalityGene, SomaticLedger, SpatialPressureChamber, KinematicChainState를 유기적으로 결합
 """
 
 from __future__ import annotations
-import hashlib
-from dataclasses import dataclass, field, asdict
-from enum import Enum
-from typing import Dict, List, Optional, Any
+from dataclasses import dataclass, field
+from typing import Dict, Any, Optional
 
-from .pressure_stage import PressureStage
-from .tensor_matrix import TensorMatrix
-
-
-class LowenArmor(str, Enum):
-    """알렉산더 로웬 5대 신체 갑주 유형"""
-    RIGID = "Rigid (완벽주의 척추 방어)"
-    CONTROLLER = "Controller (상체 팽창 및 지배)"
-    ENDURER = "Endurer (신체 억압 및 인내)"
-    DEPRIVED = "Deprived (흉곽 함몰 및 애착 갈망)"
-    DETACHED = "Detached (체온 냉각 및 해리)"
+from src.domain.gene_seed import GeneSeed
+from src.domain.visual_dna import VisualDNA
+from src.domain.personality_gene import PersonalityGene, HardInvariants
+from src.domain.somatic_ledger import SomaticLedger
+from src.domain.spatial_pressure import SpatialPressureChamber
+from src.domain.kinematic_chain import KinematicChainState
 
 
 @dataclass
 class Character:
-    """순수 도메인 캐릭터 엔티티"""
+    """살아 숨 쉬는 하이브리드 캐릭터 엔티티"""
+    gene_seed: GeneSeed
     name: str
     title: str
     faction: str
-    armor_type: LowenArmor
-    image_url: Optional[str] = None
-    seed_hash: str = field(default="")
-    ego_durability: float = 100.0  # 자아 내구도 (100.0 -> 0.0)
-    neural_taint: float = 0.0     # 신경 오염도 (0.0 -> 100.0)
-    traits: Dict[str, str] = field(default_factory=dict)
-    tensors: TensorMatrix = field(default_factory=TensorMatrix)
-
-    def __post_init__(self):
-        if not self.seed_hash:
-            seed_raw = f"{self.name}_{self.title}_{self.faction}_{self.armor_type.value}"
-            self.seed_hash = hashlib.sha256(seed_raw.encode("utf-8")).hexdigest()[:16]
+    visual_dna: VisualDNA
+    personality_gene: PersonalityGene
+    somatic_ledger: SomaticLedger = field(default_factory=SomaticLedger)
+    spatial_pressure: SpatialPressureChamber = field(default_factory=SpatialPressureChamber)
+    kinematic_chain: KinematicChainState = field(default_factory=KinematicChainState)
+    image_url: str = ""
 
     @property
-    def pressure_stage(self) -> PressureStage:
-        """신경 오염도 기반 실시간 압력 단계 계산"""
-        return PressureStage.from_neural_taint(self.neural_taint)
+    def seed_hash(self) -> str:
+        return self.gene_seed.seed_hash
 
-    def apply_damage_and_taint(self, ego_damage: float, taint_gain: float) -> Tuple[float, float, PressureStage]:
-        """자아 내구도 감소 및 신경 오염도 증가 인과율 연산"""
-        self.ego_durability = max(0.0, min(100.0, self.ego_durability - ego_damage))
-        self.neural_taint = max(0.0, min(100.0, self.neural_taint + taint_gain))
-        return self.ego_durability, self.neural_taint, self.pressure_stage
+    @classmethod
+    def create_archetype(cls, name: str, title: str, faction: str, visual_dict: dict, gene_dict: dict, explicit_seed: str = "") -> Character:
+        seed = GeneSeed.from_input(name, explicit_seed=explicit_seed)
+        v_dna = VisualDNA.from_dict(visual_dict)
+        p_gene = PersonalityGene.from_dict(gene_dict)
+        return cls(
+            gene_seed=seed,
+            name=name,
+            title=title,
+            faction=faction,
+            visual_dna=v_dna,
+            personality_gene=p_gene
+        )
 
     def to_dict(self) -> Dict[str, Any]:
-        """직렬화"""
         return {
             "seed_hash": self.seed_hash,
             "name": self.name,
             "title": self.title,
             "faction": self.faction,
-            "armor_type": self.armor_type.value,
-            "image_url": self.image_url,
-            "ego_durability": self.ego_durability,
-            "neural_taint": self.neural_taint,
-            "pressure_stage": self.pressure_stage.value,
-            "traits": dict(self.traits),
-            "tensors": self.tensors.to_dict(),
+            "visual_dna": self.visual_dna.to_dict(),
+            "personality_gene": self.personality_gene.to_dict(),
+            "somatic_ledger": self.somatic_ledger.to_dict(),
+            "spatial_pressure": self.spatial_pressure.to_dict(),
+            "kinematic_chain": self.kinematic_chain.to_dict(),
+            "image_url": self.image_url
         }
-
-    @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> Character:
-        """역직렬화"""
-        armor_raw = data.get("armor_type", LowenArmor.RIGID.value)
-        armor = LowenArmor.RIGID
-        for a in LowenArmor:
-            if a.value == armor_raw or a.name == armor_raw:
-                armor = a
-                break
-
-        tensors = TensorMatrix.from_dict(data.get("tensors", {}))
-
-        char = cls(
-            name=data["name"],
-            title=data.get("title", ""),
-            faction=data.get("faction", ""),
-            armor_type=armor,
-            image_url=data.get("image_url"),
-            seed_hash=data.get("seed_hash", ""),
-            ego_durability=float(data.get("ego_durability", 100.0)),
-            neural_taint=float(data.get("neural_taint", 0.0)),
-            traits=dict(data.get("traits", {})),
-            tensors=tensors,
-        )
-        return char

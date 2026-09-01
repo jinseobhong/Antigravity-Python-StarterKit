@@ -2,66 +2,48 @@
 """
 src/application/undo_manager.py
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-불변 스냅샷 기반 롤백(Undo) 스택 관리자 (UndoManager & TurnSnapshot)
+TurnSnapshot 기반 불변 롤백 스택 관리자 (Undo Manager)
 """
 
 from __future__ import annotations
+import copy
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Any
-
+from typing import List, Optional
 from src.domain.character import Character
 
 
-@dataclass(frozen=True)
+@dataclass
 class TurnSnapshot:
-    """턴별 불변 상태 스냅샷 (Rollback Anchor)"""
+    """턴 상태 불변 스냅샷"""
     turn_number: int
-    character_dict: Dict[str, Any]
-    user_action: str
-    narrative_prose: str
-    delta_logs: Dict[str, Any]
+    character_snapshot: Character
+    last_action: str
+    last_prose: str
 
 
 class UndoManager:
-    """롤백 스택 관리자"""
+    """단일 세션 롤백 스택 관리자"""
 
     def __init__(self):
         self._stack: List[TurnSnapshot] = []
 
-    @property
-    def can_undo(self) -> bool:
-        """롤백 가능 여부 (최소 1개 이상의 스냅샷 존재 시)"""
-        return len(self._stack) > 0
-
-    @property
-    def history_depth(self) -> int:
-        """현재 스택 깊이"""
-        return len(self._stack)
-
-    def push_snapshot(
-        self,
-        turn_number: int,
-        character: Character,
-        user_action: str,
-        narrative_prose: str,
-        delta_logs: Optional[Dict[str, Any]] = None
-    ) -> None:
-        """현재 턴 스냅샷을 스택에 푸시"""
-        snapshot = TurnSnapshot(
+    def push(self, turn_number: int, character: Character, action: str, prose: str) -> None:
+        snap = TurnSnapshot(
             turn_number=turn_number,
-            character_dict=character.to_dict(),
-            user_action=user_action,
-            narrative_prose=narrative_prose,
-            delta_logs=dict(delta_logs or {}),
+            character_snapshot=copy.deepcopy(character),
+            last_action=action,
+            last_prose=prose
         )
-        self._stack.append(snapshot)
+        self._stack.append(snap)
 
-    def pop_snapshot(self) -> Optional[TurnSnapshot]:
-        """직전 턴 스냅샷 팝 (스택에서 제거 후 반환)"""
-        if not self.can_undo:
+    def pop(self) -> Optional[TurnSnapshot]:
+        if not self._stack:
             return None
         return self._stack.pop()
 
-    def restore_character(self, snapshot: TurnSnapshot) -> Character:
-        """스냅샷으로부터 캐릭터 도메인 엔티티 100% 오차 없이 복원"""
-        return Character.from_dict(snapshot.character_dict)
+    def clear(self) -> None:
+        self._stack.clear()
+
+    @property
+    def depth(self) -> int:
+        return len(self._stack)

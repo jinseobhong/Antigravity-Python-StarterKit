@@ -3,8 +3,8 @@
 src/presentation/web/server.py
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Clean 4-Tier 전용 로컬 웹 스튜디오 서버 (Python 표준 http.server 기반, 의존성 제로)
-- 모듈화된 프론트엔드 (static/css, static/js, templates/index.html) 정적 서빙
-- 4대 대표 아키타입(릴리스, 에이라, 세라피나, 실비아) 서사 롤플레이 & 17대 텐서 API 완비
+- 8-Tier Visual DNA & 70-Step Personality Genes 연동
+- Dify 스타일 2단계 인간 결재선(HITL Checkpoint 1 & 2) REST API 완비
 """
 
 from __future__ import annotations
@@ -25,13 +25,14 @@ if sys.platform == "win32":
     except Exception:
         pass
 
-from src.domain.character import Character, LowenArmor
-from src.domain.relational_vector import RelationalVector
+from src.domain.character import Character
 from src.infrastructure.database.db_manager import DatabaseManager
-from src.infrastructure.database.repositories import CharacterRepository, TurnHistoryRepository
-from src.infrastructure.llm.client import UniversalLLMClient
-from src.infrastructure.media.danbooru_prompt_builder import DanbooruPromptBuilder
-from src.application.character_workshop_service import CharacterWorkshopService
+from src.infrastructure.database.repositories import CharacterRepository, TurnLedgerRepository
+from src.infrastructure.llm.client import MultiLLMClient
+from src.infrastructure.llm.prompt_synthesizer import PromptSynthesizer
+from src.infrastructure.media.visual_compiler import VisualCompiler
+from src.application.classifier_service import ClassifierService
+from src.application.gene_synthesis_service import GeneSynthesisService
 from src.application.narrative_orchestrator import NarrativeOrchestrator
 
 
@@ -41,29 +42,20 @@ class WebStudioApp:
     def __init__(self, db_path: str = "abyss_engine.db"):
         self.db_manager = DatabaseManager(db_path=db_path)
         self.char_repo = CharacterRepository(self.db_manager)
-        self.turn_repo = TurnHistoryRepository(self.db_manager)
-        self.workshop = CharacterWorkshopService(self.char_repo)
-        self.llm_client = UniversalLLMClient()
+        self.turn_repo = TurnLedgerRepository(self.db_manager)
+        self.llm_client = MultiLLMClient()
+        self.classifier = ClassifierService(self.llm_client)
+        self.synthesis = GeneSynthesisService(self.char_repo, self.llm_client)
 
-        # 활성 캐릭터 복원 (기본: 릴리스)
         chars = self.char_repo.list_all()
-        if chars:
-            self.active_character = chars[0]
-        else:
-            self.active_character = self.workshop.import_json({
-                "name": "릴리스",
-                "title": "제1황녀",
-                "faction": "제국 황실",
-                "armor_type": "Rigid",
-                "traits": {"외모_특징": "차가운 은발과 서늘한 금빛 동공"}
-            })
+        self.active_character = chars[0] if chars else None
 
         self.orchestrator = NarrativeOrchestrator(
             character=self.active_character,
             char_repo=self.char_repo,
             turn_repo=self.turn_repo,
             llm_client=self.llm_client
-        )
+        ) if self.active_character else None
 
     def select_character(self, seed_hash: str) -> Optional[Character]:
         char = self.char_repo.find_by_seed_hash(seed_hash)
@@ -79,6 +71,9 @@ class WebStudioApp:
         return None
 
     def get_state_payload(self) -> Dict[str, Any]:
+        if not self.orchestrator or not self.active_character:
+            return {"character": None, "step": 1, "chat_history": []}
+
         c = self.orchestrator.character
         chat_history = []
         for h in self.orchestrator.history:
@@ -93,13 +88,10 @@ class WebStudioApp:
             "step": self.orchestrator.current_turn,
             "last_action": last_action,
             "last_narrative": last_narrative,
-            "active_tensors": c.tensors.active_spotlights,
-            "recent_chain": c.tensors.recent_chain_history[-1] if c.tensors.recent_chain_history else "신체 운동 연쇄 안정",
             "chat_history": chat_history,
         }
 
 
-# 전역 백엔드 인스턴스
 STUDIO_APP = WebStudioApp()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -129,13 +121,7 @@ class WebStudioHandler(BaseHTTPRequestHandler):
             file_path = os.path.join(STATIC_DIR, rel_path)
             self._serve_file(file_path)
 
-        # 3. 초상화 정적 서빙 (/portraits/...)
-        elif parsed.path.startswith("/portraits/"):
-            rel_path = parsed.path[len("/portraits/"):]
-            file_path = os.path.join(BASE_DIR, "portraits", rel_path)
-            self._serve_file(file_path)
-
-        # 4. REST API (/api/...)
+        # 3. REST API (/api/...)
         elif parsed.path == "/api/state":
             self._send_json(STUDIO_APP.get_state_payload())
 
@@ -144,7 +130,10 @@ class WebStudioHandler(BaseHTTPRequestHandler):
             self._send_json(chars)
 
         elif parsed.path == "/api/export_prompt":
-            prompt = STUDIO_APP.workshop.export_master_prompt(STUDIO_APP.active_character)
+            if STUDIO_APP.active_character:
+                prompt = PromptSynthesizer.build_master_system_instruction(STUDIO_APP.active_character)
+            else:
+                prompt = "활성 캐릭터가 없습니다."
             self._send_json({"prompt": prompt})
 
         else:
@@ -162,23 +151,46 @@ class WebStudioHandler(BaseHTTPRequestHandler):
             STUDIO_APP.select_character(seed)
             self._send_json(STUDIO_APP.get_state_payload())
 
+        elif parsed.path == "/api/classify_and_propose":
+            query = data.get("query", "")
+            result = STUDIO_APP.classifier.resolve_boundary_and_vectors(query)
+            self._send_json(result)
+
+        elif parsed.path == "/api/synthesize_character":
+            char = STUDIO_APP.synthesis.synthesize_character(
+                name=data.get("name", "새 캐릭터"),
+                title=data.get("title", "고위 귀족"),
+                faction=data.get("faction", "독립 세력"),
+                hard_invariants_dict=data.get("hard_invariants", {}),
+                selected_vector=data.get("selected_vector", {}),
+                explicit_seed=data.get("seed_hash", "")
+            )
+            STUDIO_APP.select_character(char.seed_hash)
+            self._send_json(STUDIO_APP.get_state_payload())
+
         elif parsed.path == "/api/action":
             action_text = data.get("action_text", "")
-            STUDIO_APP.orchestrator.execute_turn(raw_action=action_text)
+            if STUDIO_APP.orchestrator:
+                STUDIO_APP.orchestrator.execute_turn(raw_action=action_text)
             self._send_json(STUDIO_APP.get_state_payload())
 
         elif parsed.path == "/api/undo":
-            STUDIO_APP.orchestrator.rollback()
+            if STUDIO_APP.orchestrator:
+                STUDIO_APP.orchestrator.rollback()
             self._send_json(STUDIO_APP.get_state_payload())
 
         elif parsed.path == "/api/reset":
-            STUDIO_APP.orchestrator.current_turn = 1
-            STUDIO_APP.orchestrator.history.clear()
-            STUDIO_APP.orchestrator.undo_manager.clear()
+            if STUDIO_APP.orchestrator:
+                STUDIO_APP.orchestrator.current_turn = 1
+                STUDIO_APP.orchestrator.history.clear()
+                STUDIO_APP.orchestrator.undo_manager.clear()
             self._send_json(STUDIO_APP.get_state_payload())
 
         elif parsed.path == "/api/generate_danbooru":
-            pos, neg = DanbooruPromptBuilder.compile_prompt_pair(STUDIO_APP.active_character)
+            if STUDIO_APP.active_character:
+                pos, neg = VisualCompiler.compile_danbooru_pair(STUDIO_APP.active_character)
+            else:
+                pos, neg = "", ""
             self._send_json({"positive": pos, "negative": neg})
 
         else:
@@ -231,7 +243,6 @@ class WebStudioHandler(BaseHTTPRequestHandler):
         self.wfile.write(data)
 
     def log_message(self, format, *args):
-        # 무소음 콘솔
         return
 
 

@@ -1,6 +1,6 @@
 /**
  * src/presentation/web/static/js/views/play.js
- * [View 2] 1:1 서사 롤플레이 룸, 대화 이력 및 마크다운 렌더러
+ * [View 2] 1:1 서사 롤플레이 룸 & 대화 이력 렌더러
  */
 
 const PlayView = {
@@ -14,9 +14,6 @@ const PlayView = {
     const playTitle = document.getElementById('playCharTitle');
     if (playTitle) playTitle.innerText = `${character.title} • ${character.faction}`;
 
-    const playArmor = document.getElementById('playCharArmor');
-    if (playArmor) playArmor.innerText = character.armor_type;
-
     const playAvatar = document.getElementById('playCharAvatar');
     if (playAvatar) playAvatar.innerText = (character.name || '👑').charAt(0);
 
@@ -28,10 +25,11 @@ const PlayView = {
       box.innerHTML = `
         <div class="p-5 rounded-2xl bg-gradient-to-br from-purple-950/40 to-pink-950/20 border border-purple-900/50 text-sm leading-relaxed prose-text shadow-lg">
           <p class="font-bold text-purple-300 mb-2 flex items-center gap-2">
-            <i class="fa-solid fa-sparkles text-amber-400"></i> ${character.name}와(과)의 1:1 서사 롤플레이가 시작되었습니다.
+            <i class="fa-solid fa-sparkles text-amber-400"></i> ${character.name}와(과)의 1:1 고밀도 서사 롤플레이가 시작되었습니다.
           </p>
           <p class="text-gray-300">
-            서늘한 대리석 기둥 사이로 차가운 바람이 스며듭니다. 그녀의 꼿꼿한 시선이 당신을 향합니다. 첫 행동을 취하십시오.
+            [불변 제약선]: <strong class="text-pink-300">${character.personality_gene?.hard_invariants?.primary_boundary || '도덕적 결벽증'}</strong><br>
+            그녀의 서늘한 시선이 당신을 향합니다. 첫 행동을 취하십시오.
           </p>
         </div>
       `;

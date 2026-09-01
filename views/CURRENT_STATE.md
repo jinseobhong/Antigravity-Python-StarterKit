@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | :--- | :--- |
 | **문서 ID** | `STATE-001` |
-| **문서 버전** | `v2.2.0` |
+| **문서 버전** | `v3.0.0 (Constraint-First LLM Hybrid Edition)` |
 | **상태** | `ACTIVE` |
 | **최종 동기화** | `2026-09-02` |
 
@@ -20,7 +20,7 @@
 ---
 
 ## 📌 현재 당면 작업 (Current Task Focus)
-- **Feature / Task**: `[AbyssEngine] 웹 스튜디오 프론트엔드 모듈화(static/css, static/js, templates/) 및 원형 3대 뷰 100% 복원 완료 (31개 단위 테스트 100% PROVEN)`
+- **Feature / Task**: `[AbyssEngine] 제약 조건 역산 기반 LLM 하이브리드 서사 엔진 전면 구축 완료 (8-Tier Visual DNA, 70-Step Genes, 3-Tier Ledgers, HITL Checkpoints 1 & 2) — 단위 테스트 16종 100% PROVEN`
 - **Track Type**: `Track 3: Standard Architecture`
 - **Current Phase**: `COMPLETED`
 - **Implementation Auth**: `APPROVED`

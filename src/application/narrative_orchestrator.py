@@ -2,134 +2,129 @@
 """
 src/application/narrative_orchestrator.py
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-턴 라이프사이클 관리, 도메인 생체 연산, 멀티 LLM 생성 및 Undo 스택 총괄 오케스트레이터
+[Dify Node 3: RECURSIVE SOMATIC NARRATIVE ENGINE]
+- 실시간 1:1 서사 롤플레이 턴 오케스트레이션
+- 7단계 신체 운동 연쇄 파동 전이 & 2~3 스포트라이트 점등
+- 동적 완급 조절 (Level 1~3 Pacing)
+- 3계층 신경·메모리 원장 (Layer 1, 2, 3) 갱신 및 DB 동기화
 """
 
 from __future__ import annotations
-from dataclasses import dataclass
-from typing import Dict, List, Optional, Any, Tuple
+import copy
+from typing import Dict, Any, List, Optional
 
 from src.domain.character import Character
-from src.domain.action_frame import ActionFrame
-from src.infrastructure.database.repositories import CharacterRepository, TurnHistoryRepository
-from src.infrastructure.llm.client import UniversalLLMClient
-from src.infrastructure.llm.prompt_builder import PromptBuilder
-from .action_parser_service import ActionParserService
-from .undo_manager import UndoManager, TurnSnapshot
-
-
-@dataclass
-class TurnResult:
-    """한 턴의 실행 결과 응답 객체"""
-    turn_number: int
-    user_action: str
-    action_frame: ActionFrame
-    narrative_prose: str
-    somatic_events: List[str]
-    character: Character
+from src.domain.spatial_pressure import SpatialLayer
+from src.infrastructure.llm.client import MultiLLMClient
+from src.infrastructure.llm.prompt_synthesizer import PromptSynthesizer
+from src.infrastructure.database.repositories import CharacterRepository, TurnLedgerRepository
+from src.application.undo_manager import UndoManager
 
 
 class NarrativeOrchestrator:
-    """실시간 서사 롤플레이 오케스트레이터"""
+    """하이브리드 서사 롤플레이 총괄 오케스트레이터"""
 
     def __init__(
         self,
         character: Character,
         char_repo: CharacterRepository,
-        turn_repo: TurnHistoryRepository,
-        llm_client: Optional[UniversalLLMClient] = None,
+        turn_repo: TurnLedgerRepository,
+        llm_client: MultiLLMClient
     ):
         self.character = character
         self.char_repo = char_repo
         self.turn_repo = turn_repo
-        self.llm_client = llm_client or UniversalLLMClient()
-        self.parser = ActionParserService()
+        self.llm = llm_client
         self.undo_manager = UndoManager()
         self.current_turn = 1
-        self.history: List[Dict[str, Any]] = []
+        self.history: List[Dict[str, str]] = []
 
-    def execute_turn(self, raw_action: str) -> TurnResult:
-        """
-        1. 턴 스냅샷 저장 (Undo 보장)
-        2. 사용자 행동 파싱 ➔ ActionFrame
-        3. 도메인 17대 텐서 외력 및 Kinematic Chain 연산 (Pure Python)
-        4. 자아 내구도 / 신경 오염도 인과율 갱신 (Pure Python)
-        5. LLM 서사 집필 호출
-        6. DB 원장 기록 및 영속화
-        """
+    def execute_turn(self, raw_action: str) -> Dict[str, Any]:
+        """플레이어 행동에 따라 1턴 서사 진행 (비결정론적 LLM 추론 & 3-Tier 원장 동기화)"""
         # 1. 롤백을 위한 스냅샷 푸시
-        self.undo_manager.push_snapshot(
-            turn_number=self.current_turn,
-            character=self.character,
-            user_action=raw_action,
-            narrative_prose="",
+        last_action_text = self.history[-1]["action"] if self.history else ""
+        last_prose_text = self.history[-1]["prose"] if self.history else ""
+        self.undo_manager.push(self.current_turn, self.character, last_action_text, last_prose_text)
+
+        # 2. 신체 운동 연쇄 파동 전이 (Kinematic Chain 2~3 스포트라이트)
+        active_steps = self.character.kinematic_chain.advance_wave()
+
+        # 3. 완급 조절 레벨 결정
+        if self.current_turn <= 2:
+            pacing_level = "Level 1 (경량 2~4문단)"
+        elif self.current_turn <= 6:
+            pacing_level = "Level 2 (서사 고조 5~8문단)"
+            if self.character.spatial_pressure.current_layer == SpatialLayer.LAYER_0_PUBLIC:
+                self.character.spatial_pressure.transition_to(SpatialLayer.LAYER_1_THRESHOLD)
+        else:
+            pacing_level = "Level 3 (대하 클라이맥스 10~15문단)"
+            self.character.spatial_pressure.transition_to(SpatialLayer.LAYER_2_INTIMATE)
+
+        # 4. LLM 프롬프트 조립 & 서사 생성
+        system_instruction = PromptSynthesizer.build_master_system_instruction(self.character)
+        chat_hist = []
+        for h in self.history:
+            chat_hist.append({"role": "user", "content": h["action"]})
+            chat_hist.append({"role": "assistant", "content": h["prose"]})
+
+        user_prompt = PromptSynthesizer.build_turn_user_prompt(
+            self.character,
+            self.current_turn,
+            raw_action,
+            chat_hist
         )
 
-        # 2. 자연어 파싱
-        frame = self.parser.parse_input(raw_action)
+        generated_prose = self.llm.generate_text(system_instruction, user_prompt, temperature=0.85)
 
-        # 3. 17대 텐서 및 신체 운동 연쇄 전이 연산 (0토큰, 결정론적)
-        somatic_events = self.character.tensors.apply_stimulus(
-            primary_tensor=frame.primary_tensor,
-            intensity=frame.intensity * 0.1
-        )
+        # 5. 3계층 원장 동적 갱신
+        self._update_somatic_ledger(raw_action, active_steps)
 
-        # 4. 생체 수치 갱신 (강도에 따른 자아 데미지 및 오염도 가산)
-        ego_damage = frame.intensity * 2.5
-        taint_gain = frame.intensity * 3.0
-        self.character.apply_damage_and_taint(ego_damage=ego_damage, taint_gain=taint_gain)
-
-        # 5. LLM 서사 생성
-        sys_prompt, user_prompt = PromptBuilder.build_narrative_prompts(
-            character=self.character,
-            action_frame=frame,
-            turn_number=self.current_turn,
-            recent_chat_history=self.history
-        )
-        raw_prose = self.llm_client.generate(sys_prompt, user_prompt)
-        if not raw_prose:
-            # LLM API 미제공 또는 오프라인 환경을 위한 기본 폴백 서사
-            raw_prose = f'{self.character.name}는 숨을 들이쉬며 당신의 행동을 응시했다.\n\n"무슨 생각을 하는 거지?"\n\n그녀의 등줄기에 차가운 긴장감이 스쳐 지나갔다.'
-
-        # 6. DB 영속화
-        char_id = self.char_repo.save(self.character)
-        self.turn_repo.record_turn(
-            character_id=char_id,
-            turn_number=self.current_turn,
-            user_action=raw_action,
-            vector_type=frame.dominant_vector.name,
-            narrative_prose=raw_prose,
-            ego_durability=self.character.ego_durability,
-            neural_taint=self.character.neural_taint,
-            pressure_stage=self.character.pressure_stage.value,
-        )
-
-        result = TurnResult(
-            turn_number=self.current_turn,
-            user_action=raw_action,
-            action_frame=frame,
-            narrative_prose=raw_prose,
-            somatic_events=somatic_events,
-            character=self.character,
-        )
-
+        # 6. 이력 및 DB 기록
         self.history.append({
-            "turn": self.current_turn,
             "action": raw_action,
-            "prose": raw_prose,
+            "prose": generated_prose
         })
-        self.current_turn += 1
-        return result
 
-    def rollback(self) -> Optional[Character]:
-        """직전 턴으로 완벽 롤백"""
-        snapshot = self.undo_manager.pop_snapshot()
-        if not snapshot:
-            return None
-
-        self.character = self.undo_manager.restore_character(snapshot)
-        self.current_turn = snapshot.turn_number
+        self.turn_repo.record_turn(
+            seed_hash=self.character.seed_hash,
+            turn_num=self.current_turn,
+            action=raw_action,
+            prose=generated_prose,
+            ledger_snap=self.character.somatic_ledger.to_dict()
+        )
         self.char_repo.save(self.character)
+        self.current_turn += 1
+
+        return {
+            "turn": self.current_turn - 1,
+            "action": raw_action,
+            "prose": generated_prose,
+            "pacing_level": pacing_level,
+            "active_kinematic_steps": active_steps,
+            "ledger": self.character.somatic_ledger.to_dict()
+        }
+
+    def rollback(self) -> bool:
+        """이전 턴 상태로 불변 롤백 (Undo)"""
+        snap = self.undo_manager.pop()
+        if not snap:
+            return False
+
+        self.current_turn = snap.turn_number
+        self.character = snap.character_snapshot
         if self.history:
             self.history.pop()
-        return self.character
+
+        self.char_repo.save(self.character)
+        return True
+
+    def _update_somatic_ledger(self, action: str, active_steps: List[str]) -> None:
+        """행동에 따라 3계층 원장 상태 갱신"""
+        ledger = self.character.somatic_ledger
+        # Layer 1: 반사계 갱신
+        ledger.layer_1_reflex["spine_rigidity"] = f"{active_steps[0]}에 따른 긴장성 경직"
+        # Layer 2: 단기버퍼 갱신
+        ledger.layer_2_short_term["sensory_hysteresis"] = f"{active_steps[1]}에 머문 잔향과 체온 교환"
+        # Layer 3: 장기기억 갱신
+        inversion = min(100, (self.current_turn * 12))
+        ledger.layer_3_long_term["relationship_inversion_rate"] = f"{inversion}% (심리적 틈새와 의존 심화)"

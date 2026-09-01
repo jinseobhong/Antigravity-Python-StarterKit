@@ -49,10 +49,8 @@ const App = {
     const navPlay = document.getElementById('navPlay');
     const navVault = document.getElementById('navVault');
 
-    // 모든 뷰 숨김
     [viewLobby, viewPlay, viewVault].forEach(el => el?.classList.add('hidden'));
 
-    // 탭 스타일 초기화
     [navLobby, navPlay, navVault].forEach(btn => {
       if (btn) btn.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-gray-900/80 text-gray-400 hover:text-white hover:bg-gray-800 transition flex items-center gap-1.5';
     });
@@ -84,14 +82,14 @@ const App = {
     }
   },
 
-  async sendAction(customText, vectorType) {
+  async sendAction(customText) {
     const input = document.getElementById('actionInput');
     const text = (customText || input?.value || '').trim();
     if (!text) return;
 
     if (input) input.value = '';
     try {
-      this.currentState = await ApiClient.sendAction(text, vectorType || 'SUBJUGATION');
+      this.currentState = await ApiClient.sendAction(text);
       this.render();
     } catch (err) {
       alert('턴 진행 실패: ' + err);
@@ -120,7 +118,6 @@ const App = {
 
 window.App = App;
 
-// 페이지 로드 시 즉시 부트스트랩
 document.addEventListener('DOMContentLoaded', () => {
   App.init();
 });

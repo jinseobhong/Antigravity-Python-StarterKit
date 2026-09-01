@@ -23,11 +23,29 @@ const ApiClient = {
     return await res.json();
   },
 
-  async sendAction(actionText, vectorType = 'SUBJUGATION') {
+  async classifyAndPropose(userQuery) {
+    const res = await fetch('/api/classify_and_propose', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: userQuery })
+    });
+    return await res.json();
+  },
+
+  async synthesizeCharacter(payload) {
+    const res = await fetch('/api/synthesize_character', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    return await res.json();
+  },
+
+  async sendAction(actionText) {
     const res = await fetch('/api/action', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action_text: actionText, vector_type: vectorType })
+      body: JSON.stringify({ action_text: actionText })
     });
     return await res.json();
   },
