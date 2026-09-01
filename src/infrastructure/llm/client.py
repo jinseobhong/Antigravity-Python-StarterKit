@@ -12,12 +12,43 @@ import urllib.request
 from typing import Optional, Dict, Any, List
 
 
+def load_local_env(filepath: str = ".env") -> None:
+    """순수 파이썬 의존성 제로 .env 파일 로더"""
+    if os.path.exists(filepath):
+        try:
+            with open(filepath, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("#") and "=" in line:
+                        k, v = line.split("=", 1)
+                        k = k.strip()
+                        v = v.strip().strip("'").strip('"')
+                        if k and v:
+                            os.environ[k] = v
+        except Exception:
+            pass
+
+
+load_local_env()
+
+
 class MultiLLMClient:
     """멀티 LLM 비동기/동기 호출 어댑터"""
 
     def __init__(self, api_key: Optional[str] = None, model: str = "gemini-2.5-flash"):
+        load_local_env()
         self.api_key = api_key or os.getenv("GEMINI_API_KEY", "") or os.getenv("ANTHROPIC_API_KEY", "")
         self.model = model
+
+    def set_api_key(self, key: str) -> None:
+        self.api_key = key.strip()
+        os.environ["GEMINI_API_KEY"] = self.api_key
+        # .env 파일에 영구 저장
+        try:
+            with open(".env", "w", encoding="utf-8") as f:
+                f.write(f"GEMINI_API_KEY={self.api_key}\n")
+        except Exception:
+            pass
 
     def generate_text(self, system_instruction: str, user_prompt: str, temperature: float = 0.85) -> str:
         """LLM 호출 (키가 없을 경우 고품질 결정론적 Mock 엔진으로 Fallback)"""

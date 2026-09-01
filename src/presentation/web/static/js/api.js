@@ -9,6 +9,20 @@ const ApiClient = {
     return await res.json();
   },
 
+  async getLlmStatus() {
+    const res = await fetch('/api/llm_status');
+    return await res.json();
+  },
+
+  async configLlm(apiKey) {
+    const res = await fetch('/api/config_llm', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ api_key: apiKey })
+    });
+    return await res.json();
+  },
+
   async getCharacters() {
     const res = await fetch('/api/characters');
     return await res.json();

@@ -51,7 +51,38 @@ const ModalManager = {
     alert(`${type === 'pos' ? 'Positive' : 'Negative'} 태그가 복사되었습니다.`);
   },
 
-  // 3. HITL 다단계 캐릭터 생성 모달
+  // 3. LLM API 키 설정 모달
+  async openKeyModal() {
+    try {
+      const status = await ApiClient.getLlmStatus();
+      document.getElementById('currentKeyInfo').innerText = `현재 상태: ${status.masked_key} (${status.model})`;
+      document.getElementById('keyModal').classList.remove('hidden');
+    } catch (err) {
+      alert('LLM 상태 확인 실패: ' + err);
+    }
+  },
+
+  closeKeyModal() {
+    document.getElementById('keyModal').classList.add('hidden');
+  },
+
+  async saveApiKey() {
+    const key = document.getElementById('inputApiKey').value.trim();
+    if (!key) {
+      alert('API 키를 입력해 주세요.');
+      return;
+    }
+    try {
+      await ApiClient.configLlm(key);
+      alert('✨ Gemini / Claude API 키가 성공적으로 연동 및 .env에 저장되었습니다!');
+      this.closeKeyModal();
+      App.checkLlmStatus();
+    } catch (err) {
+      alert('API 키 저장 실패: ' + err);
+    }
+  },
+
+  // 4. HITL 다단계 캐릭터 생성 모달
   openCreationModal() {
     creationCache = null;
     document.getElementById('createStep1').classList.remove('hidden');

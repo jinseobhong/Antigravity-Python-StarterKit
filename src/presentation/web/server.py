@@ -136,6 +136,11 @@ class WebStudioHandler(BaseHTTPRequestHandler):
                 prompt = "활성 캐릭터가 없습니다."
             self._send_json({"prompt": prompt})
 
+        elif parsed.path == "/api/llm_status":
+            has_key = bool(STUDIO_APP.llm_client.api_key)
+            masked = (STUDIO_APP.llm_client.api_key[:6] + "..." + STUDIO_APP.llm_client.api_key[-4:]) if has_key else "미등록 (오프라인 시뮬레이터 동작 중)"
+            self._send_json({"has_key": has_key, "masked_key": masked, "model": STUDIO_APP.llm_client.model})
+
         else:
             self.send_response(404)
             self.end_headers()
@@ -146,7 +151,12 @@ class WebStudioHandler(BaseHTTPRequestHandler):
         body = self.rfile.read(content_len).decode("utf-8") if content_len > 0 else "{}"
         data = json.loads(body) if body else {}
 
-        if parsed.path == "/api/select_character":
+        if parsed.path == "/api/config_llm":
+            key = data.get("api_key", "").strip()
+            STUDIO_APP.llm_client.set_api_key(key)
+            self._send_json({"status": "SUCCESS", "has_key": bool(key)})
+
+        elif parsed.path == "/api/select_character":
             seed = data.get("seed_hash", "")
             STUDIO_APP.select_character(seed)
             self._send_json(STUDIO_APP.get_state_payload())
