@@ -10,16 +10,17 @@
 ---
 
 ## 📌 현재 작업 상세 (Current Task Focus)
-- **Feature / Task**: `HITL 워크플로우 전용 스킬 (.agents/skills/hitl-workflow/SKILL.md) 및 상태 닻 구축`
+- **Feature / Task**: `표준 워크플로우 전용 스킬 (.agents/skills/workflow/SKILL.md) 및 상태 닻 정돈`
 - **Current Phase**: `PHASE 4: 증거 제출 및 최종 완료 (COMPLETED)`
 - **Implementation Auth**: `APPROVED`
 - **Proof Status**: `PROVEN`
 - **Decision Status**: `FINAL_ACCEPTED`
 
 ## 📁 최근 변경 내역 (Recent Changes)
-- `[NEW]` `.agents/skills/hitl-workflow/SKILL.md`: 4단계 실전 HITL 페어링 루프 강제 런북 스킬
-- `[NEW]` `CURRENT_STATE.md`: 프로젝트 실시간 상태 및 5단계 파이프라인 이정표
+- `[NEW]` `.agents/skills/workflow/SKILL.md`: 표준 4단계 페어링 루프 강제 런북 스킬
+- `[DELETE]` `.agents/skills/hitl-workflow/SKILL.md`: 구 명칭 폴더 정리
+- `[MODIFY]` `CURRENT_STATE.md`: 프로젝트 실시간 상태 및 5단계 파이프라인 이정표
 
 ## 🧪 검증 결과 (Executed Evidence)
-- 스킬 파일 구조 및 YAML 메타데이터 파싱 유효성 검증 완료 (`PROVEN`)
+- 스킬 파일 구조 및 YAML 메타데이터(`name: workflow`) 유효성 검증 완료 (`PROVEN`)
 - Git 버전 관리 추적 준비 완료 (`PROVEN`)

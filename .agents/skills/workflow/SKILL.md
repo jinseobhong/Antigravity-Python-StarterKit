@@ -1,16 +1,16 @@
 ---
-name: hitl-workflow
+name: workflow
 description: >-
-  Enforces the 4-step Human-In-The-Loop (HITL) pairing workflow for software development,
+  Enforces the standard 4-step pair programming workflow for software development,
   feature implementation, bug fixes, refactoring, and architectural tasks:
   [Phase 1: Understand & State Sync -> Phase 2: Blueprint & Plan (Approval Gate) ->
    Phase 3: Execute & AI Proof (Raw Test Logs) -> Phase 4: Proof Report & Human Decision].
   Prevents premature coding without explicit human approval and mandates objective verification.
 ---
 
-# HITL Pair Programming Execution Runbook
+# Pair Programming Execution Runbook (Workflow)
 
-이 스킬은 Antigravity 에이전트가 개발 및 구현 태스크를 수행할 때 준수해야 하는 **실전 4단계 페어링 및 입증 책임(Evidence Bearer) 강제 런북**이다.
+이 스킬은 Antigravity 에이전트가 개발 및 구현 태스크를 수행할 때 준수해야 하는 **표준 4단계 페어링 및 입증 책임(Evidence Bearer) 강제 런북**이다.
 
 ---
 
