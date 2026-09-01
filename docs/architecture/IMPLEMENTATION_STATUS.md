@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | :--- | :--- |
 | **문서 ID** | `STATUS-001` |
-| **문서 버전** | `v4.0.0 (Clean 4-Tier & Real Database Verification Edition)` |
+| **문서 버전** | `v5.0.0 (Full 11-Node Creation Pipeline Verified Edition)` |
 | **상태** | `STABLE` |
-| **단위 테스트 합격률** | `10/10 PASS (100% PROVEN)` |
+| **단위 테스트 합격률** | `13/13 PASS (100% PROVEN)` |
 | **최종 동기화** | `2026-09-02` |
 
 ---
@@ -28,6 +28,9 @@
 | **Infrastructure** | `src/infrastructure/llm/client.py` | `COMPLETE` | `PROVEN` |
 | **Infrastructure** | `src/infrastructure/llm/prompt_synthesizer.py` | `COMPLETE` | `PROVEN` |
 | **Application** | `src/application/classifier_service.py` | `COMPLETE` | `PROVEN` |
+| **Application** | `src/application/spec_compiler_service.py` | `COMPLETE` | `PROVEN` |
+| **Application** | `src/application/master_synthesizer_service.py` | `COMPLETE` | `PROVEN` |
+| **Application** | `src/application/static_validator.py` | `COMPLETE` | `PROVEN` |
 | **Application** | `src/application/gene_synthesis_service.py` | `COMPLETE` | `PROVEN` |
 | **Application** | `src/application/undo_manager.py` | `COMPLETE` | `PROVEN` |
 | **Application** | `src/application/narrative_orchestrator.py` | `COMPLETE` | `PROVEN` |

@@ -140,8 +140,8 @@ const App = {
     vectorsContainer.innerHTML = s.resolution_vectors.map(v => `
       <div class="portal-card" style="cursor: pointer;" onclick="App.selectVector('${v.vector_id}')">
         <div style="font-weight: 700; font-size: 1.05rem; color: #f472b6;">[${v.vector_id}] ${v.vector_name}</div>
-        <div style="font-size: 0.85rem; color: var(--text-secondary);">${v.axis_description}</div>
-        <button class="btn btn-sm btn-purple" style="margin-top: 0.5rem;">이 궤적 채택 (${v.vector_id})</button>
+        <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.3rem;">${v.axis_description}</div>
+        <button class="btn btn-sm btn-purple" style="margin-top: 0.6rem;">이 궤적 채택 (${v.vector_id})</button>
       </div>
     `).join("");
   },
@@ -151,10 +151,11 @@ const App = {
     this.creationState.selected_vector = selected;
 
     const step2Div = document.getElementById("create-step-2");
-    step2Div.innerHTML = `<div style="text-align: center; padding: 2rem; color: #c084fc;">8-Tier Visual DNA 및 70단계 유전자 컴파일 중... ✨</div>`;
+    step2Div.innerHTML = `<div style="text-align: center; padding: 2rem; color: #c084fc;">8-Tier Visual DNA, 17대 텐서, 70단계 유전자 컴파일 중... ✨</div>`;
 
     try {
-      const res = await API.compileCharacter({
+      // Dify Node 7 듀얼 모드 스펙 컴파일
+      const res = await API.compileSpec({
         target_name: this.creationState.target_name,
         title: this.creationState.title,
         seed_hash: this.creationState.seed_hash,
@@ -162,14 +163,69 @@ const App = {
         selected_vector: selected
       });
 
+      if (res.success && res.spec) {
+        this.creationState.compiled_spec = res.spec;
+        this.renderCheckpoint2();
+      }
+    } catch (e) {
+      alert("컴파일 실패: " + e.message);
+      this.openCreateModal();
+    }
+  },
+
+  renderCheckpoint2() {
+    const step2Div = document.getElementById("create-step-2");
+    const step3Div = document.getElementById("create-step-3");
+    step2Div.style.display = "none";
+    step3Div.style.display = "flex";
+
+    const s = this.creationState;
+    const spec = s.compiled_spec;
+    const dna = spec.visual_dna || {};
+    const traits = spec.traits || {};
+
+    const summaryBox = document.getElementById("cp2-summary-box");
+    summaryBox.innerHTML = `
+      <div style="color: #f472b6; font-weight: 700; margin-bottom: 0.4rem;">[8-Tier Visual DNA Summary]</div>
+      • 골격: ${dna.skeletal || "표준 골격"}<br>
+      • 동공: ${dna.ocular || "표준 동공"}<br>
+      • 모발: ${dna.hair || "표준 모발"}<br>
+      • 의복/초커: ${dna.apparel || "표준 의복"}<br>
+      • 홍조/반응: ${dna.blush || "표준 홍조"}<br>
+      <div style="color: #38bdf8; font-weight: 700; margin-top: 0.6rem; margin-bottom: 0.4rem;">[70-Step Personality Genes & Traits]</div>
+      • 아키타입: ${traits.archetype_class || "Rigid"}<br>
+      • 불변 제약선: ${s.hard_invariants?.[0] || "가문의 명예"}<br>
+      • 채택된 궤적: [${s.selected_vector?.vector_id}] ${s.selected_vector?.vector_name}<br>
+      • 17대 텐서 및 Illustrious-XL 6-Slot 단부루 태그 연동 완료
+    `;
+  },
+
+  async handleFinalApply() {
+    const applyBtn = document.getElementById("btn-cp2-apply");
+    applyBtn.disabled = true;
+    applyBtn.innerText = "25대 마스터 헌법 합성 및 DB 영속화 중... ✨";
+
+    try {
+      const s = this.creationState;
+      const res = await API.compileCharacter({
+        target_name: s.target_name,
+        title: s.title,
+        seed_hash: s.seed_hash,
+        hard_invariants: s.hard_invariants,
+        selected_vector: s.selected_vector
+      });
+
       if (res.success) {
         Modal.close("create-character-modal");
         await VaultView.loadCharacters();
         await this.switchView("vault");
-        alert(`✨ ${this.creationState.target_name} 캐릭터가 성공적으로 발현되었습니다!`);
+        alert(`✨ ${s.target_name} (${s.title}) 캐릭터가 25대 마스터 헌법과 함께 영구히 발현되었습니다!`);
       }
     } catch (e) {
-      alert("컴파일 실패: " + e.message);
+      alert("발현 인가 오류: " + e.message);
+    } finally {
+      applyBtn.disabled = false;
+      applyBtn.innerText = "👑 [APPLY] 25대 마스터 헌법 합성 및 발현 인가";
     }
   }
 };

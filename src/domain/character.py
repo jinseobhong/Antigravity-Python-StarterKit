@@ -35,6 +35,10 @@ class Character:
     portrait_url: str = ""
     is_active: bool = False
 
+    @property
+    def seed_hash(self) -> str:
+        return self.gene_seed.seed_hash
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "id": self.id,

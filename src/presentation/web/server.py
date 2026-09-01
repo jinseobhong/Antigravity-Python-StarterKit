@@ -23,6 +23,9 @@ from src.infrastructure.llm.client import MultiLLMClient
 from src.infrastructure.llm.prompt_synthesizer import PromptSynthesizer
 from src.application.classifier_service import ClassifierService
 from src.application.gene_synthesis_service import GeneSynthesisService
+from src.application.spec_compiler_service import SpecCompilerService
+from src.application.master_synthesizer_service import MasterSynthesizerService
+from src.application.static_validator import StaticValidator
 from src.application.narrative_orchestrator import NarrativeOrchestrator
 from src.application.undo_manager import UndoManager
 from src.domain.character import Character
@@ -44,6 +47,8 @@ class StudioHandler(SimpleHTTPRequestHandler):
     llm_client: MultiLLMClient = None
     classifier_svc: ClassifierService = None
     synthesis_svc: GeneSynthesisService = None
+    spec_compiler_svc: SpecCompilerService = None
+    master_synthesizer_svc: MasterSynthesizerService = None
     narrative_orch: NarrativeOrchestrator = None
     undo_mgr: UndoManager = None
 
@@ -55,6 +60,8 @@ class StudioHandler(SimpleHTTPRequestHandler):
         cls.llm_client = MultiLLMClient()
         cls.classifier_svc = ClassifierService(cls.llm_client)
         cls.synthesis_svc = GeneSynthesisService(cls.char_repo, cls.llm_client)
+        cls.spec_compiler_svc = SpecCompilerService(cls.llm_client)
+        cls.master_synthesizer_svc = MasterSynthesizerService(cls.llm_client)
         cls.narrative_orch = NarrativeOrchestrator(cls.char_repo, cls.turn_repo, cls.llm_client)
         cls.undo_mgr = UndoManager(cls.turn_repo, cls.char_repo)
         
@@ -135,6 +142,29 @@ class StudioHandler(SimpleHTTPRequestHandler):
         elif path == "/api/characters/classify":
             concept = body_data.get("concept", "")
             result = self.classifier_svc.resolve_vectors_and_seed(concept)
+            self._send_json(result)
+            return
+
+        elif path == "/api/characters/compile-spec":
+            target_name = body_data.get("target_name", "미상의 귀족")
+            title = body_data.get("title", "귀족")
+            seed_hash = body_data.get("seed_hash", "#GENE-70G-INIT")
+            hard_invariants = body_data.get("hard_invariants", [])
+            selected_vector = body_data.get("selected_vector", {})
+
+            spec_data = self.spec_compiler_svc.compile_spec(
+                target_name=target_name,
+                title=title,
+                seed_hash=seed_hash,
+                hard_invariants=hard_invariants,
+                selected_vector=selected_vector
+            )
+            self._send_json({"success": True, "spec": spec_data})
+            return
+
+        elif path == "/api/characters/synthesize-master":
+            char_data = body_data.get("character_data", {})
+            result = self.master_synthesizer_svc.synthesize_master_prompt(char_data)
             self._send_json(result)
             return
 

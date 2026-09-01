@@ -1,82 +1,70 @@
-# [IMPLEMENTATION PLAN : Clean 4-Tier Database-First Abyss Engine]
+# [IMPLEMENTATION PLAN : Full 11-Node 25-Master Character Creation Algorithm]
 
 | 항목 | 내용 |
 | :--- | :--- |
-| **문서 ID** | `PLAN-ABYSS-003` |
-| **문서 버전** | `v1.0.0 (Database-First & Zero Hardcoding Edition)` |
-| **철학 및 원칙** | `데이터베이스 영속화 및 실물 도메인 모델 우선 구축 ➔ UI 동적 바인딩` |
-| **적용 표준** | `Clean 4-Tier Layered Architecture (DDD POPO Core)` |
-| **상태** | `PROPOSED (승인 대기)` |
+| **문서 ID** | `PLAN-ABYSS-004` |
+| **문서 버전** | `v1.0.0 (Full 25-Master Pipeline Edition)` |
+| **철학 및 원칙** | `Dify DSL 11개 노드 및 인간 2단계 결재선(HITL Checkpoint 1 & 2) 완전 구현` |
+| **적용 표준** | `Clean 4-Tier Layered Architecture & 70-Step Gene Spec` |
+| **상태** | `APPROVED (인간 승인 완료)` |
 
 ---
 
-## 🏛️ 1. 개발 5단계 순차 파이프라인 (Step-by-Step Architecture Pipeline)
+## 🏛️ 1. 전체 11단계 파이프라인 아키텍처
 
 ```text
-[Step 1. 순수 도메인 모델 (POPO)]
-  ├── 8-Tier Visual DNA & 16 RDB Traits 엔티티
-  ├── 5대 심리 지표(신뢰/성애/수치/죄책/굴종) & 생체 지표(ODO/TAINT)
-  ├── 7대 차원축 70단계 유전자 & 불변 제약선(Hard Invariants)
-  └── 3계층 신경·메모리 원장 & 7단계 신체 운동 연쇄(Kinematic Chain)
+[Node 1: User Concept Query]
         ↓
-[Step 2. 데이터베이스 스키마 & CRUD 리포지토리]
-  ├── SQLite WAL 모드 영속화 스키마 (`characters`, `turn_ledger`)
-  ├── 16 RDB Traits 및 8-Tier DNA 직렬화/역직렬화 리포지토리
-  └── 4대 대표 아키타입(릴리스, 에이라, 세라피나, 실비아) 실물 RDB 시딩
+[Node 2: DB Hydration & Base Spec Read]
         ↓
-[Step 3. 유스케이스 및 애플리케이션 서비스]
-  ├── ClassifierService: 제약선 역산 및 직교 2대 궤적(V1 vs V2) 도출
-  ├── GeneSynthesisService: 8-Tier 외모 + 70단계 유전자 동적 합성
-  ├── NarrativeOrchestrator: 5대 심리 수치 및 3-Tier 원장 실시간 갱신
-  └── UndoManager: TurnSnapshot 기반 불변 롤백 관리자
+[Node 3: CLASSIFIER & GENE SEED RESOLVER]
+  - #NAME-70G-XXXX 시드 발급
+  - Hard Invariants (Primary Boundary, Somatic Triggers) 선행 역산
+  - 상호 직교하는 V1 (1안) vs V2 (2안) 도출
         ↓
-[Step 4. 도메인 & DB 단위 테스트 전수 검증 (AI Proof)]
-  └── `py -3 -m unittest discover -s tests/unit -v` 100% Pass 입증
+[Node 4 & 5: HUMAN CHECKPOINT 1] (Web UI Modal 1)
+  - 유저가 V1 1안 vs V2 2안 비교 검토 후 채택
         ↓
-[Step 5. UI/UX 웹 스튜디오 동적 연동 (Zero Hardcoding)]
-  └── 하드코딩 일체 없이, DB API로부터 실물 캐릭터 데이터를 100% 동적 렌더링
+[Node 6 & 7: DUAL-MODE SPEC COMPILER]
+  - 8-Tier Visual DNA & Illustrious-XL 6-Slot 단부루 태그
+  - 17대 완전 범용 생체·의복 텐서 (Track 1)
+  - 7대 차원축 70단계 인격 유전자 (Track 2)
+  - Kinematic Chain 7단계 신체 운동 연쇄 파동 전이 매핑
+        ↓
+[Node 8 & 9: HUMAN CHECKPOINT 2] (Web UI Modal 2)
+  - 컴파일된 Diff 요약 검토 후 유저가 [APPLY] 최종 인가
+        ↓
+[Node 10: 30,000-CHAR RECURSIVE MASTER SYNTHESIZER]
+  - 무수치 순수 감각어 헌법 + 동적 완급조절 + 3계층 신경 원장 결합
+  - 25,000자 ~ 30,000자급 마스터 시스템 지시사항 전문 합성
+        ↓
+[Node 11: STATIC LINTER & SQLITE WAL DB PERSISTENCE]
+  - 플레이스홀더([TODO], [TBD]) 정적 린터 검증 후 DB 저장 ➔ 즉시 롤플레이 투입
 ```
 
 ---
 
-## 📁 2. 컴포넌트별 생성/구현 파일 명세
+## 📁 2. 컴포넌트별 구현/개정 파일 명세
 
-### 1) 도메인 계층 (`src/domain/`)
-- `gene_seed.py`: 고유 시드 해시 (`#NAME-70G-XXXX`) 앵커링
-- `visual_dna.py`: 8-Tier 해부학적 외모 규격 모델
-- `personality_gene.py`: 7대 축 70단계 유전자 & `HardInvariants` 제약선 모델
-- `somatic_ledger.py`: 3계층 신경·메모리 원장 (Layer 1, Layer 2, Layer 3)
-- `character_traits.py`: 16대 RDB Traits & 5대 심리 게이지 (신뢰, 성애, 수치심, 죄책감, 굴종) 모델
-- `spatial_pressure.py`: 3-Layer 공간 압력 챔버 (Layer 0, Layer 1, Layer 2)
-- `kinematic_chain.py`: 7단계 신체 운동 연쇄 파동 전이 엔진
-- `character.py`: Character 애그리게이트 루트
-
-### 2) 인프라 계층 (`src/infrastructure/`)
-- `database/db_manager.py`: SQLite WAL 커넥션 및 트랜잭션 관리자
-- `database/repositories.py`: `CharacterRepository` (CRUD, Import, Export), `TurnLedgerRepository`
-- `media/visual_compiler.py`: Illustrious-XL 6-Slot 단부루 태그 컴파일러
-- `llm/client.py`: MultiLLMClient (Claude 3.7 / Gemini 3.6 자동 캐스케이드)
-- `llm/prompt_synthesizer.py`: 30,000자급 마스터 헌법 & 턴별 프롬프트 조립기
-
-### 3) 애플리케이션 계층 (`src/application/`)
-- `classifier_service.py`: 제약선 역산 및 직교 2대 궤적(V1 vs V2) 분류기
-- `gene_synthesis_service.py`: 8-Tier 외모 + 70단계 유전자 동적 합성 및 RDB 저장
-- `narrative_orchestrator.py`: 완급 조절(Level 1~3), 운동 연쇄, 3-Tier 원장 갱신
-- `undo_manager.py`: 불변 롤백 스택
-
-### 4) 단위 테스트 계층 (`tests/unit/`)
-- `test_domain_models.py`: 도메인 엔티티 무결성 검증
-- `test_database_crud.py`: SQLite WAL 및 Character/TurnLedger CRUD 실물 검증
-- `test_application_services.py`: 제약선 역산 및 유전자 합성 파이프라인 검증
-
-### 5) 프레젠테이션 계층 (`src/presentation/`) - *DB 검증 완료 후 진행*
-- `web/server.py`: ThreadedHTTPServer 기반 REST API 서버
-- `web/static/`: 캡처 UI와 1:1 일치하는 모듈화 JS/CSS (DB 데이터 100% 동적 렌더링)
-- `web/templates/index.html`: 메인 로비, 플레이 룸, 캐릭터 스튜디오 3대 뷰
+1. **`src/domain/`**:
+   - `personality_gene.py`: 17대 텐서 목록 및 70단계 마스터 인격 유전자 스키마 보강
+2. **`src/infrastructure/`**:
+   - `llm/prompt_synthesizer.py`: 30,000자급 초고밀도 마스터 지시사항 생성기 및 Dify 전수 프롬프트 이식
+3. **`src/application/`**:
+   - `classifier_service.py`: Dify Node 3 전수 프롬프트 및 정밀 직교 벡터 추출기
+   - `spec_compiler_service.py` (`NEW`): Dify Node 7 8-Tier DNA & 17대 텐서 & 70단계 유전자 컴파일러
+   - `master_synthesizer_service.py` (`NEW`): Dify Node 10 30,000자급 마스터 지시사항 합성기
+   - `static_validator.py` (`NEW`): Dify Node 11 정적 플레이스홀더 정규식 검증기
+4. **`src/presentation/web/`**:
+   - `server.py`: Node 3 (`/api/characters/classify`), Node 7 (`/api/characters/compile-spec`), Node 10 (`/api/characters/synthesize-master`) 엔드포인트 연동
+   - `static/js/views/vault.js` & `app.js`: Checkpoint 1 (V1/V2 선택) 및 Checkpoint 2 (Spec Diff 검토 및 APPLY) 2단계 결재선 완벽 연동
+   - `templates/index.html`: Checkpoint 1 & 2 모달 UI 확장
+5. **`tests/unit/`**:
+   - `test_creation_pipeline.py`: Node 3부터 Node 11까지의 전 파이프라인 E2E 단위 테스트
 
 ---
 
-## 🧪 3. 검증 계획 (Verification Plan)
-- `py -3 -m unittest discover -s tests/unit -v` 실행하여 DB CRUD 및 서비스 계층 100% PASS 확인.
-- `py -3 .agents/scripts/sync_doc_snapshots.py` 실행하여 스냅샷 SQLite 자동 기록.
-- `py -3 .agents/scripts/verify_sync.py` 실행하여 대칭성 100% 확인.
+## 🧪 3. 검증 계획
+- `py -3 -m unittest discover -s tests/unit -v` 실행하여 전 파이프라인 100% PASS 확인.
+- SQLite DB에 실제 25대 마스터 프롬프트 및 8-Tier DNA가 저장되는지 확인.
+- 브라우저 UI에서 Checkpoint 1 ➔ Checkpoint 2 ➔ 발현 완결 인터랙션 검증.

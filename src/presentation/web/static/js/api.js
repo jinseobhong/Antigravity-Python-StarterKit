@@ -31,6 +31,24 @@ const API = {
     return res.json();
   },
 
+  async compileSpec(payload) {
+    const res = await fetch("/api/characters/compile-spec", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    return res.json();
+  },
+
+  async synthesizeMaster(characterData) {
+    const res = await fetch("/api/characters/synthesize-master", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ character_data: characterData })
+    });
+    return res.json();
+  },
+
   async compileCharacter(payload) {
     const res = await fetch("/api/characters/compile", {
       method: "POST",
