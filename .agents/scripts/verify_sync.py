@@ -120,10 +120,10 @@ def validate_customizations(repo_root: Path) -> bool:
             else:
                 print(f"  - docs/templates/{template_file}: OK (Constitution Article 20 Verified)")
 
-    # 4. Check Root README.md and .agents/README.md
+    # 4. Check Root README.md and .agents/CONVENTIONS.md
     print("\n* Checking Root & Hub Documentation...")
     root_readme = repo_root / "README.md"
-    hub_readme = agents_dir / "README.md"
+    conventions_hub = agents_dir / "CONVENTIONS.md"
 
     if not root_readme.exists():
         errors.append("[MISSING README] Missing Project Root 'README.md'")
@@ -132,10 +132,12 @@ def validate_customizations(repo_root: Path) -> bool:
         status_text = "OK (Header Verified)" if has_header else "OK"
         print(f"  - README.md: {status_text}")
 
-    if not hub_readme.exists():
-        errors.append("[MISSING README] Missing Submodule '.agents/README.md'")
+    if not conventions_hub.exists():
+        errors.append("[MISSING HUB] Missing Master Hub '.agents/CONVENTIONS.md'")
     else:
-        print("  - .agents/README.md: OK")
+        has_header = check_metadata_header(conventions_hub)
+        status_text = "OK (Header Verified)" if has_header else "OK"
+        print(f"  - .agents/CONVENTIONS.md: {status_text}")
 
     # 5. Final Verdict
     print("\n" + "=" * 70)
