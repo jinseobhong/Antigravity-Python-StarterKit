@@ -38,10 +38,10 @@
 
 | 접두어 (Prefix) | 대상 작업 영역 | 커밋 메시지 권장 형식 |
 | :--- | :--- | :--- |
-| **`feat:`** | 신규 비즈니스 기능, 도메인 모델, API 추가 | `feat: implement SomaticGene immutable model` |
+| **`feat:`** | 신규 비즈니스 기능, 도메인 모델, API 추가 | `feat: implement UserProfile immutable model` |
 | **`fix:`** | 버그 수정, 런타임 결함 패치 | `fix: resolve sqlite lock on connection close` |
 | **`gov:`** | 헌법, 규격서, 제안서, 거버넌스 스크립트 변경 | `gov: establish GIT_WORKFLOW_SPEC and update hub` |
-| **`test:`** | 단위(Unit) 및 종단간(E2E) 테스트 추가/보강 | `test: add character roundtrip persistence e2e` |
+| **`test:`** | 단위(Unit) 및 종단간(E2E) 테스트 추가/보강 | `test: add user roundtrip persistence e2e` |
 | **`refactor:`** | 기능 동작 변경 없는 코드 리팩터링 및 성능 최적화 | `refactor: extract DatabaseManager context manager` |
 | **`docs:`** | views/ 관측 뷰 및 사용자 문서 갱신 | `docs: sync CURRENT_STATE for phase 1 completion` |
 | **`chore:`** | 패키지 의존성(`requirements.txt`), 설정 변경 | `chore: update requirements.txt with pydantic` |

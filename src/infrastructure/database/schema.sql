@@ -1,5 +1,5 @@
 -- ====================================================================
--- AbyssEmpire Application Database Schema (SQLite)
+-- Universal Application Database Schema (SQLite)
 -- Clean Architecture Infrastructure Layer (Fresh Slate)
 -- ====================================================================
 

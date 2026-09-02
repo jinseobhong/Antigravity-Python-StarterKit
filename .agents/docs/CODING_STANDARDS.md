@@ -1,4 +1,4 @@
-﻿# CODING_STANDARDS.md — 파이썬 코딩 표준 및 엔지니어링 구현 규격서
+# CODING_STANDARDS.md — 파이썬 코딩 표준 및 엔지니어링 구현 규격서
 
 | 항목 | 내용 |
 | :--- | :--- |
@@ -35,69 +35,71 @@ def calculate_pressure_delta(
 
 ---
 
+## 🏛️ 2. 파이썬 7대 핵심 코딩 규약 (7 Core Coding Standards)
+
 ### 2.2 도메인 순수성 및 불변성 (Pure Domain & Immutability)
 1. **외부 프레임워크 의존성 0**: src/domain/ 내부의 모든 엔티티(Entities)와 값 객체(Value Objects)는 외부 DB, HTTP, OS 관련 서드파티 라이브러리를 일체 임포트하지 아니한다.
 2. **불변 값 객체 패턴**: 도메인 상태를 표현하는 객체는 @dataclass(frozen=True)로 선언하여 부수 효과(Side-Effect)를 원천 차단한다. 상태 변경 시 기존 인스턴스를 변형하지 않고 새로운 인스턴스를 반환한다.
 
-`python
+```python
 # [GOOD] 불변 도메인 모델
 from dataclasses import dataclass
 
 @dataclass(frozen=True)
-class SomaticGene:
-    gene_id: str
-    expression_level: float
-    is_active: bool = True
+class UserProfile:
+    user_id: str
+    username: str
+    reputation_score: float = 0.0
 
-    def evolve(self, delta: float) -> "SomaticGene":
-        new_level = max(0.0, min(1.0, self.expression_level + delta))
-        return SomaticGene(
-            gene_id=self.gene_id,
-            expression_level=new_level,
-            is_active=self.is_active
+    def update_reputation(self, delta: float) -> "UserProfile":
+        new_score = max(0.0, min(100.0, self.reputation_score + delta))
+        return UserProfile(
+            user_id=self.user_id,
+            username=self.username,
+            reputation_score=new_score
         )
-`
+```
 
 ---
 
 ### 2.3 계층별 명시적 커스텀 예외 (Explicit Custom Exceptions)
-1. **날것의 예외 발생 금지**: 코드 내부에서 범용 Exception, KeyError, ValueError를 직접 aise하는 행위를 금지한다.
+1. **날것의 예외 발생 금지**: 코드 내부에서 범용 `Exception`, `KeyError`, `ValueError`를 직접 `raise`하는 행위를 금지한다.
 2. **도메인 예외 계층 구조 준수**: 모든 예외는 시스템 최상위 베이스 예외 및 도메인 전용 베이스 예외를 상속한다.
 
-`python
-class AbyssEmpireError(Exception):
+```python
+class AppError(Exception):
     """시스템 최상위 기본 예외"""
     pass
 
-class DomainError(AbyssEmpireError):
+class DomainError(AppError):
     """도메인 비즈니스 규칙 위반 베이스 예외"""
     pass
 
-class InvalidGeneExpressionError(DomainError):
-    """유전자 발현 수치가 허용 범위를 벗어났을 때 발생"""
-    def __init__(self, gene_id: str, value: float):
-        super().__init__(f"Gene '{gene_id}' expression level {value} is out of bounds [0.0, 1.0].")
-`
+class InvalidEntityStateError(DomainError):
+    """엔티티 상태 수치가 허용 범위를 벗어났을 때 발생"""
+    def __init__(self, entity_id: str, value: float):
+        super().__init__(f"Entity '{entity_id}' value {value} is out of valid bounds.")
+```
 
 ---
 
 ### 2.4 Arrange-Act-Assert (AAA) 테스트 패턴 및 100% 실측
-1. **AAA 구조 분리**: 모든 단위 테스트(	ests/unit/)는 **준비(Arrange)**, **실행(Act)**, **단언(Assert)** 3개 블록으로 명확히 구분하여 작성한다.
+1. **AAA 구조 분리**: 모든 단위 테스트(`tests/unit/`)는 **준비(Arrange)**, **실행(Act)**, **단언(Assert)** 3개 블록으로 명확히 구분하여 작성한다.
 2. **결정론적 테스트**: 테스트는 네트워크, 실측 시간 등에 의존하지 않는 순수 결정론적(Deterministic) 함수여야 한다.
 
-`python
-def test_somatic_gene_evolution_caps_at_maximum():
+```python
+def test_user_reputation_update_caps_at_maximum():
     # Arrange (준비)
-    initial_gene = SomaticGene(gene_id="GENE_001", expression_level=0.95)
-    delta = 0.10
+    initial_user = UserProfile(user_id="USER_001", username="Alice", reputation_score=95.0)
+    delta = 10.0
 
     # Act (실행)
-    evolved_gene = initial_gene.evolve(delta)
+    updated_user = initial_user.update_reputation(delta)
 
     # Assert (단언)
-    assert evolved_gene.expression_level == 1.0
-    assert evolved_gene.gene_id == "GENE_001"
-`
+    assert updated_user.reputation_score == 100.0
+    assert updated_user.user_id == "USER_001"
+```
 
 ---
 
@@ -105,31 +107,31 @@ def test_somatic_gene_evolution_caps_at_maximum():
 1. **의존성 방향 단방향 강제**:
    - Presentation ➔ Application ➔ Domain
    - Infrastructure ➔ Domain / Application (인터페이스 구현)
-2. **도메인 계층의 독립성**: 도메인은 하위 계층(DB, LLM 클라이언트, 웹 프레임워크)의 존재를 일체 알지 못하며, 인터페이스(Protocol/ABC)를 통해 협력한다.
+2. **도메인 계층의 독립성**: 도메인은 하위 계층(DB, 외부 API, 웹 프레임워크)의 존재를 일체 알지 못하며, 인터페이스(Protocol/ABC)를 통해 협력한다.
 
 ---
 
 ### 2.6 표준 Google-Style Docstring 의무화
 공개 모듈, 클래스, 함수에는 목적, 매개변수, 반환값, 발생 가능한 예외를 명시하는 Google Style Docstring을 작성한다:
 
-`python
-def render_narrative_prompt(
-    character_name: str,
-    stage_level: int
+```python
+def render_welcome_message(
+    user_id: str,
+    tier_level: int
 ) -> str:
-    """캐릭터 상태에 기반하여 렌더링된 LLM 프롬프트 문자열을 생성한다.
+    """사용자 상태에 기반하여 렌더링된 환영 메시지 문자열을 생성한다.
 
     Args:
-        character_name: 대상 캐릭터 식별자.
-        stage_level: 현재 텐션 압력 스테이지 레벨 (1~5).
+        user_id: 대상 사용자 식별자.
+        tier_level: 현재 권한 등급 티어 레벨 (1~5).
 
     Returns:
-        최종 조립된 완성형 프롬프트 텍스트.
+        최종 조립된 완성형 메시지 텍스트.
 
     Raises:
-        InvalidStageLevelError: stage_level이 1 미만 또는 5 초과인 경우.
+        InvalidTierLevelError: tier_level이 1 미만 또는 5 초과인 경우.
     """
-`
+```
 
 ---
 
