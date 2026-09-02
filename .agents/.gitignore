@@ -1,0 +1,5 @@
+﻿store/*.db
+store/*.db-wal
+store/*.db-shm
+__pycache__/
+*.pyc

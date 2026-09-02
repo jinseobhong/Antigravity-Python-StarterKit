@@ -1,0 +1,43 @@
+{
+  "version": "2.2",
+  "governance": {
+    "constitution_path": "GEMINI.md",
+    "enforcement": "ALWAYS_ON"
+  },
+  "execution": {
+    "terminal": {
+      "wrapper": "python guardrail.py",
+      "policy": "DEFAULT_DENY",
+      "commands": {
+        "allow": [
+          "^git\\s+(status|diff|log|branch|checkout|add|commit).*$",
+          "^(npm|pnpm|yarn)\\s+(test|run\\s+build|run\\s+lint|install).*$",
+          "^(pytest|python\\s+-m\\s+pytest|vitest|jest).*$",
+          "^cargo\\s+(test|check|build).*$",
+          "^(cat|head|tail|grep|find|ls|dir|Get-Content|type).*$",
+          "^(python|node)\\s+.*$"
+        ],
+        "deny": [
+          "^.*(rm|del|erase|Remove-Item)\\s+.*$",
+          "^.*(chmod|chown)\\s+.*$",
+          "^.*(\\bcp\\b|\\bmv\\b|Copy-Item|Move-Item)\\s+.*(GEMINI|LICENSE|\\.env|\\.rules|guardrail|\\.agents).*$",
+          "^.*(>|>>)\\s+.*(GEMINI|LICENSE|\\.env|\\.rules|guardrail|\\.agents).*$",
+          "^.*(curl|wget)\\s+.*\\|\\s*(bash|sh|powershell).*$",
+          "^.*(kill|pkill|taskkill).*$"
+        ]
+      }
+    },
+    "file_system": {
+      "read_only_paths": [
+        "GEMINI.md",
+        "LICENSE",
+        ".rules/**",
+        ".gitignore",
+        ".env*",
+        "guardrail.py",
+        ".agents/**"
+      ],
+      "on_violation": "KILL_PROCESS"
+    }
+  }
+}
