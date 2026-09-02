@@ -28,10 +28,10 @@ def check_metadata_header(file_path: Path) -> bool:
         return False
 
 def check_constitution_header(file_path: Path) -> bool:
-    """Checks if file contains the Article 20 Constitution Supreme Mandate header."""
+    """Checks if file contains the Global Constitution v2.2 Supreme Mandate header."""
     try:
         content = file_path.read_text(encoding='utf-8')
-        return "[HITL TRINITY SUPREME MANDATE - CONSTITUTION ARTICLE 20]" in content
+        return "[GLOBAL CONSTITUTION v2.2 & HITL TRINITY MANDATE]" in content
     except Exception:
         return False
 
