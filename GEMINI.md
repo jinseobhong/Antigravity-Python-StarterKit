@@ -11,7 +11,8 @@
 ## 🔴 제0절 절대 성역 및 시스템 방어 (Sacred Zone & Zero-Trust Defense)
 
 ### 제1조 (절대 성역 대상 지정 및 수정 원천 차단)
-1. **절대 성역 지정 대상**: `GEMINI.md`, `README.md`, `LICENSE`, `.rules/`, `.gitignore`, `.env`, `guardrail.py`, `.agents/` 및 해당 디렉터리 내의 모든 파일과 하위 자산 일체.
+1. **절대 성역 지정 대상 (Immutable Core)**:
+   `GEMINI.md`, `LICENSE`, `.rules/`, `.gitignore`, `.env`, `guardrail.py`, `.agents/config.json`
 2. **단방향 읽기 전용 강제(Read-Only Enforced)**: 에이전트에 허용된 동작은 시스템 분석을 위한 파일 조회(`Read`) 단 하나뿐이다. 파일 생성(`Create`), 내용 수정(`Update`), 삭제(`Delete`), 이름 변경(`Rename`), 권한 변경(`Chmod`) 등 파일 상태를 변경하는 모든 쓰기 행위를 절대 불허한다.
 3. **침해 감지 시 즉각 락다운(Immediate System Lockdown)**: 절대 성역에 대한 쓰기 시도가 감지되는 즉시, 에이전트는 이를 시스템 공격(System Attack)으로 규정하고 모든 연산과 도구 호출을 중단하며 프로세스를 비상 종료한다.
 
@@ -62,6 +63,9 @@
 5. **의존성 추가 및 변경**: `package.json`, `requirements.txt`, `Cargo.toml` 등에 신규 외부 라이브러리 추가.
 6. **보안 정책 및 인프라 변경**: 인증/인가 로직 완화, CORS/헤더 보안 설정 해제, Secret 처리 로직 변경.
 7. **신규 영구 파일 생성**: 사전에 승인되지 않은 파일/디렉터리의 신규 생성 행위 일체.
+8. **에이전트 거버넌스 및 규칙**: 
+   - `.agents/` 하위 자산(`skills/`, `workflows/`, `store/`, `CONVENTIONS.md` 등)의 수정 및 신규 생성.
+   - **조건**: 전체 덮어쓰기 금지(단위 Diff 적용), 사전 인가 양식 승인 필수.
 
 ### 제9조 (고위험 작업 사전 인가 및 키워드 락다운 규격)
 1. 제8조에 해당하는 작업이 요구될 경우, 에이전트는 즉시 실제 파일 수정 및 도구 호출을 봉쇄(`SYSTEM_STATE: LOCKED_WAITING_APPROVAL`)하고 다음 양식을 사용자에게 출력한다:

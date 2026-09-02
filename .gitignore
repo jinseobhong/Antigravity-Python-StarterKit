@@ -1,0 +1,20 @@
+﻿# SQLite Store Binaries & WAL files (Track schema.sql, ignore binaries)
+.agents/store/*.db
+.agents/store/*.db-wal
+.agents/store/*.db-shm
+*.db
+*.db-wal
+*.db-shm
+
+# Python cache & virtual environments
+__pycache__/
+*.py[cod]
+*.class
+.venv/
+venv/
+ENV/
+
+# Secrets & Environment
+.env
+.env.*
+!.env.example
